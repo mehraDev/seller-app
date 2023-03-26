@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { auth } from '../../firebase/firebase';
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { addRoleToUser } from "../../firebase/fb-auth";
 interface LoginFormProps {
   onSuccess: () => void;
 }
@@ -18,7 +17,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
     // User signed in successfully
     const user = userCredential.user;
     console.log(`User ${user.uid} signed in successfully!`);
-    addRoleToUser('seller')
   })
   .catch((error) => {
     // Handle errors here
