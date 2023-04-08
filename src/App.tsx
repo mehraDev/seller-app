@@ -1,10 +1,17 @@
-import LoginForm from 'pages/Login/Login';
-import './App.css';
-
+import React, { useState } from 'react';
+import Dashboard from 'components/Dashboard/Dashboard';
 function App() {
+  const [loggedIn, setLoggedIn] = useState(true);
+  const [userType, setUserType] = useState('');
+  const [shopKind, setShopKind] = useState('');
+
+  
   return (
-    <div className="App">
-      <LoginForm onSuccess={() => console.log("sdd")}/>
+    <div id='app'>
+      {loggedIn && (
+        // <Dashboard userType={userType} shopKind={shopKind} />
+        <Dashboard/>
+      )}
     </div>
   );
 }
