@@ -1,15 +1,15 @@
 import React from 'react';
-import { NavLink, Route, BrowserRouter as Router, Switch } from 'react-router-dom';
+import { NavLink, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import styled from 'styled-components';
-import Dashboard from './Dashboard';
-import Billing from './Billing';
-import Orders from './Orders';
-import Statistics from './Statistics';
-import Delivery from './Delivery';
-import Inventory from './Inventory';
-import PublicWebsite from './PublicWebsite';
-import Discounts from './Discounts';
-import Settings from './Settings';
+// import Dashboard from './Dashboard';
+import Billing from 'components/Billing/Billing';
+// import Orders from './Orders';
+// import Statistics from './Statistics';
+// import Delivery from './Delivery';
+// import Inventory from './Inventory';
+// import PublicWebsite from './PublicWebsite';
+// import Discounts from './Discounts';
+// import Settings from './Settings';
 
 const NavWrapper = styled.nav`
   width: 250px;
@@ -54,30 +54,30 @@ function SideNav() {
     <Router>
       <NavWrapper>
         <NavList>
-          <NavItem><NavLink exact to="/" activeClassName="active">Dashboard</NavLink></NavItem>
-          <NavItem><NavLink to="/billing" activeClassName="active">Billing</NavLink></NavItem>
-          <NavItem><NavLink to="/orders" activeClassName="active">Orders</NavLink></NavItem>
-          <NavItem><NavLink to="/statistics" activeClassName="active">Statistics</NavLink></NavItem>
-          <NavItem><NavLink to="/delivery" activeClassName="active">Delivery</NavLink></NavItem>
-          <NavItem><NavLink to="/inventory" activeClassName="active">Inventory</NavLink></NavItem>
-          <NavItem><NavLink to="/public-website" activeClassName="active">Public Website</NavLink></NavItem>
-          <NavItem><NavLink to="/discounts" activeClassName="active">Discounts</NavLink></NavItem>
-          <NavItem><NavLink to="/settings" activeClassName="active">Settings</NavLink></NavItem>
-          <NavItem><NavLink to="/logout" activeClassName="active">Logout</NavLink></NavItem>
+          <NavItem><NavLink  to="/" >Dashboard</NavLink></NavItem>
+          <NavItem><NavLink to="/billing" >Billing</NavLink></NavItem>
+          <NavItem><NavLink to="/orders" >Orders</NavLink></NavItem>
+          <NavItem><NavLink to="/statistics" >Statistics</NavLink></NavItem>
+          <NavItem><NavLink to="/delivery" >Delivery</NavLink></NavItem>
+          <NavItem><NavLink to="/inventory" >Inventory</NavLink></NavItem>
+          <NavItem><NavLink to="/public-website" >Public Website</NavLink></NavItem>
+          <NavItem><NavLink to="/discounts" >Discounts</NavLink></NavItem>
+          <NavItem><NavLink to="/settings" >Settings</NavLink></NavItem>
+          <NavItem><NavLink to="/logout" >Logout</NavLink></NavItem>
         </NavList>
       </NavWrapper>
-      <Switch>
-        <Route exact path="/" component={Dashboard} />
-        <Route path="/billing" component={Billing} />
-        <Route path="/orders" component={Orders} />
+      <Routes>
+        {/* <Route exact path="/" component={Dashboard} /> */}
+        <Route path="/billing" Component={Billing} />
+        {/* <Route path="/orders" component={Orders} />
         <Route path="/statistics" component={Statistics} />
         <Route path="/delivery" component={Delivery} />
         <Route path="/inventory" component={Inventory} />
         <Route path="/public-website" component={PublicWebsite} />
         <Route path="/discounts" component={Discounts} />
-        <Route path="/settings" component={Settings} />
+        <Route path="/settings" component={Settings} /> */}
         {/* add any additional routes you need here */}
-      </Switch>
+      </Routes>
     </Router>
   );
 }
