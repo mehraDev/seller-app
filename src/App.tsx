@@ -1,19 +1,17 @@
-import React, { useState } from 'react';
-import Dashboard from 'components/Dashboard/Dashboard';
-function App() {
-  const [loggedIn, setLoggedIn] = useState(true);
-  const [userType, setUserType] = useState('');
-  const [shopKind, setShopKind] = useState('');
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
-  
+import Host from 'app/Host/Host'
+import DashboardPage from 'app/pages/Dashboard/Dashboard';
+
+function App() {
   return (
-    <div id='app'>
-      {loggedIn && (
-        // <Dashboard userType={userType} shopKind={shopKind} />
-        <Dashboard/>
-      )}
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Host/>} />
+        <Route path="/dashboard" element={<DashboardPage />} />
+      </Routes>
+    </Router>
   );
 }
 
-export default App;
+export default App
