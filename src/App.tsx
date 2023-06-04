@@ -1,11 +1,14 @@
-import LoginForm from 'pages/Login/Login';
-import './App.css';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import DashboardPage from 'app/pages/dashboard';
 
 function App() {
   return (
-    <div className="App">
-      <LoginForm onSuccess={() => console.log("sdd")}/>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<DashboardPage/>} />
+        <Route path="/dashboard" element={<DashboardPage/>} />
+      </Routes>
+    </Router>
   );
 }
 
