@@ -1,32 +1,32 @@
 import styled from 'styled-components'
 import Logo from './Logo'
 
-interface NameLogoProps {
-  hideName?: boolean
+interface LogoSideNavProps {
+  hideName?: boolean,
+  sizeSmall?: number,
+  sizeLarge?: number
 }
 
-const LogoSideNav: React.FC<NameLogoProps> = ({hideName}) => {
+const LogoSideNav: React.FC<LogoSideNavProps> = ({hideName,sizeSmall = 1.5,sizeLarge = 1.5}) => {
   return (
-    <LogoWrapper>
-      <Logo />
-      {!hideName && <LogoText>DigiBhoomi</LogoText>}
-    </LogoWrapper>
+    <NameLogoWrapper>
+      <Logo height={hideName ? `${sizeLarge}rem`: `${sizeSmall}rem`} width={hideName ? `${sizeLarge}rem`: `${sizeSmall}rem`} />
+      {!hideName && <div>DigiBhoomi</div>}
+    </NameLogoWrapper>
   )
 }
 
-const LogoWrapper = styled.div`
-  padding: 10px 2rem;
+const NameLogoWrapper = styled.div`
   display: flex;
   align-items: center;
   color: white;
-  border-bottom: 1px solid #9f9f9f;
-`
-
-const LogoText = styled.div`
-  padding: 0px 10px;
-  font-size: larger;
   font-weight: 600;
+  font-size: 1.25rem;
+  
   font-family: 'Raleway', sans-serif;
+  & > div {
+    margin-left: 1rem;
+  }
 `
 
-export default LogoSideNav
+export default LogoSideNav;

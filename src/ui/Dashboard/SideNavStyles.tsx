@@ -1,6 +1,10 @@
 import styled from "styled-components"
 
-const SideNavWrapper = styled.div`
+interface SideNavWrapperProps{
+  isOpen?: boolean
+}
+
+const SideNavWrapper = styled.div<SideNavWrapperProps>`
   position: relative;
   padding: ${(props) => (props.isOpen ? '1rem' : '1rem 4px')};
   height: 100vh;

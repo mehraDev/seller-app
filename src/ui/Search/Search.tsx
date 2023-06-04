@@ -1,18 +1,26 @@
 import React, { useState } from "react";
-import styled from "styled-components";
-import Icon from "ui/Icon/Icon";
-import { IconName } from "ui/Icon/iconNames";
+import styled, { css } from "styled-components";
+import Button from "ui/Button";
+import Icon, { IconName } from "ui/Icon";
+
 
 interface Props {
   items?: string[];
+  showButton?: boolean;
 }
 
-const SearchContainer = styled.div`
-  display: flex;
-  align-items: center;
-  background-color: #f2f2f2;
+const SearchInputWrapper = styled.div<{ isFocused: boolean }>`
+  width: 100%;
   border-radius: 4px;
-  padding: 8px;
+  align-items: center;
+  display: flex;
+  gap: 1rem;
+  background: ${({theme})=> theme.neutralColor.bgLayout};
+  border: 1px solid
+    ${({ isFocused, theme }) =>
+      isFocused ? theme.brandColor.primaryBorderHover : theme.neutralColor.border};
+  transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
+  align-items: stretch;
 `;
 
 const SearchIcon = styled.span`
@@ -22,71 +30,67 @@ const SearchIcon = styled.span`
 `;
 
 const SearchInput = styled.input`
-  border: none;
   flex: 1;
-  font-size: 1rem;
-  background-color: #f2f2f2;
-
+  padding: 2px;
+  margin: 2px;
+  width: 100%;
+  border: 1px solid #ffffff00;
+  background: transparent;
+  color: ${({ theme }) => theme.neutralColor.text};
+  font-size: ${({ theme }) => theme.font.fontSize};
   &:focus {
     outline: none;
   }
-`;
-
-const SearchResults = styled.ul`
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  max-height: 200px;
-  overflow-y: auto;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-`;
-
-const SearchResult = styled.li`
-  padding: 8px;
-
-  &:hover {
-    background-color: #f2f2f2;
-    cursor: pointer;
+  &::placeholder {
+    color: ${({ theme }) => theme.neutralColor.textTertiary};
   }
 `;
 
-const Search: React.FC<Props> = ({ items = [] }) => {
+const IconWrapper = styled.span`
+  display: flex;
+`;
+
+const Search: React.FC<Props> = ({ items = [], showButton = false }) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [searchResults, setSearchResults] = useState<string[]>([]);
+  const [isFocused, setIsFocused] = useState(false);
+  const [isClicked, setIsClicked] = useState(false);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     const searchTerm = event.target.value;
     setSearchTerm(searchTerm);
+  };
 
-    if (searchTerm === "") {
-      setSearchResults([]);
-    } else {
-      const filteredItems = items.filter((item) =>
-        item.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-      setSearchResults(filteredItems);
-    }
+  const handleFocus = () => {
+    setIsFocused(true);
+  };
+
+  const handleBlur = () => {
+    setIsFocused(false);
+  };
+
+  const handleClick = () => {
+    setIsClicked(true);
   };
 
   return (
     <>
-      <SearchContainer>
-        <Icon name={IconName.LeftArrow} />
+      <SearchInputWrapper isFocused={isFocused}>
         <SearchInput
-          type="text"
           placeholder="Search"
           value={searchTerm}
           onChange={handleSearch}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
-      </SearchContainer>
-      {/* {searchResults.length > 0 && (
-        <SearchResults>
-          {searchResults.map((result) => (
-            <SearchResult key={result}>{result}</SearchResult>
-          ))}
-        </SearchResults>
-      )} */}
+        {isFocused && showButton && (
+          <IconWrapper>
+            <Button variant="secondary" size="small" onClick={handleClick}>
+              <Icon name={IconName.LeftArrow} width={1.2} height={1.2} />
+              Search
+            </Button>
+          </IconWrapper>
+        )}
+      </SearchInputWrapper>
     </>
   );
 };

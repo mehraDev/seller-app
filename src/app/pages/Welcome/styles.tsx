@@ -38,8 +38,4 @@ export const TitleWrapper = styled.div`
 export const LoginWrapper = styled.div`
   background: rgba(255, 255, 255, 0.15);
   border-radius: 8px;
-  
-  
- 
- 
 `;

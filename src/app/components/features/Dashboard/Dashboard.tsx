@@ -1,8 +1,11 @@
-import React from 'react';
+
+import FoodAddItemForm from '../ProductManager/AddProductForm/Food/FoodAddItemForm';
 
 const Dashboard = () => {
   return (
-    <div>Home Component</div>
+    <div>
+      <FoodAddItemForm/>
+    </div>
   );
 };
 

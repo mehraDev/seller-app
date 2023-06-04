@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { BrandWrapper, LoginWrapper, TitleWrapper, WelcomePageWrapper } from './styles';
-import Logo from 'ui/Logo/Logo';
+
 
 interface WelcomePageProps {
   // Props for the WelcomePage component, if any

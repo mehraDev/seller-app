@@ -1,21 +1,42 @@
-import React, {  useState } from 'react';
+import React, {  useEffect, useState } from 'react';
 import SideNav from './SideNav/SideNav';
-import { ComponentItemType } from 'app/services/DashboardPage/getComponentFromFeatureList';
+
 import DashboardBody from './Body/DashboardBody';
-import { DashboardHeader } from './Header/Header';
 import { DashboardWrapper } from './styles';
+import MobileHeader from 'ui/MobileHeader';
+import { ComponentItemType } from 'app/services/dashboardPage/dashboardHost/getComponentsFromFeatureList';
 
 interface DashboardProps {
     features: ComponentItemType[];
+    onLogout: () => void;
   }
 
-  const Dashboard: React.FC<DashboardProps> = ({ features }) => {
-    const [activeFeature, setActiveFeature] = useState<string>(""); 
-  
-    const handleFeatureChange = (feature: string) => {
+  const Dashboard: React.FC<DashboardProps> = ({ features }) =>  {
+    const [dashboardHeight, setDashboardHeight] = useState(window.innerHeight);
+    const [activeFeature, setActiveFeature] = useState<number>(0); 
+    const [isSideNavVisible, setIsSideNavVisible] = useState(false);
+    const handleFeatureChange = (feature: number) => {
       setActiveFeature(feature);
     };
+
+    useEffect(() => {
+      const handleResize = () => {
+        setDashboardHeight(window.innerHeight);
+      };
   
+      const handleOrientationChange = () => {
+        setDashboardHeight(window.innerHeight);
+      };
+  
+      window.addEventListener('resize', handleResize);
+      window.addEventListener('orientationchange', handleOrientationChange);
+  
+      return () => {
+        window.removeEventListener('resize', handleResize);
+        window.removeEventListener('orientationchange', handleOrientationChange);
+      };
+    }, []);
+
     const sideNavList = features.map((feature) => {
       return {
         name: feature.name,
@@ -23,14 +44,18 @@ interface DashboardProps {
       };
     });
 
-    const activeComponent = activeFeature
-    ? features.find((feature) => feature.name === activeFeature)?.component
-    : features[0]?.component;
+    const activeComponent = features[activeFeature]?.component;
 
     return (
-      <DashboardWrapper>
-        <SideNav list={sideNavList} activeFeature={activeFeature} setActiveFeature={handleFeatureChange} />
-        <DashboardHeader onLogout={()=>console.log('logout')}/>
+      <DashboardWrapper height={dashboardHeight}>
+        <SideNav
+            list={sideNavList}
+            activeFeature={activeFeature}
+            setActiveFeature={handleFeatureChange}
+            show={isSideNavVisible}
+            toggleSideNav={setIsSideNavVisible}
+        />
+        <MobileHeader toggleSideNav={() => setIsSideNavVisible(!isSideNavVisible)}/>
         <DashboardBody activeComponent={activeComponent} />
       </DashboardWrapper>
     );

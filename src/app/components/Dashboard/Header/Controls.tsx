@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import Icon from "ui/Icon/Icon";
-import { IconName } from "ui/Icon/iconNames";
+
+
 import { NotificationIconWraper, ProfileIconPopupWrapper, ProfileIconWrapper, ToggleWrapper } from "./styles";
+import Icon, { IconName } from "ui/Icon";
 // import { Notification } from "./Notification";
 // import { UserProfile } from "./UserProfile";
 

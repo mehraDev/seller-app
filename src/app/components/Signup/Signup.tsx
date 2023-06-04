@@ -1,0 +1,143 @@
+import React, { useState } from 'react';
+import { Button, ButtonWrapper, Form, FormTitle, Input, InputWrapper, LoginLink, LoginLinkWrapper, Select, SignupFormWrapper } from './styles';
+import { auth, db } from 'firebaseServices/firebase';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { collection, doc, setDoc } from 'firebase/firestore';
+import signupSeller from 'firebaseServices/Registration/Signup/Signup';
+
+interface Props {
+  onExistingUserClick: () => void;
+}
+
+const SignupForm: React.FC<Props> = ({ onExistingUserClick }) => {
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [shopName, setShopName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [shopType, setShopType] = useState('');
+  const [formError, setFormError] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Validate form fields
+    if (
+      !firstName ||
+      !lastName ||
+      !shopName ||
+      !phone ||
+      !email ||
+      !password ||
+      !shopType
+    ) {
+      setFormError('Please fill in all fields.');
+      return;
+    }
+
+    const userData = {
+      firstName,
+      lastName,
+      shopName,
+      phone,
+      email,
+      password,
+      shopType,
+    };
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+
+      await updateProfile(user, {
+        displayName: `${user} `,
+      });
+      
+      signupSeller(shopType,`${firstName} ${lastName}`,phone,email);
+    } catch (error: any) {
+      console.error('Error signing up:', error.code, error.message);
+    }
+  };
+
+  return (
+    <SignupFormWrapper>
+      <FormTitle>Create your account</FormTitle>
+      <Form onSubmit={handleSubmit}>
+        <InputWrapper>
+          <Input
+            type="text"
+            placeholder="First Name"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+          />
+        </InputWrapper>
+        <InputWrapper>
+          <Input
+            type="text"
+            placeholder="Last Name"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+          />
+        </InputWrapper>
+        <InputWrapper>
+          <Input
+            type="text"
+            placeholder="Shop Name"
+            value={shopName}
+            onChange={(e) => setShopName(e.target.value)}
+          />
+        </InputWrapper>
+        <InputWrapper>
+          <Input
+            type="tel"
+            placeholder="Phone"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+          />
+        </InputWrapper>
+        <InputWrapper>
+          <Input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </InputWrapper>
+        <InputWrapper>
+          <Input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </InputWrapper>
+        <InputWrapper>
+          <Select value={shopType} onChange={(e) => setShopType(e.target.value)}>
+            <option value="">Shop Type</option>
+            <option value="grocery">Grocery</option>
+            <option value="food">Food</option>
+            <option value="Fashion">Fashion</option>
+            <option value="Electronics">Electronics</option>
+          </Select>
+        </InputWrapper>
+        {formError && <div>{formError}</div>}
+        <ButtonWrapper>
+          <Button type="submit">Sign up</Button>
+        </ButtonWrapper>
+      </Form>
+      <LoginLinkWrapper>
+        Already have an account?{' '}
+        <LoginLink href="#" onClick={onExistingUserClick}>
+          Log in
+        </LoginLink>
+      </LoginLinkWrapper>
+    </SignupFormWrapper>
+  );
+};
+
+export default SignupForm;

@@ -1,96 +1,77 @@
-import { useLocation} from 'react-router-dom'
-// import {useState} from 'react'
-// import {faAngleDoubleLeft, faAngleDoubleRight} from '@fortawesome/free-solid-svg-icons'
-// import {WithStyledComponentProps} from 'components/ui/withStyledComponent'
 
-import styled from 'styled-components'
+import SideNavWrapper, {AccountWrapper, SettingButton, SettingPopupWrapepr, SideNavAccountLabel, SideNavItemWrapper, SideNavLabel, SideNavListWrapper, ToggleButton} from './styles';
 
-import SideNavIcon from './SideNavIcon'
-// import Logo from 'components/ui/Logo/Logo'
-// import NameLogo from 'components/ui/Logo/NameLogo'
-
-import SideNavWrapper, {SideNavItemWrapper, SideNavListWrapper} from './styles'
-import NameLogoSideNav from 'ui/Logo/LogoSideNav';
 import { useState } from 'react';
-
-import Icon from 'ui/Icon/Icon';
-import { IconName } from 'ui/Icon/iconNames';
+import Icon, { IconName, IconSidenav } from 'ui/Icon';
+import { IconEnum } from 'ui/Icon/IconSidenav';
+import { auth } from 'firebaseServices/firebase';
+import LogoSideNav from 'ui/Logo';
 
 interface SideNavProps {
-  list: { name: string; icon: string }[];
-  activeFeature: string;
-  setActiveFeature: (feature: string) => void;
-}
+  list: { name: string; icon: keyof typeof IconEnum }[];
+  activeFeature: number;
+  setActiveFeature: (feature: number) => void;
+  show: boolean;
+  toggleSideNav: (flag: boolean) => void;
+};
 
-const SideNav: React.FC<SideNavProps> = ({ list, activeFeature, setActiveFeature }) => {
-  const location = useLocation()
-  const [activeItem, setActiveItem] = useState<null | string>(null)
-  const [isOpen, setIsOpen] = useState(true)
-
-  // Find the menu item that matches the current URL path
-  const activeMenuItem = list.find((item) =>
-    location.pathname.startsWith(`/${item.name.toLowerCase()}`),
-  )
-
-  // Set the active item based on the active menu item
-  if (activeMenuItem && activeItem !== activeMenuItem.name) {
-    setActiveItem(activeMenuItem.name)
-  }
-
+const SideNav: React.FC<SideNavProps> = ({ list, activeFeature, setActiveFeature ,show,toggleSideNav}) => {
+  const [activeItem, setActiveItem] = useState<number>(activeFeature);
+  const [accountPopup, setAccountPopup] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState(true);
+  const itemClickHandler = (activeItem:number) => {
+    setActiveFeature(activeItem);
+    setActiveItem(activeItem);
+    if(isOpen){
+      toggleSideNav(false);
+    }
+  };
+  const username = auth.currentUser;
+  console.log(username)
   return (
-    <SideNavWrapper isOpen={true} className="sidenav">
-    <NameLogoSideNav hideName={false} />
-      <SideNavListWrapper>
-        {list.map((item) => (
+    <SideNavWrapper show={show} className="sidenav" expanded={isOpen}>
+      <LogoSideNav hideName={!isOpen} sizeLarge={2}/>
+      <SideNavListWrapper expanded={isOpen}>
+        {list.map((item,index) => (
           <SideNavItemWrapper
             key={item.name}
-            onClick={() => setActiveFeature(item.name)}
-            className={activeItem === item.name ? 'active' : ''}
+            onClick={() => itemClickHandler(index)}
+            className={activeItem === index ? 'active' : ''}
             // isOpen={isOpen}
           >
-            
-            <SideNavIcon zoom={!isOpen} iconName={item.icon} />
-            <SideNavLabel isOpen={true}>
+            <IconSidenav zoom={!isOpen} iconName={item.icon} />
+            <SideNavLabel show={isOpen}>
               {item.name}
             </SideNavLabel>
           </SideNavItemWrapper>
         ))}
       </SideNavListWrapper>
+      <AccountWrapper expanded={isOpen}>
+      <SideNavItemWrapper
+            key={'account'}
+            onClick={() => {}}
+          >
+            <IconSidenav zoom={!isOpen} iconName={'Account'} />
+            <SideNavAccountLabel show={isOpen}>
+            Panj Tara Dhaba
+            </SideNavAccountLabel>
+          </SideNavItemWrapper>
+          <SettingButton>
+            <Icon name={IconName.Setting} color='white' onClick={() => setAccountPopup(!accountPopup)}/>
+           {accountPopup &&
+            <SettingPopupWrapepr>
+              <span >
+                Logout
+              </span>
+              <Icon name={IconName.RightArrow} color='white'/>
+            </SettingPopupWrapepr>}
+            </SettingButton>
+        </AccountWrapper>
       <ToggleButton onClick={() => setIsOpen(!isOpen)}>
-        <Icon name={IconName.LeftArrow} color='white'/>
+        <Icon name={isOpen ? IconName.LeftArrow : IconName.RightArrow} color='white'/>
       </ToggleButton>
      </SideNavWrapper>
   )
-}
-
-const SideNavLabel = styled.span`
-  padding-left: 1rem;
-`
-
-const ToggleButton = styled.button`
-    padding: 0.5rem;
-    position: absolute;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    display: flex;
-    -webkit-box-pack: center;
-    justify-content: center;
-    -webkit-box-align: center;
-    align-items: center;
-    background: none;
-    bottom: 2rem;
-    right: 1rem;
-
-  &:hover {
-    background-color: rgb(0, 122, 234);
-    & > svg {
-            opacity: 1;
-        }
-  }
-  & > svg {
-        opacity: 0.8;
-    }
-`
+};
 
 export default SideNav

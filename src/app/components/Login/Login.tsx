@@ -1,12 +1,14 @@
 import { loginUser } from 'app/services/Login/loginSignup';
 import React, { useState } from 'react';
-import { Button, CreateAccount, ForgotPassword, Input, LoginWrapper } from './styles';
+import {  CreateAccount, ForgotPassword, Input, LoginWrapper } from './styles';
+import Button from 'ui/Button';
+
 
 interface LoginProps {
-  // Props for the LoginForm component, if any
+  onAccountCreation: () => void;
 }
 
-const Login: React.FC<LoginProps> = () => {
+const Login: React.FC<LoginProps> = ({ onAccountCreation }) => {
   const [emailOrId, setEmailOrId] = useState('');
   const [password, setPassword] = useState('');
 
@@ -28,11 +30,11 @@ const Login: React.FC<LoginProps> = () => {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-      <Button onClick={handleLogin}>Log in</Button>
+      <Button fullWidth={true} onClick={handleLogin} padding='0.5rem 1rem' margin='0.5rem' >Log in</Button>
       <ForgotPassword>
         <a href="/">Forgot password?</a>
       </ForgotPassword>
-      <CreateAccount>
+      <CreateAccount onClick={onAccountCreation}>
         Create new account
       </CreateAccount>
     </LoginWrapper>
