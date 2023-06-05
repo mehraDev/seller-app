@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
-import { AuthWrapper } from './styles';
-import Brand from 'app/components/Brand';
 
 import Signup from 'app/components/Signup';
 import Login from 'app/pages/Login';
+import { AuthWrapper } from './styles';
 
 interface AuthProps {
 }
 
-const Auth: React.FC<AuthProps> = () => {
+const AuthenticationPage: React.FC<AuthProps> = () => {
   const [showLogin, setShowLogin] = useState<boolean>(true);
 
   const handleShowSignup = () => {
@@ -21,7 +20,6 @@ const Auth: React.FC<AuthProps> = () => {
 
   return (
     <AuthWrapper className='auth-wrapper'>
-        
         {showLogin ? (
         <Login onAccountCreation={handleShowSignup} />
       ) : (
@@ -31,4 +29,4 @@ const Auth: React.FC<AuthProps> = () => {
   );
 };
 
-export default Auth;
+export default AuthenticationPage;

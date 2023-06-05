@@ -5,8 +5,8 @@ import HostWrapper from './styles';
 import getFeatureComponents from 'app/services/dashboardPage/dashboardHost/getFeatureComponents';
 import { ComponentItemType } from 'app/services/dashboardPage/dashboardHost/getComponentsFromFeatureList';
 import {default as onlineIndicator} from 'app/services/dashboardPage/dashboardHost/Pulse';
-import { LoadingScreen } from 'app/pages/Dashboard';
-import Auth from 'app/pages/Dashboard/auth';
+import {  AuthenticationPage, LoadingPage } from 'app/pages/Dashboard';
+
 
 const Dashboard = lazy(() => import('app/components/Dashboard/Dashboard'));
 
@@ -77,12 +77,12 @@ function DashboardHost() {
       {user ? 
         <>
           {loading ? 
-            <LoadingScreen />
+            <LoadingPage />
             : 
             <Dashboard features={features} onLogout={handleLogout} />}
         </>
       : 
-      <Auth />
+      <AuthenticationPage />
       }
     </HostWrapper>
   );
