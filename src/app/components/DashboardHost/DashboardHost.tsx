@@ -1,17 +1,16 @@
 import React, { lazy, useEffect, useState } from 'react';
 import { User, getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from 'firebaseServices/firebase';
-
-import LoadingScreen from 'app/pages/dashboard/LoadingScreen';
-import Auth from 'app/pages/dashboard/auth';
 import HostWrapper from './styles';
 import getFeatureComponents from 'app/services/dashboardPage/dashboardHost/getFeatureComponents';
 import { ComponentItemType } from 'app/services/dashboardPage/dashboardHost/getComponentsFromFeatureList';
 import {default as onlineIndicator} from 'app/services/dashboardPage/dashboardHost/Pulse';
+import { LoadingScreen } from 'app/pages/Dashboard';
+import Auth from 'app/pages/Dashboard/auth';
 
 const Dashboard = lazy(() => import('app/components/Dashboard/Dashboard'));
 
-function Host() {
+function DashboardHost() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [features, setFeatures] = useState<ComponentItemType[] | []>([]);
@@ -89,5 +88,5 @@ function Host() {
   );
 }
 
-export default Host;
+export default DashboardHost;
 

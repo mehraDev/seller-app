@@ -1,3 +1,3 @@
-import Host from "./Host";
+import DashboardHost from "./DashboardHost";
 
-export default Host;
+export default DashboardHost;

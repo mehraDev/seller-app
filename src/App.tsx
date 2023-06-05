@@ -1,5 +1,6 @@
+import DashboardPage from 'app/pages/Dashboard';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import DashboardPage from 'app/pages/dashboard';
+
 
 function App() {
   return (
