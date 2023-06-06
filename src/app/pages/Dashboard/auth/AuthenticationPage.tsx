@@ -9,7 +9,7 @@ interface AuthProps {
 
 const AuthenticationPage: React.FC<AuthProps> = () => {
   const [showLogin, setShowLogin] = useState<boolean>(true);
-
+  
   const handleShowSignup = () => {
     setShowLogin(false);
   };
@@ -19,7 +19,7 @@ const AuthenticationPage: React.FC<AuthProps> = () => {
   };
 
   return (
-    <AuthWrapper className='auth-wrapper'>
+    <AuthWrapper className='auth'>
         {showLogin ? (
         <Login onAccountCreation={handleShowSignup} />
       ) : (
