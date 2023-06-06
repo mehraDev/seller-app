@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import { Button, ButtonWrapper, Form, FormTitle, Input, InputWrapper, LoginLink, LoginLinkWrapper, Select, SignupFormWrapper } from './styles';
-import { auth, db } from 'firebaseServices/firebase';
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import { collection, doc, setDoc } from 'firebase/firestore';
-import signupSeller from 'firebaseServices/Registration/Signup/Signup';
+import signupAndCreateUserProfile from './services';
 
 interface Props {
   onExistingUserClick: () => void;
@@ -36,7 +33,7 @@ const SignupForm: React.FC<Props> = ({ onExistingUserClick }) => {
       return;
     }
 
-    const userData = {
+    const formData = {
       firstName,
       lastName,
       shopName,
@@ -47,18 +44,7 @@ const SignupForm: React.FC<Props> = ({ onExistingUserClick }) => {
     };
 
     try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      const user = userCredential.user;
-
-      await updateProfile(user, {
-        displayName: `${user} `,
-      });
-      
-      signupSeller(shopType,`${firstName} ${lastName}`,phone,email);
+      await signupAndCreateUserProfile(formData);
     } catch (error: any) {
       console.error('Error signing up:', error.code, error.message);
     }
