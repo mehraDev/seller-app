@@ -21,10 +21,10 @@ type ComponentListType = {
 };
 
 const ComponentList : ComponentListType= {
-    Dashboard: {
-      name: 'Dashboard',
+    Home: {
+      name: 'Home',
       component: DashboardComponent,
-      icon: IconEnum.Dashboard,
+      icon: IconEnum.Home,
     },
     Billing: {
       name: 'Billing',

@@ -2,7 +2,7 @@ import getShopType from "./getShopType";
 
 
 export enum FeaturesEnum {
-  Dashboard = "Dashboard",
+  Home = "Home",
   Billing = "Billing",
   Orders = "Orders",
   Statistics = "Statistics",
@@ -19,7 +19,7 @@ const getFeaturesList = async (): Promise<FeaturesEnum[]> => {
   switch (shopType) {
     case 'food':
       return [
-        FeaturesEnum.Dashboard,
+        FeaturesEnum.Home,
         FeaturesEnum.Orders,
         FeaturesEnum.Delivery,
         FeaturesEnum.Billing,
@@ -30,7 +30,7 @@ const getFeaturesList = async (): Promise<FeaturesEnum[]> => {
 
     case 'clothing':
       return [
-        FeaturesEnum.Dashboard,
+        FeaturesEnum.Home,
         FeaturesEnum.Billing,
         FeaturesEnum.Orders,
         FeaturesEnum.Statistics,

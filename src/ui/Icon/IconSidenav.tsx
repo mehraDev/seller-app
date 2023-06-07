@@ -1,7 +1,7 @@
 import { Suspense, FC } from 'react';
 import { lazy } from 'react';
 
-const DashboardIcon = lazy(() =>
+const HomeIcon = lazy(() =>
   import('assets/icons/dashboard.svg').then((module) => ({ default: module.ReactComponent })),
 );
 const BillingIcon = lazy(() =>
@@ -30,7 +30,7 @@ const AccountIcon = lazy(() =>
 );
 
 export enum IconEnum {
-    Dashboard = "Dashboard",
+    Home = "Home",
     Billing = "Billing",
     Orders = "Orders",
     Statistics = "Statistics",
@@ -46,7 +46,7 @@ interface IconMapType {
 }
   
 export const iconMap: IconMapType = {
-    [IconEnum.Dashboard]: DashboardIcon,
+    [IconEnum.Home]: HomeIcon,
     [IconEnum.Billing]: BillingIcon,
     [IconEnum.Orders]: OrdersIcon,
     [IconEnum.Statistics]: ReportsIcon,
