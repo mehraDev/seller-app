@@ -12,11 +12,14 @@ interface Props {
 const MobileHeader: React.FC<Props> = ({toggleSideNav}) => {
   return (
     <MobileHeaderWrapper>
-        <Icon name={IconName.Bars} width={1.5} height={1.5} onClick={toggleSideNav}/> 
-        <Brand/>
-        {/* <IconEmptyWrapper >
-        <Icon name={IconName.Bars} width={1.5} height={1.5} onClick={toggleSideNav}/>
-        </IconEmptyWrapper> */}
+        <div><Icon name={IconName.Bars} width={1.5} height={1.5} onClick={toggleSideNav}/> </div>
+        <div><Brand/></div>
+        <div>
+        <IconEmptyWrapper >
+        <Icon name={IconName.Ellipsis} width={1.5} height={1.5} onClick={toggleSideNav}/>
+        </IconEmptyWrapper>
+        </div>
+        
         
     </MobileHeaderWrapper>
     )

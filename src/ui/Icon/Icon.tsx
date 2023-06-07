@@ -1,6 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { CSSProperties, useState } from "react";
+import { CSSProperties, useEffect, useState } from "react";
 import { faRing,faCircleExclamation,faGear,faHouse,faXmark,faBell, faArrowLeft, faArrowRight,faBars,faEllipsisVertical,faChevronDown,faChevronUp } from '@fortawesome/free-solid-svg-icons';
+import styled from "styled-components";
 
 
 export enum IconName {
@@ -46,40 +47,68 @@ interface IconProps {
   height?: number;
   borderRadius?: number;
   onClick? : () => void,
-  isHoverable? : boolean
+  isHoverable? : boolean,
+  clickEffect? : boolean
 }
 
 const Icon: React.FC<IconProps> = ({
   name,
   className,
   color,
-  width = 1,
-  height = 1,
-  borderRadius = 0.5,
+  width ,
+  height ,
+  borderRadius = 2.5,
   isHoverable = true,
+  clickEffect = true,
   onClick
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const icon = icons[name];
+  const [isClicked, setIsClicked] = useState(false);
+
+  useEffect(() => {
+    if (isClicked) {
+      const timeout = setTimeout(() => {
+        setIsClicked(false);
+      }, 100);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [isClicked]);
+  
+  const handleClick = () => {
+    setIsClicked(true);
+    if (onClick) {
+      onClick();
+    }
+  };
 
   const iconStyle: CSSProperties = {
     color,
-    width: `${width}rem`,
-    height: `${height}rem`,
+    width: width ? `${width}rem` : '',
+    height:  height ? `${height}rem`: '',
     borderRadius: `${borderRadius}rem`,
-    cursor: isHoverable ? 'pointer' : 'default'
+    cursor: isHoverable ? 'pointer' : 'default',
+    background: (isClicked && clickEffect) ? '#04000008' : '',
+    padding: '4px',
   };
-
   return (
-    <FontAwesomeIcon
+<IconWrapper>
+<FontAwesomeIcon
       icon={icon}
       className={className}
       style={{ ...iconStyle}}
-      onClick={onClick}
+      onClick={() => handleClick()}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     />
+</IconWrapper>
+   
+
+    
   );
 };
 
+const IconWrapper = styled.div`
+`;
 export default Icon;

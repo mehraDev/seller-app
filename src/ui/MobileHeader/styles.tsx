@@ -9,7 +9,7 @@ const MobileHeaderWrapper = styled.div`
     display: flex;
     align-items: center;
     padding: 1rem;
-    justify-content: center;
+    justify-content: space-between;
     border-bottom: 1px solid #c9c9c980;
     height: 3.5rem;
     & > svg {
