@@ -4,10 +4,11 @@ import SideNav from './SideNav/SideNav';
 import DashboardBody from './Body/DashboardBody';
 import { DashboardWrapper } from './styles';
 import MobileHeader from 'ui/MobileHeader';
-import { ComponentItemType } from 'app/services/dashboardPage/dashboardHost/getComponentsFromFeatureList';
+import { Feature } from '../DashboardHost/services/getComponentsFromFeatureList';
+
 
 interface DashboardProps {
-    features: ComponentItemType[];
+    features: Feature[];
     onLogout: () => void;
   }
 
