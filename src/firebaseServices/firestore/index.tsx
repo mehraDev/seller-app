@@ -1,4 +1,4 @@
 import createCollection from "./collection";
-import createDocument from "./document";
+import { createDocument,fetchDocument } from "./document";
 
-export {createDocument, createCollection}
+export {createDocument, createCollection,fetchDocument}

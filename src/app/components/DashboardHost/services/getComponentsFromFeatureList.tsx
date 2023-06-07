@@ -1,6 +1,6 @@
 import { lazy } from 'react';
 import { IconEnum } from '../../../../ui/Icon/IconSidenav';
-import { FeaturesEnum } from './getFeatures';
+import { FeaturesEnum } from './getFeaturesList';
 
 const DashboardComponent = lazy(() => import('app/components/features/Dashboard/Dashboard'));
 const BillingComponent = lazy(() => import('app/components/features/Billing/Billing'));
@@ -10,14 +10,14 @@ const DeliveryComponent = lazy(() => import('app/components/features/Delivery/De
 const ProductCatalogue = lazy(() => import('app/components/features/ProductManager/Host'));
 const TransactionsComponent = lazy(() => import('app/components/features/Transactions/Transactions'));
 
-export interface ComponentItemType {
+export interface Feature {
   name: string;
   component: React.ComponentType;
   icon: IconEnum;
 }
 
 type ComponentListType = {
-  [key in FeaturesEnum]: ComponentItemType;
+  [key in FeaturesEnum]: Feature;
 };
 
 const ComponentList : ComponentListType= {
@@ -63,7 +63,7 @@ const ComponentList : ComponentListType= {
     }
 };
 
-function getComponentsFromFeatureList(featureList: FeaturesEnum[]) :ComponentItemType[]{
+function getComponentsFromFeatureList(featureList: FeaturesEnum[]) :Feature[]{
   return featureList.map((feature) => ComponentList[feature]);
 }
 

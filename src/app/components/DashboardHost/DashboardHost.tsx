@@ -2,10 +2,10 @@ import React, { lazy, useEffect, useState } from 'react';
 import { User, getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from 'firebaseServices/firebase';
 import HostWrapper from './styles';
-import getFeatureComponents from 'app/services/dashboardPage/dashboardHost/getFeatureComponents';
-import { ComponentItemType } from 'app/services/dashboardPage/dashboardHost/getComponentsFromFeatureList';
-import {default as onlineIndicator} from 'app/services/dashboardPage/dashboardHost/Pulse';
+
 import {  AuthenticationPage, LoadingPage } from 'app/pages/Dashboard';
+import { getFeatureComponents } from './services';
+import { Feature } from './services/getComponentsFromFeatureList';
 
 
 const Dashboard = lazy(() => import('app/components/Dashboard/Dashboard'));
@@ -13,7 +13,7 @@ const Dashboard = lazy(() => import('app/components/Dashboard/Dashboard'));
 function DashboardHost() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const [features, setFeatures] = useState<ComponentItemType[] | []>([]);
+  const [features, setFeatures] = useState<Feature[] | []>([]);
   const [dashboardHeight, setDashboardHeight] = useState(window.innerHeight);
 
     useEffect(() => {
@@ -36,35 +36,34 @@ function DashboardHost() {
 
     useEffect(() => {
       const unsubscribe = onAuthStateChanged(auth, async (user) => {
-        setUser(user);
         if (user) {
           try {
             const featureList = await getFeatureComponents();
             setFeatures(featureList);
-            
+            setUser(user);
+            setLoading(false);
           } catch (error) {
             console.error('Error fetching feature list:', error);
             setLoading(false);
           }
         }
-        setLoading(false);
     });
     
       return () => {
         unsubscribe();
       };
-    }, []);
+    }, [user]);
 
-    useEffect(() => {
-      if(user){
-        const stopOnlineIndicator = onlineIndicator();
+    // useEffect(() => {
+    //   if(user){
+    //     const stopOnlineIndicator = onlineIndicator();
     
-        return () => {
-          stopOnlineIndicator(); 
-        };
-      }
+    //     return () => {
+    //       stopOnlineIndicator(); 
+    //     };
+    //   }
       
-    }, [user]); 
+    // }, [user]); 
 
   const handleLogout = async () => {
     const auth = getAuth();
