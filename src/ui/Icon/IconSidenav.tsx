@@ -68,7 +68,7 @@ const IconSidenav: FC<IconSidenavProps> = ({ iconName, fill = 'white', zoom, ...
   const IconComponent = iconName ? iconMap[iconName] : null;
   const size = zoom ? '1.5rem' : '1rem';
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<div>.</div>}>
       {IconComponent && (
         <svg viewBox="0 0 512 512" style={{ height: size, width: size, fill: fill }} {...props}>
           <IconComponent />

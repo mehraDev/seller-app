@@ -3,10 +3,7 @@ import { getProductCatalogueList } from 'app/services/features/ProductCatalogue'
 import { Product } from './interface/Product';
 import ProductManager from './ProductManager';
 import ProductManagerVariants from './ProductManagerVariants/ProductManagerVariants';
-import LoadingScreen from 'app/pages/dashboard/LoadingScreen';
-import saveProductsToDB from 'app/services/features/Catalogue/saveProductsToDB';
-import uploadCatalogue from 'app/services/features/Catalogue/uploadCatalogue';
-import { getProducts } from 'app/services/features/Catalogue/getProducts';
+import LoadingAnimation from 'ui/LoadingAnimation/LoadingAnimation';
 
 const ProductManagerHost: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -49,7 +46,7 @@ const ProductManagerHost: React.FC = () => {
   const Manager = ProductManagerVariants[shopType];
 
   if (isLoading) {
-    return <LoadingScreen/>
+    return <LoadingAnimation/>
   }
 
   if (error) {
