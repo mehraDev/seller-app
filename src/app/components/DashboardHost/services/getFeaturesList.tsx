@@ -1,5 +1,6 @@
 import getShopType from "./getShopType";
 
+
 export enum FeaturesEnum {
   Dashboard = "Dashboard",
   Billing = "Billing",
@@ -12,6 +13,7 @@ export enum FeaturesEnum {
 }
 
 const getFeaturesList = async (): Promise<FeaturesEnum[]> => {
+ try{
   const shopType = await getShopType();
 
   switch (shopType) {
@@ -37,6 +39,9 @@ const getFeaturesList = async (): Promise<FeaturesEnum[]> => {
     default:
       return []; // Return an empty array if the shopType is not recognized
   }
+ } catch (error){
+  throw error;
+ }
 };
 
 export default getFeaturesList;
