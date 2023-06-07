@@ -7,7 +7,7 @@ const BillingComponent = lazy(() => import('app/components/features/Billing/Bill
 const OrdersComponent = lazy(() => import('app/components/features/Orders/Orders'));
 const StatisticsComponent = lazy(() => import('app/components/features/Statistics/Statistics'));
 const DeliveryComponent = lazy(() => import('app/components/features/Delivery/Delivery'));
-const ProductCatalogue = lazy(() => import('app/components/features/ProductManager/Host'));
+const ProductsManager = lazy(() => import('app/components/features/ProductManager/Host'));
 const TransactionsComponent = lazy(() => import('app/components/features/Transactions/Transactions'));
 
 export interface Feature {
@@ -46,9 +46,9 @@ const ComponentList : ComponentListType= {
       component: DeliveryComponent,
       icon: IconEnum.Delivery,
     },
-    Catalogue: {
-      name: 'Catalogue',
-      component: ProductCatalogue,
+    Products: {
+      name: 'Products',
+      component: ProductsManager,
       icon: IconEnum.Catalogue,
     },
     Transactions: {

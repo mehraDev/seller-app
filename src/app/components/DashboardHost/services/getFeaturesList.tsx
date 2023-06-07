@@ -9,7 +9,7 @@ export enum FeaturesEnum {
   Delivery = "Delivery",
   Inventory = "Inventory",
   Transactions = "Transactions",
-  Catalogue = "Catalogue"
+  Products = "Products"
 }
 
 const getFeaturesList = async (): Promise<FeaturesEnum[]> => {
@@ -25,7 +25,7 @@ const getFeaturesList = async (): Promise<FeaturesEnum[]> => {
         FeaturesEnum.Billing,
         FeaturesEnum.Transactions,
         FeaturesEnum.Statistics,
-        FeaturesEnum.Catalogue,
+        FeaturesEnum.Products,
       ];
 
     case 'clothing':
