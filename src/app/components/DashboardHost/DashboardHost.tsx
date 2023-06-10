@@ -3,9 +3,10 @@ import { User, getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from 'firebaseServices/firebase';
 import HostWrapper from './styles';
 
-import {  AuthenticationPage, LoadingPage } from 'app/pages/Dashboard';
+import {  AuthenticationPage } from 'app/pages/Dashboard';
 import { getFeatureComponents } from './services';
 import { Feature } from './services/getComponentsFromFeatureList';
+import LoadingAnimation from 'ui/LoadingAnimation/LoadingAnimation';
 
 
 const Dashboard = lazy(() => import('app/components/Dashboard/Dashboard'));
@@ -76,7 +77,7 @@ function DashboardHost() {
       {user ? 
         <>
           {loading ? 
-            <LoadingPage />
+            <LoadingAnimation />
             : 
             <Dashboard features={features} onLogout={handleLogout} />}
         </>

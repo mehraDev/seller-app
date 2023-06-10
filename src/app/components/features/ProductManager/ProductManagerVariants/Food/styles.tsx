@@ -3,16 +3,18 @@ import media from "ui/Utils/Media/media";
 
 export const ProductManagerWrapper = styled.div`
     height: 100%;
-    background: ${({theme}) => theme.neutralColor.bgLayout};
+    position: relative;
+    background: ${({theme}) => theme.neutralColor.bgContainer};
     box-shadow: 0 2px 4px ${({theme}) => theme.brandColor.primaryBorderHover};
 `;
+
 
 export const ProductsViewerWrapper = styled.div`
     height: calc(100%);
     overflow: scroll;
     padding: 1rem;
     display: flex;
-    gap: 1%;
+    gap: 2%;
     flex-wrap: wrap;
 `;
 
@@ -31,6 +33,7 @@ export const OptionsWrapper = styled.div`
         justify-self: end;
         margin-right: 6rem;
 `;
+
 
 export const OptionsWrapperMobileTab = styled.div`
         position: absolute;

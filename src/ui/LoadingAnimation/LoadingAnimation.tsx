@@ -1,7 +1,6 @@
-import React from 'react';
 import styled, { keyframes } from 'styled-components';
 
-const Loading = () => {
+const LoadingAnimation = () => {
   return (
     <Container>
       <LoadingSpinner />
@@ -38,4 +37,4 @@ const LoadingSpinner = styled.div`
   animation: ${spinAnimation} 0.7s linear infinite;
 `;
 
-export default Loading;
+export default LoadingAnimation;

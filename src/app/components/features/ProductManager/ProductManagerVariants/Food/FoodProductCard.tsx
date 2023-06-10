@@ -17,13 +17,13 @@ interface FoodProductCardProps{
 const FoodProductCardWrapper = styled.div<FoodProductCardWrapperProps>`
     display: flex;
     flex-direction: column;
-    height: 11rem;
     margin-bottom: 0.5rem;
     background-color: white;
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 10px;
     border-radius: 4px;
     overflow: hidden;
     width: 49%;
+    height: 13rem;
+
     ${media.tablet}{
       width: 24%;
     }
@@ -85,14 +85,12 @@ const FoodProductCard: React.FC<FoodProductCardProps> = ({ product,height,width 
     <FoodProductCardWrapper width={width} height={height}>
       <FoodImageWrapper>
         <img src={image || FOOD_DUMMY_PRODUCT_IMAGE} alt={name} />
-        <Icon name={IconName.VegNonveg} color={!veg ? 'red' : 'green'} isHoverable={false}/>
+        {/* <Icon name={IconName.VegNonveg} color={!veg ? 'red' : 'green'} isHoverable={false}/> */}
       </FoodImageWrapper>
-      
-      <div>
-        <div>{name}</div>
-        <p>{description}</p>
-        
-      </div>
+      <FoodLabelWrapper>
+        <LabelWrapper>{name}</LabelWrapper>
+        <PriceWrapper> &#8377; {`${price}`}</PriceWrapper>
+      </FoodLabelWrapper>
     </FoodProductCardWrapper>
   );
 };
@@ -100,15 +98,40 @@ const FoodProductCard: React.FC<FoodProductCardProps> = ({ product,height,width 
 
 const FoodImageWrapper = styled.div`
 position: relative;
-margin: 0.5rem;
+width: 100%;
+height: 25%;
+
   &  > img {
-    width: 100%;
-    height: auto;
-    height: 70%;
-  }
-  &  > svg {
+    height: 9rem;
+    width: 9rem;
     position: absolute;
-    right: 0;
+    border-radius: 50%;
+    margin-left: 14%;
+
   }
 `
+
+const FoodLabelWrapper = styled.div`
+  border: 1px solid ${({theme}) => theme.neutralColor.borderSecondary};
+  padding-top: 54%;
+  box-shadow: ${({theme}) => theme.shadow.boxShadowSecondary};
+  text-align: center;
+  height: 80%;
+  
+  
+  border-radius: 0.5rem;
+  ;
+`;
+
+const PriceWrapper = styled.div`
+  font-size:  ${({theme}) => theme.font.fontSizeSM};
+  font-weight: 600;
+  color:#ff9c09;
+`;
+const LabelWrapper = styled.div`
+  font-size:  ${({theme}) => theme.font.fontSizeLG};
+  color: ${({theme}) => theme.neutralColor.text};
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+`;
 export default FoodProductCard;
