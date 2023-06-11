@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Product } from "../../Host";
+import { Product } from "../../ProductManagerHost";
 import View from "./View";
 import { OptionsWrapper, ControlsWrapper, SelectWrapper, OptionsWrapperMobileTab, OptionItem, OptionsList } from "./styles";
 import Search from "ui/Search/Search";

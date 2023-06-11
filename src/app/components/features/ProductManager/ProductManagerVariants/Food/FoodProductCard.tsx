@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { FoodProduct, Product } from "../../interface/Product";
+import {  IFoodProduct } from "../../interface/Product";
 import media from "ui/Utils/Media/media";
 import Icon, { IconName } from "ui/Icon";
 
@@ -12,7 +12,7 @@ type FoodProductCardWrapperProps = {
 interface FoodProductCardProps{
   height: number;
   width: number
-  product: FoodProduct
+  product: IFoodProduct
 }
 const FoodProductCardWrapper = styled.div<FoodProductCardWrapperProps>`
     display: flex;
@@ -80,7 +80,7 @@ const FoodProductCardWrapper = styled.div<FoodProductCardWrapperProps>`
 
 const FOOD_DUMMY_PRODUCT_IMAGE = 'https://firebasestorage.googleapis.com/v0/b/cloudyug-f2fe4.appspot.com/o/s%2Ffood%2Fp%2Fpizza-1684092131674?alt=media&token=ea09cca2-c93e-4437-abaa-a89eb74caab4'
 const FoodProductCard: React.FC<FoodProductCardProps> = ({ product,height,width }) => {
-  const { name, description, price, image,veg } = product;
+  const { name, description, price, image,isVeg } = product;
   return (
     <FoodProductCardWrapper width={width} height={height}>
       <FoodImageWrapper>
