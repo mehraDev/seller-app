@@ -4,7 +4,7 @@ import FoodAddItemForm from '../ProductManager/AddProductForm/Food/FoodAddItemFo
 const Dashboard = () => {
   return (
     <div>
-      <FoodAddItemForm/>
+      Hello
     </div>
   );
 };

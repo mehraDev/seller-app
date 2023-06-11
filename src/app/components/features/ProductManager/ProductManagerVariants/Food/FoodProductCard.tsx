@@ -2,7 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import {  IFoodProduct } from "../../interface/Product";
 import media from "ui/Utils/Media/media";
-import Icon, { IconName } from "ui/Icon";
 
 type FoodProductCardWrapperProps = {
   width:  number,
