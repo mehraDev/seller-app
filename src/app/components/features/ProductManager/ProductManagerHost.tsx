@@ -1,16 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy } from 'react';
 import { getProductCatalogueList } from 'app/services/features/ProductCatalogue';
-import { Product } from './interface/Product';
-import ProductManager from './ProductManager';
-import ProductManagerVariants from './ProductManagerVariants/ProductManagerVariants';
+import { IProduct, IProductManager } from './interface/Product';
 import LoadingAnimation from 'ui/LoadingAnimation/LoadingAnimation';
+import {  IFoodProductManager } from './ProductManagerVariants/Food/FoodProductManager';
+import styled from 'styled-components';
+
+interface ProductManagerVariantsTypes {
+  [key: string]: React.FC<IProductManager>;
+  food: React.FC<IFoodProductManager>;
+}
+
+const ProductManagerVariants: ProductManagerVariantsTypes = {
+  food: lazy(() => import('./ProductManagerVariants/Food/FoodProductManager')),
+};
 
 const ProductManagerHost: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [hasData, setHasData] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [shopType, setShopType] = useState<string>(''); 
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<IProduct[]>([]);
 
   useEffect(() => {
     const checkAuthorization = (): boolean => {
@@ -53,7 +62,13 @@ const ProductManagerHost: React.FC = () => {
     return <div>Eror</div>;
   }
     
-    return <ProductManager products={products} childComponent={<Manager products={products} />} />;
+  return (
+    <ProductMangerWrapper>
+      <Manager products={products} />
+    </ProductMangerWrapper>)
 };
 
+export const ProductMangerWrapper = styled.div`
+    height: 100%;
+`;
 export default ProductManagerHost;

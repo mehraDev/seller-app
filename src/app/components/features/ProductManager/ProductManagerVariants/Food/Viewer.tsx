@@ -1,17 +1,15 @@
-
-import { FoodProduct, Product } from "../../interface/Product";
-
+import { IFoodProduct } from "../../interface/Product";
 import FoodProductCard from "./FoodProductCard";
 import { ProductsViewerWrapper } from "./styles";
 
 export interface ViewerTypes{
-  products: FoodProduct[];
+  products: IFoodProduct[];
 }
 
 const Viewer : React.FC<ViewerTypes>= ({ products }) => {
     return (
     <ProductsViewerWrapper>
-            {products.map((product:FoodProduct) => (
+            {products.map((product:IFoodProduct) => (
               <FoodProductCard product={product} width={49} height={11}/>
             ))}
     </ProductsViewerWrapper>

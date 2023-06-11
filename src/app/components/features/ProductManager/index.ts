@@ -1,3 +1,3 @@
-import ProductManagerHost from "./Host";
+import ProductManagerHost from "./ProductManagerHost";
 
 export default ProductManagerHost;

@@ -1,10 +1,5 @@
 import styled from "styled-components";
 
-export const ProductCatalogueContainer = styled.div`
-    height: 100%;
-    background: #c0c0c021;
-`;
-
 export const ProductCardWrapper = styled.div`
 display: flex;
 flex-direction: column;

@@ -1,20 +1,20 @@
 import styled from "styled-components";
-import { Product } from "../../interface/Product";
+import { IFoodProduct } from "../../interface/Product";
 import ProductsViewer from "./Viewer";
 import {  ProductManagerWrapper } from "./styles";
 import Options from "./OptionUI/Option";
 import OptionsList from "./OptionUI/OptionList";
 
-export interface FoodProductManagerTypes{
-  products: Product[];
+export interface IFoodProductManager{
+  products: IFoodProduct[];
 }
 
-const FoodProductManager : React.FC<FoodProductManagerTypes>= ({ products }) => {
+const FoodProductManager : React.FC<IFoodProductManager>= ({ products }) => {
     return (
         <ProductManagerWrapper>
-          <Options >
+          {/* <Options >
             <OptionsList />
-          </Options>
+          </Options> */}
             <ProductsViewer  products={products}/>
         </ProductManagerWrapper>);
   };
