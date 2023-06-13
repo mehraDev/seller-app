@@ -1,11 +1,27 @@
 import styled from "styled-components";
 
+interface ILabel {
+    top?: boolean
+}
 
-const Label = styled.label`
-    margin-bottom: 0.25rem;
-    margin-left: 2px;
-    font-weight: 600;
-    margin-right: 0.5rem;
+interface IInputWrapper {
+    top?: boolean
+}
+
+export const InputWrapper = styled.div<IInputWrapper>`
+  display: flex;
+  flex-direction: ${({top}) => top ? 'column' : 'row'};
+  align-items: ${({top}) => top ? '' : 'center'};
+
+  &:focus-within label {
+    color:${({theme}) => theme.brandColor.primary}
+  }
+`;
+
+const Label = styled.label<ILabel>`
+    font-weight: 500;
+    margin-bottom: ${({top}) => top ? '0.25rem' : '0'};
+    margin-right: ${({top}) => !top ? '0.5rem' : '0'};
 `;
 
 const FlexBox = styled.div`

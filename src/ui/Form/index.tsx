@@ -1,12 +1,11 @@
 import Form from "./Form";
-import TextInput from "./Inputs/TextInput";
-import IntegerInput from "./Inputs/IntegerInput";
-import ImageInput from "./Inputs/ImageInput";
-import DescriptionInput from "./Inputs/DescriptionInput";
-import VegNonvegInput from "./Inputs/VegNonvegInput";
+
+import InputImage from "./Inputs/InputImage";
+import InputDescription from "./Inputs/InputDescription";
+import InputRadio from "./Inputs/InputRadio";
 import DropdownInput from "./Inputs/DropdownInput";
-
-
+import InputText from "./Inputs/InputText";
+import InputInteger from "./Inputs/InputInteger";
 
 export default Form;
-export { TextInput ,IntegerInput,DescriptionInput,VegNonvegInput, DropdownInput,ImageInput };
+export { InputText ,InputInteger,InputDescription,InputRadio, DropdownInput,InputImage };

@@ -2,7 +2,7 @@ import React, { lazy, Suspense } from 'react';
 import styled from 'styled-components';
 import Icon, { IconName } from 'ui/Icon';
 
-const FoodAddItemForm = lazy(() => import('./Food/FoodAddItemForm'));
+const FoodAddItemForm = lazy(() => import('./Food/FoodAddProductForm'));
 
 interface IAddProduct {
   shopType: string,
@@ -47,12 +47,17 @@ const Row = styled.div`
   font-size: large;
   display: flex;
   flex-direction: row;
+  font-weight: 700;
   align-items: center;
-  font-weight: 600;
   border-bottom: 1px solid ${({theme }) => theme.neutralColor.border};
-
-  h3{
-    margin-left: 1rem;
+  color: ${({theme }) => theme.brandColor.primaryActive};
+  div{
+    margin-right: 1rem;
+  }
+  h3 {
+    flex-grow: 1;
+    text-align: center;
+    margin-right: 2rem;
   }
 `;
 

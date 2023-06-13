@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { CSSProperties, useEffect, useState } from "react";
-import { faChevronLeft,faRing,faCircleExclamation,faGear,faHouse,faXmark,faBell, faArrowLeft, faArrowRight,faBars,faEllipsisVertical,faChevronDown,faChevronUp } from '@fortawesome/free-solid-svg-icons';
+import { faImage,faChevronLeft,faRing,faCircleExclamation,faGear,faHouse,faXmark,faBell, faArrowLeft, faArrowRight,faBars,faEllipsisVertical,faChevronDown,faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import styled from "styled-components";
 
 
@@ -17,7 +17,8 @@ export enum IconName {
   Setting = 'setting',
   Alert = 'alert',
   VegNonveg = 'vegNonveg',
-  GoBack = 'goBack'
+  GoBack = 'goBack',
+  Image = 'image'
 }
 
 interface Icons {
@@ -37,7 +38,8 @@ export const icons: Icons = {
   setting: faGear,
   alert: faCircleExclamation,
   vegNonveg: faRing,
-  goBack: faChevronLeft
+  goBack: faChevronLeft,
+  image: faImage
 };
 
 
