@@ -1,22 +1,15 @@
-import React, { useState, useEffect, lazy } from 'react';
+import React, { useState, useEffect } from 'react';
 import { getProductCatalogueList } from 'app/services/features/ProductCatalogue';
-import { IProduct, IProductManager } from './interface/Product';
+import { IProduct } from './interfaces/productInterface';
 import LoadingAnimation from 'ui/LoadingAnimation/LoadingAnimation';
-import {  IFoodProductManager } from './ProductManagerVariants/Food/FoodProductManager';
 import styled from 'styled-components';
 import Icon, { IconName } from 'ui/Icon';
-import AddProduct from './AddProductForm/AddProductForm';
+import Viewer from './Viewer';
+import AddProduct from './AddProduct';
 
-interface ProductManagerVariantsTypes {
-  [key: string]: React.FC<IProductManager>;
-  food: React.FC<IFoodProductManager>;
-}
 
-const ProductManagerVariants: ProductManagerVariantsTypes = {
-  food: lazy(() => import('./ProductManagerVariants/Food/FoodProductManager')),
-};
 
-const ProductManagerHost: React.FC = () => {
+const ProductManager: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [hasData, setHasData] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -24,9 +17,9 @@ const ProductManagerHost: React.FC = () => {
   const [products, setProducts] = useState<IProduct[]>([]);
   const [viewMode, setViewMode] = useState< 'list' | 'tile'>('tile');
   const [optionsList,setOptionsList] = useState(false);
-  const [selectedAction, setSelectedAction] = useState<'add' | 'edit'  | 'upload' |  'display'>('display');
+  const [selectedAction, setSelectedAction] = useState<'add' | 'edit'  | 'upload' |  'viewer'>('viewer');
 
-  const handleOptionClick = (action: 'add' | 'edit' | 'upload' | 'display') => {
+  const handleOptionClick = (action: 'add' | 'edit' | 'upload' | 'viewer') => {
     setTimeout(() => {
       setSelectedAction(action);
       setOptionsList(!optionsList)
@@ -41,7 +34,7 @@ const ProductManagerHost: React.FC = () => {
   }
 
   const handleGoBack = () => {
-    setSelectedAction('display');
+    setSelectedAction('viewer');
     setOptionsList(false)
   }
 
@@ -76,7 +69,7 @@ const ProductManagerHost: React.FC = () => {
     }
   }, [hasData]);
 
-  const Manager = ProductManagerVariants[shopType];
+  
 
   if (isLoading) {
     return <LoadingAnimation/>
@@ -87,7 +80,7 @@ const ProductManagerHost: React.FC = () => {
   }
     
   return (
-    <ProductMangerWrapper>
+    <StyledWrapper>
       <ControlsWrapper>
         <OptionsWrapper>
         <OptionIcon>
@@ -106,14 +99,26 @@ const ProductManagerHost: React.FC = () => {
         }
         </OptionsWrapper>
       </ControlsWrapper>
-      {selectedAction === 'display' && <Manager products={products} />}
-      {selectedAction === 'add' && <AddProduct shopType={shopType} backClick={handleGoBack}/>}
-    </ProductMangerWrapper>)
+      {selectedAction === 'viewer' && 
+      <Viewer products={products} shop={shopType}/>
+      }
+      {selectedAction === 'add' && <AddProduct shop={shopType} onClose={handleGoBack}/>}
+    </StyledWrapper>)
 };
 
-export const ProductMangerWrapper = styled.div`
+export const StyledWrapper = styled.div`
     height: 100%;
 `;
+// export const FeatureHeader = styled.div`
+//   font-weight: bold;
+//   padding: 1rem;
+//   font-family: 'Raleway';
+//   color: rgba(59,69,78,1.00);
+//   font-size: 1.5rem;
+//   font-weight: 600;
+//   line-height: 40px;
+
+// `
 export const ControlsWrapper = styled.div`
   width: 100%;
 `;
@@ -150,4 +155,4 @@ export const OptionsList = styled.ul`
   }
 
 `
-export default ProductManagerHost;
+export default ProductManager;

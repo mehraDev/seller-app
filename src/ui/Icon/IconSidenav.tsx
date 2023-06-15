@@ -28,6 +28,9 @@ const TransactionsIcon = lazy(() =>
 const AccountIcon = lazy(() =>
   import('assets/icons/profile.svg').then((module) => ({ default: module.ReactComponent })),
 );
+const FirebaseIcon = lazy(() =>
+  import('assets/icons/profile.svg').then((module) => ({ default: module.ReactComponent })),
+);
 
 export enum IconEnum {
     Home = "Home",
@@ -38,7 +41,8 @@ export enum IconEnum {
     Inventory = "Inventory",
     Transactions = "Transactions",
     Catalogue = "Catalogue",
-    Account = "Account"
+    Account = "Account",
+    Firebase = "Firebase"
 }
 
 interface IconMapType {
@@ -55,6 +59,8 @@ export const iconMap: IconMapType = {
     [IconEnum.Transactions]: TransactionsIcon,
     [IconEnum.Catalogue]: CatalogueIcon,
     [IconEnum.Account]: AccountIcon,
+    [IconEnum.Account]: AccountIcon,
+    [IconEnum.Firebase]: FirebaseIcon,
 };
   
 interface IconSidenavProps {

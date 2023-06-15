@@ -46,7 +46,6 @@ interface DashboardProps {
     });
 
     const activeComponent = features[activeFeature]?.component;
-
     return (
       <DashboardWrapper height={dashboardHeight}>
         <SideNav
@@ -56,7 +55,7 @@ interface DashboardProps {
             show={isSideNavVisible}
             toggleSideNav={setIsSideNavVisible}
         />
-        <MobileHeader toggleSideNav={() => setIsSideNavVisible(!isSideNavVisible)}/>
+        <MobileHeader heading={activeFeature !== 0 ? sideNavList[activeFeature].name : ''} toggleSideNav={() => setIsSideNavVisible(!isSideNavVisible)}/>
         <DashboardBody activeComponent={activeComponent} />
       </DashboardWrapper>
     );

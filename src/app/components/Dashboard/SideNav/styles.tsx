@@ -1,10 +1,28 @@
-import styled from "styled-components"
+import styled, { keyframes } from "styled-components"
 import media from "ui/Utils/Media/media";
 
 interface SideNavWrapperProps {
   show: boolean;
   expanded: boolean
 }
+
+const slideInAnimation = keyframes`
+  from {
+    transform: translateX(-110%);
+  }
+  to {
+    transform: translateX(0);
+  }
+`;
+
+const slideOutAnimation = keyframes`
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-110%);
+  }
+`;
 
 const SideNavWrapper = styled.div<SideNavWrapperProps>`
   position:${({expanded}) => expanded ? 'absolute' : 'relative'};
@@ -14,7 +32,9 @@ const SideNavWrapper = styled.div<SideNavWrapperProps>`
   transition: width 0.2s ease-in-out;
   background: linear-gradient(43deg, rgb(1, 29, 54) 39%, rgb(8, 35, 60) 39%, rgb(7, 31, 54) 100%);
   top: 3.5rem;
-  display:  ${props => props.show  ? 'flex' : 'none'};
+  animation: ${({ show }) => (show ? slideInAnimation : slideOutAnimation)} 0.3s forwards;
+  display:  flex;
+  
   & > div {
         display: none;
     }
@@ -26,10 +46,7 @@ const SideNavWrapper = styled.div<SideNavWrapperProps>`
   & > nav {
     margin-top: 1.5rem;
   }
-  ${media.tablet}{
-      /* width: 35%; */
-      
-  }
+  ${media.tablet}{}
   > div:first-of-type div {
     margin-right: 6rem;
   }

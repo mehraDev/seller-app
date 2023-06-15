@@ -6,17 +6,23 @@ const MobileHeaderWrapper = styled.div`
   top: 0;
   z-index: 100;
   width: 100vw;
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  justify-content: center;
+  height: 3.5rem;
+  color: #013f54;
+  & > div:first-child {
     display: flex;
     align-items: center;
-    padding: 1rem;
-    justify-content: space-between;
-    border-bottom: 1px solid #c9c9c980;
-    height: 3.5rem;
-    & > svg {
-        left: 0;
-        margin-left: 1rem;
-        position: absolute;
-    border-bottom: 1px solid #c9c9c980;
+    position: absolute;
+    left: 1rem;
+  }
+  & > svg {
+      left: 0;
+      margin-left: 1rem;
+      position: absolute;
+      border-bottom: 1px solid #c9c9c980;
     ${media.desktop}{
         display: none;
     }
@@ -31,7 +37,13 @@ interface IconEmptyWrapperProps {
     height?: number;
     color?: string;
   }
-  
+
+  export const HeadingMain = styled.div`
+    font-size: 1.25rem;
+    font-weight: 600;
+    font-family: 'Raleway';
+
+  `
 export  const IconEmptyWrapper = styled.span<IconEmptyWrapperProps>`
     display: inline-block;
     width: ${props => `${props.width ?? 1}rem`};

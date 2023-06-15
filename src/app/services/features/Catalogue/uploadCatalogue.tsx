@@ -1,4 +1,4 @@
-import { Product } from 'app/components/features/ProductManager/interface/Product';
+import { Product } from 'app/components/features/ProductManager/interfaces/productInterface';
 import { addDoc, collection, doc, setDoc } from 'firebase/firestore';
 import { auth, db } from 'firebaseServices/firebase';
 import panjTaraData from "store/menu/menu";

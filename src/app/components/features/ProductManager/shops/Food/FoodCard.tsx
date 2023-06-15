@@ -1,19 +1,19 @@
 import React from "react";
 import styled from "styled-components";
-import {  IFoodProduct } from "../../interface/Product";
+import {  IProductFood } from "../../interfaces/productInterface";
 import media from "ui/Utils/Media/media";
 
-type FoodProductCardWrapperProps = {
+type FoodCardWrapperProps = {
   width:  number,
   height: number
 };
 
-interface FoodProductCardProps{
+interface FoodCardProps{
   height: number;
   width: number
-  product: IFoodProduct
+  product: IProductFood
 }
-const FoodProductCardWrapper = styled.div<FoodProductCardWrapperProps>`
+const FoodCardWrapper = styled.div<FoodCardWrapperProps>`
     display: flex;
     flex-direction: column;
     margin-bottom: 0.5rem;
@@ -78,10 +78,10 @@ const FoodProductCardWrapper = styled.div<FoodProductCardWrapperProps>`
 `;
 
 const FOOD_DUMMY_PRODUCT_IMAGE = 'https://firebasestorage.googleapis.com/v0/b/cloudyug-f2fe4.appspot.com/o/s%2Ffood%2Fp%2Fpizza-1684092131674?alt=media&token=ea09cca2-c93e-4437-abaa-a89eb74caab4'
-const FoodProductCard: React.FC<FoodProductCardProps> = ({ product,height,width }) => {
+const FoodCard: React.FC<FoodCardProps> = ({ product,height,width }) => {
   const { name, description, price, image,isVeg } = product;
   return (
-    <FoodProductCardWrapper width={width} height={height}>
+    <FoodCardWrapper width={width} height={height}>
       <FoodImageWrapper>
         <img src={image || FOOD_DUMMY_PRODUCT_IMAGE} alt={name} />
         {/* <Icon name={IconName.VegNonveg} color={!veg ? 'red' : 'green'} isHoverable={false}/> */}
@@ -90,7 +90,7 @@ const FoodProductCard: React.FC<FoodProductCardProps> = ({ product,height,width 
         <LabelWrapper>{name}</LabelWrapper>
         <PriceWrapper> &#8377; {`${price}`}</PriceWrapper>
       </FoodLabelWrapper>
-    </FoodProductCardWrapper>
+    </FoodCardWrapper>
   );
 };
 
@@ -133,4 +133,4 @@ const LabelWrapper = styled.div`
   font-weight: 500;
   margin-bottom: 0.5rem;
 `;
-export default FoodProductCard;
+export default FoodCard;

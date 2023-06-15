@@ -1,4 +1,4 @@
-import { Product } from "app/components/features/ProductManager/interface/Product";
+import { Product } from "app/components/features/ProductManager/interfaces/productInterface";
 import panjTaraData from "store/menu/menu";
 export const getProductCatalogueList = async (): Promise<Product[]> => {
     try {

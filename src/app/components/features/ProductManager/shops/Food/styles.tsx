@@ -5,18 +5,10 @@ export const ProductManagerWrapper = styled.div`
     height: 100%;
     position: relative;
     background: ${({theme}) => theme.neutralColor.bgContainer};
-    box-shadow: 0 2px 4px ${({theme}) => theme.brandColor.primaryBorderHover};
 `;
 
 
-export const ProductsViewerWrapper = styled.div`
-    height: calc(100%);
-    overflow: scroll;
-    padding: 1rem;
-    display: flex;
-    gap: 2%;
-    flex-wrap: wrap;
-`;
+
 
 export const ControlsWrapper = styled.div`
    padding: 0.5rem 1.5rem;

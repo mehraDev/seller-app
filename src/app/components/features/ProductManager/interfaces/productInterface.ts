@@ -6,9 +6,7 @@ export interface IProduct {
     image?: string;
     
 }
-export interface IProductManager{
-  products: IProduct[];
-}
-export interface IFoodProduct extends IProduct {
+
+export interface IProductFood extends IProduct {
   isVeg? : boolean;
 }

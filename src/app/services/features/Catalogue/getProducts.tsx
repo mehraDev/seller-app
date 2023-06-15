@@ -1,4 +1,4 @@
-import { Product } from "app/components/features/ProductManager/interface/Product";
+import { Product } from "app/components/features/ProductManager/interfaces/productInterface";
 
 import checkProductsInDB from "./checkProductsInDB";
 import fetchProducts from "./fetchProducts";

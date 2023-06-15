@@ -29,7 +29,7 @@ const SideNav: React.FC<SideNavProps> = ({ list, activeFeature, setActiveFeature
   const username = auth.currentUser;
   console.log(username)
   return (
-    <SideNavWrapper show={show} className="sidenav" expanded={isOpen}>
+    <SideNavWrapper show={show} expanded={isOpen}>
       <LogoSideNav hideName={!isOpen} sizeLarge={2}/>
       <SideNavListWrapper expanded={isOpen}>
         {list.map((item,index) => (

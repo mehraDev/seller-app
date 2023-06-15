@@ -1,4 +1,4 @@
-import { Product } from 'app/components/features/ProductManager/interface/Product';
+import { Product } from 'app/components/features/ProductManager/interfaces/productInterface';
 import { openDB } from 'idb';
 const DB_NAME = 'myAppDB';
 const STORE_NAME = 'products';

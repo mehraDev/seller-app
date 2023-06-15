@@ -74,7 +74,7 @@ const FoodAddProductForm = () => {
 };
 
 const FoodForm = styled(Form)`
-  padding: 2rem 2rem 2rem;
+  padding: 2rem;
   margin: 2rem 1rem;
   border-radius: 8px;
   box-shadow: ${({theme}) => theme.shadow.boxShadowSecondary};

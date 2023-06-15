@@ -1,5 +1,5 @@
 
-import FoodAddItemForm from '../ProductManager/AddProductForm/Food/FoodAddProductForm';
+import FoodAddItemForm from '../ProductManager/ProductAddForm/Food/FoodAddProductForm';
 
 const Dashboard = () => {
   return (

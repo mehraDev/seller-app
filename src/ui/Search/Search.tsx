@@ -11,11 +11,11 @@ interface Props {
 
 const SearchInputWrapper = styled.div<{ isFocused: boolean }>`
   width: 100%;
-  border-radius: 4px;
+  border-radius: 16px;
   align-items: center;
   display: flex;
   gap: 1rem;
-  background: ${({theme})=> theme.neutralColor.bgLayout};
+  background: #fff;
   border: 1px solid
     ${({ isFocused, theme }) =>
       isFocused ? theme.brandColor.primaryBorderHover : theme.neutralColor.border};
@@ -31,13 +31,13 @@ const SearchIcon = styled.span`
 
 const SearchInput = styled.input`
   flex: 1;
-  padding: 2px;
+  padding: 0.25rem;
   margin: 2px;
   width: 100%;
   border: 1px solid #ffffff00;
   background: transparent;
   color: ${({ theme }) => theme.neutralColor.text};
-  font-size: ${({ theme }) => theme.font.fontSize};
+  font-size: 1rem;
   &:focus {
     outline: none;
   }
