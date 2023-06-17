@@ -19,7 +19,7 @@ const Button = styled.button`
   padding: 0.5rem;
   border: 1px solid #ccc;
   border-radius: 4px;
-  background-color: ${({theme}) => theme.brandColor.primaryTextActive};
+  background-color:#e51579;
   color: #fff;
   width: fit-content;
 `;

@@ -1,12 +1,12 @@
-import React, {  useEffect, useState } from 'react';
+import React, {  lazy, useEffect, useState } from 'react';
 import SideNav from './SideNav/SideNav';
-
 import DashboardBody from './Body/DashboardBody';
 import { DashboardWrapper } from './styles';
 import MobileHeader from 'ui/MobileHeader';
 import { Feature } from '../DashboardHost/services/getComponentsFromFeatureList';
 
-
+const SellerProfile = lazy(() => import('../Profile/Profile'));
+export const PROFILE_FEATURE_NAME = 'Profile';
 interface DashboardProps {
     features: Feature[];
     onLogout: () => void;
@@ -14,10 +14,17 @@ interface DashboardProps {
 
   const Dashboard: React.FC<DashboardProps> = ({ features }) =>  {
     const [dashboardHeight, setDashboardHeight] = useState(window.innerHeight);
-    const [activeFeature, setActiveFeature] = useState<number>(0); 
+    const [activeFeature, setActiveFeature] = useState<string>(features[0].name); 
     const [isSideNavVisible, setIsSideNavVisible] = useState(false);
-    const handleFeatureChange = (feature: number) => {
+    const [isActiveFeatureProfile,setIsActiveFeatureProfile] = useState(false);
+
+    const handleSideNavProfileClick = () => {
+      setIsActiveFeatureProfile(true);
+      setActiveFeature(PROFILE_FEATURE_NAME);
+    }
+    const handleFeatureChange = (feature: string) => {
       setActiveFeature(feature);
+      setIsActiveFeatureProfile(false)
     };
 
     useEffect(() => {
@@ -45,17 +52,25 @@ interface DashboardProps {
       };
     });
 
-    const activeComponent = features[activeFeature]?.component;
+    let activeComponent;
+    if(isActiveFeatureProfile){
+      activeComponent = SellerProfile;
+    }else{
+      activeComponent = features.find(feature => feature.name === activeFeature)?.component;
+    }
+    const showMobileHeading = activeFeature !== features[0].name ? activeFeature.toUpperCase() : '';
+
     return (
       <DashboardWrapper height={dashboardHeight}>
         <SideNav
-            list={sideNavList}
-            activeFeature={activeFeature}
-            setActiveFeature={handleFeatureChange}
+            navList={sideNavList}
+            activeItem={activeFeature}
+            onItemClick={handleFeatureChange}
             show={isSideNavVisible}
-            toggleSideNav={setIsSideNavVisible}
+            hideSideNav={() => setIsSideNavVisible(false)}
+            onProfileClick={() => handleSideNavProfileClick()}
         />
-        <MobileHeader heading={activeFeature !== 0 ? sideNavList[activeFeature].name : ''} toggleSideNav={() => setIsSideNavVisible(!isSideNavVisible)}/>
+        <MobileHeader heading={showMobileHeading} toggleSideNav={() => setIsSideNavVisible(!isSideNavVisible)}/>
         <DashboardBody activeComponent={activeComponent} />
       </DashboardWrapper>
     );

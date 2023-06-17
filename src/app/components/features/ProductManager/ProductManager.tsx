@@ -68,10 +68,7 @@ const ProductManager: React.FC = () => {
       
     }
   }, [hasData]);
-
-  
-
-  if (isLoading) {
+if (isLoading) {
     return <LoadingAnimation/>
   }
 

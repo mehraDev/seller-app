@@ -5,7 +5,7 @@ import InputImageButton from "ui/Form/Inputs/InputImage";
 import ImageViewer from "ui/ImageViewer/ImageViewer";
 import ImageSearch from "ui/ImageSearch/ImageSearch";
 
-const FormAddProduct = () => {
+const AddProductForm = () => {
   const [itemName, setItemName] = useState("");
   const [price, setPrice] = useState<number | string | undefined>();
   const [image, setImage] = useState("");
@@ -13,7 +13,7 @@ const FormAddProduct = () => {
   const [vegRadio, setVegRadio] = useState<string | 0>(0);
   const [size, setSize] = useState("");
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event:any) => {
     event.preventDefault();
     setItemName("");
     setPrice('');
@@ -74,15 +74,11 @@ const FormAddProduct = () => {
 };
 
 const FoodForm = styled(Form)`
-  padding: 2rem;
-  margin: 2rem 1rem;
-  border-radius: 8px;
-  box-shadow: ${({theme}) => theme.shadow.boxShadowSecondary};
   gap: 1.5rem;
 `   
 
 const StyledButton = styled.button`
-  background-color: ${({ theme }) => theme.brandColor.primaryActive};
+  background-color: #e51579;
   color: #ffffff;
   padding: 1rem;
   border: none;
@@ -93,13 +89,13 @@ const StyledButton = styled.button`
   transition: background-color 0.3s ease;
 
   &:hover {
-    background-color: #1976d2;
+    background-color: #cf136e;
   }
 
   &:focus {
     outline: none;
-    box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.3);
+    box-shadow: 0 0 0 3px rgba(243, 33, 212, 0.3);
   }
 `;
-export default FormAddProduct;
+export default AddProductForm;
 

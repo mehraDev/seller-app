@@ -1,74 +1,72 @@
 
-import SideNavWrapper, {AccountWrapper, SettingButton, SettingPopupWrapepr, SideNavAccountLabel, SideNavItemWrapper, SideNavLabel, SideNavListWrapper, ToggleButton} from './styles';
+import SideNavWrapper, {AccountWrapper, SideNavAccountLabel, SideNavItemWrapper, SideNavLabel, SideNavListWrapper, ToggleButton} from './styles';
 
 import { useState } from 'react';
 import Icon, { IconName, IconSidenav } from 'ui/Icon';
 import { IconEnum } from 'ui/Icon/IconSidenav';
 import { auth } from 'firebaseServices/firebase';
 import LogoSideNav from 'ui/Logo';
+import { PROFILE_FEATURE_NAME } from '../Dashboard';
 
-interface SideNavProps {
-  list: { name: string; icon: keyof typeof IconEnum }[];
-  activeFeature: number;
-  setActiveFeature: (feature: number) => void;
+interface ISideNav {
+  navList: { name: string; icon: keyof typeof IconEnum }[];
+  activeItem: string;
+  onItemClick: (item: string) => void;
   show: boolean;
-  toggleSideNav: (flag: boolean) => void;
+  hideSideNav: () => void;
+  onProfileClick: () => void;
 };
 
-const SideNav: React.FC<SideNavProps> = ({ list, activeFeature, setActiveFeature ,show,toggleSideNav}) => {
-  const [activeItem, setActiveItem] = useState<number>(activeFeature);
-  const [accountPopup, setAccountPopup] = useState<boolean>(false);
-  const [isOpen, setIsOpen] = useState(true);
-  const itemClickHandler = (activeItem:number) => {
-    setActiveFeature(activeItem);
-    setActiveItem(activeItem);
-    if(isOpen){
-      toggleSideNav(false);
+const SideNav: React.FC<ISideNav> = ({onProfileClick, navList, activeItem,onItemClick ,show,hideSideNav}) => {
+  const [isExpanded, setIsExpanded] = useState(true);
+
+  const itemClickHandler = (activeItem:string) => {
+    onItemClick(activeItem);
+    if(isExpanded){
+      hideSideNav();
     }
   };
+
+  const handleProfileClick = () => {
+    onProfileClick();
+    if(isExpanded){
+      hideSideNav();
+    }
+  }
   const username = auth.currentUser;
-  console.log(username)
+  console.log(isExpanded)
   return (
-    <SideNavWrapper show={show} expanded={isOpen}>
-      <LogoSideNav hideName={!isOpen} sizeLarge={2}/>
-      <SideNavListWrapper expanded={isOpen}>
-        {list.map((item,index) => (
+    <SideNavWrapper show={show} expanded={isExpanded}>
+      <LogoSideNav hideName={!isExpanded} sizeLarge={2}/>
+      <SideNavListWrapper expanded={isExpanded}>
+        {navList.map((item,index) => (
           <SideNavItemWrapper
-            key={item.name}
-            onClick={() => itemClickHandler(index)}
-            className={activeItem === index ? 'active' : ''}
+            key={index}
+            onClick={() => itemClickHandler(item.name)}
+            className={activeItem === item.name ? 'active' : ''}
             // isOpen={isOpen}
           >
-            <IconSidenav zoom={!isOpen} iconName={item.icon} />
-            <SideNavLabel show={isOpen}>
+            <IconSidenav zoom={!isExpanded} iconName={item.icon} />
+            <SideNavLabel show={isExpanded}>
               {item.name}
             </SideNavLabel>
           </SideNavItemWrapper>
         ))}
       </SideNavListWrapper>
-      <AccountWrapper expanded={isOpen}>
+      <AccountWrapper expanded={isExpanded} className='sidenav-account'>
       <SideNavItemWrapper
             key={'account'}
-            onClick={() => {}}
+            onClick={handleProfileClick}
+            className={activeItem === PROFILE_FEATURE_NAME ? 'active' : ''}
           >
-            <IconSidenav zoom={!isOpen} iconName={'Account'} />
-            <SideNavAccountLabel show={isOpen}>
+            <IconSidenav zoom={!isExpanded} iconName={'Account'} />
+            <SideNavAccountLabel show={isExpanded}>
             Panj Tara Dhaba
             </SideNavAccountLabel>
           </SideNavItemWrapper>
-          <SettingButton>
-            <Icon name={IconName.Setting} color='white' onClick={() => setAccountPopup(!accountPopup)}/>
-           {accountPopup &&
-            <SettingPopupWrapepr>
-              <span >
-                Logout
-              </span>
-              <Icon name={IconName.RightArrow} color='white'/>
-            </SettingPopupWrapepr>}
-            </SettingButton>
         </AccountWrapper>
-      <ToggleButton onClick={() => setIsOpen(!isOpen)}>
-        <Icon name={isOpen ? IconName.LeftArrow : IconName.RightArrow} color='white'/>
+      <ToggleButton onClick={() => setIsExpanded(!isExpanded)}>
+        <Icon name={isExpanded ? IconName.LeftArrow : IconName.RightArrow} color='white'/>
       </ToggleButton>
      </SideNavWrapper>
   )

@@ -33,22 +33,20 @@ const SideNavWrapper = styled.div<SideNavWrapperProps>`
   background: linear-gradient(43deg, rgb(1, 29, 54) 39%, rgb(8, 35, 60) 39%, rgb(7, 31, 54) 100%);
   top: 3.5rem;
   animation: ${({ show }) => (show ? slideInAnimation : slideOutAnimation)} 0.3s forwards;
-  display:  flex;
+  flex-direction: column;
   
-  & > div {
-        display: none;
-    }
   & > div:first-child {
     height: 3.5rem;
+    display: none;
     border-bottom: 1px solid #9f9f9f;
     padding-left: ${({expanded}) => expanded ? '2rem' : '1.3rem'};
   }
   & > nav {
     margin-top: 1.5rem;
   }
-  ${media.tablet}{}
   > div:first-of-type div {
     margin-right: 6rem;
+   
   }
   ${media.desktop}{
       display: block;
@@ -56,9 +54,13 @@ const SideNavWrapper = styled.div<SideNavWrapperProps>`
       float: left;
       height: calc(100%);
       top: 0rem;
+      animation: none;
       & > div {
         display: flex;
-    }
+      }
+    & > div:first-child {
+    display: flex;
+  }
   }
 `
 
