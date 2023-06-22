@@ -12,8 +12,8 @@ interface IFileExplorer {
 
 const FileExplorer: React.FC<IFileExplorer> = ({root}) => {
   const [currentPath, setCurrentPath] = useState([root]);
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [, setSelectedImage] = useState(null);
+
   const [loading, setLoading] = useState<boolean>(true);
   const [subFoldersList, setSubFoldersList] = useState<string[]>([]);
   const [files, setFilesList] = useState<string[]>([]);
@@ -119,8 +119,5 @@ const SearchBar = styled.div`
   /* Styles for the search bar */
 `;
 
-const GoBackButton = styled.button`
-  /* Styles for the "Go Back" button */
-`;
 
 export default FileExplorer;

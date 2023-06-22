@@ -4,7 +4,6 @@ import SideNavWrapper, {AccountWrapper, SideNavAccountLabel, SideNavItemWrapper,
 import { useState } from 'react';
 import Icon, { IconName, IconSidenav } from 'ui/Icon';
 import { IconEnum } from 'ui/Icon/IconSidenav';
-import { auth } from 'firebaseServices/firebase';
 import LogoSideNav from 'ui/Logo';
 import { PROFILE_FEATURE_NAME } from '../Dashboard';
 
@@ -33,7 +32,7 @@ const SideNav: React.FC<ISideNav> = ({onProfileClick, navList, activeItem,onItem
       hideSideNav();
     }
   }
-  const username = auth.currentUser;
+
   console.log(isExpanded)
   return (
     <SideNavWrapper show={show} expanded={isExpanded}>

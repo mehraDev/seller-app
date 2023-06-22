@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "firebaseServices/firebase";
 
 interface Props {

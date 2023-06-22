@@ -66,7 +66,7 @@ const Icon: React.FC<IconProps> = ({
   clickEffect = true,
   onClick
 }) => {
-  const [isHovered, setIsHovered] = useState(false);
+  const [, setIsHovered] = useState(false);
   const icon = icons[name];
   const [isClicked, setIsClicked] = useState(false);
 

@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useRef } from "react";
+import React,{ useRef } from "react";
 import styled from "styled-components";
 import Icon, { IconName } from "ui/Icon";
 import resizeImage from "ui/Utils/Media/imageResizer";
