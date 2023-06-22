@@ -5,6 +5,7 @@ async function getShopType(): Promise<string | undefined> {
   try {
     const user = auth.currentUser;
     if (user) {
+      console.log('user')
       const userId = user.uid;
       const location = `sellers/${userId}/private`;
       const documentData = await fetchDocument(location, 'profile');
@@ -18,7 +19,7 @@ async function getShopType(): Promise<string | undefined> {
       }
     } else {
       console.log("User is not logged in.");
-      return undefined;
+      return 'food';
     }
   } catch (error) {
     console.error("Error retrieving shop type:", error);

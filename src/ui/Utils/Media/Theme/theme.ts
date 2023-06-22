@@ -9,8 +9,21 @@ const brandColor = {
     primaryTextHover: '#2692eb',
     primaryText: '#0174de',
     primaryTextActive: '#0059b8',
+
+     // color: Pink
+    pinkBg: '#fdeaf1',
+    pinkBgHover: '#f7c7dc',
+    pinkBorder: '#f199b1',
+    pinkBorderHover: '#e87392',
+    pinkHover: '#e51579',
+    pink: '#e51579',
+    pinkActive: '#c20f62',
+    pinkTextHover: '#e51579',
+    pinkText: '#e51579',
+    pinkTextActive: '#c20f62',
   };
   
+
   const neutralColor = {
     text: 'rgba(0, 0, 0, 0.88)',
     textSecondary: 'rgba(0, 0, 0, 0.65)',
@@ -39,6 +52,8 @@ const brandColor = {
     fontSizeHeading3: '24px',
     fontSizeHeading4: '20px',
     fontSizeHeading5: '16px',
+  };
+  const lineHeight = {
     lineHeight: 1.5714285714285714,
     lineHeightSM: 1.6666666666666667,
     lineHeightLG: 1.5,
@@ -47,7 +62,7 @@ const brandColor = {
     lineHeightHeading3: 1.3333333333333333,
     lineHeightHeading4: 1.4,
     lineHeightHeading5: 1.5,
-  };
+  }
   const shadow = {
     boxShadowSecondary: 'rgba(60, 66, 87, 0.08) 0px 15px 35px 0px, rgba(0, 0, 0, 0.12) 0px 5px 15px 0px',
     boxShadow:'0 6px 16px 0 rgba(0, 0, 0, 0.08),0 3px 6px -4px rgba(0, 0, 0, 0.12),0 9px 28px 8px rgba(0, 0, 0, 0.05)'
@@ -57,6 +72,7 @@ const brandColor = {
     brandColor,
     neutralColor,
     font,
+    lineHeight,
     shadow
   };
   

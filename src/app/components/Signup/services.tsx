@@ -31,14 +31,16 @@ async function signupUserWithEmailAndPassword(email: string, password: string): 
 }
 
 async function createLicense(userCredential: UserCredential) : Promise<void> {
-  const joiningDate = userCredential.user.metadata.creationTime as string;
-  const freeLicenseExpiration = new Date(joiningDate);
-  freeLicenseExpiration.setDate(freeLicenseExpiration.getDate() + 3);
+  const date = userCredential.user.metadata.creationTime as string;
+  const licenseStartDate = new Date(date);
+  const licenseEndDate = new Date(licenseStartDate.getTime());
+  licenseEndDate.setDate(licenseEndDate.getDate() + 3);
 
   const licenseData = {
-    licenseType: 'free',
-    licenseExpiration: freeLicenseExpiration,
-    freeLicenseExpiration: freeLicenseExpiration,
+    license: 'free',
+    licenseCode: 'free3d',
+    startDate:  licenseStartDate,
+    endDate: licenseEndDate,
   };
   try {
     await createDocument(`sellers/${userCredential.user.uid}/admin`,'license', licenseData)
@@ -54,7 +56,7 @@ async function createLicense(userCredential: UserCredential) : Promise<void> {
         throw new Error('Failed to create user profile: cannot create seller document');
       }
     try {
-        await createDocument(`sellers/${userCredential.user.uid}/private`, 'profile' ,profile);
+        await createDocument(`sellers/${userCredential.user.uid}/private`, 'profile', profile);
       } catch (error) {
         throw new Error('Failed to create user profile: Cannot create private collection');
       }

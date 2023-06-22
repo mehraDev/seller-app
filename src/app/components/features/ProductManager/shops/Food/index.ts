@@ -1,3 +1,3 @@
-import Viewer from "./Viewer";
+import ProductViewerFood from "./ProductViewerFood";
 
-export default Viewer;
+export default ProductViewerFood;

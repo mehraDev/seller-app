@@ -12,10 +12,6 @@ export const InputWrapper = styled.div<IInputWrapper>`
   display: flex;
   flex-direction: ${({top}) => top ? 'column' : 'row'};
   align-items: ${({top}) => top ? '' : 'center'};
-
-  &:focus-within label {
-    color:${({theme}) => theme.brandColor.primary}
-  }
 `;
 
 const Label = styled.label<ILabel>`

@@ -23,7 +23,7 @@ const AddProduct: React.FC<IAddProduct> = ({ shop ,onClose}) => {
 
   return (
     <StyledWrapper>
-      <Header color='#e51579'>
+      <Header color='#d82b7e'>
         <h3>Add Product</h3>
         <Icon name={IconName.Close} onClick={() => onClose()}/>
       </Header>
@@ -57,7 +57,6 @@ const Header = styled.div<IStyledHeader>`
   align-items: center;
   justify-content: space-between;
   margin-bottom: 1.5rem;
-  border-bottom: 1px solid #e5157991;
   padding-bottom: 16px;
 `;
 export default AddProduct;

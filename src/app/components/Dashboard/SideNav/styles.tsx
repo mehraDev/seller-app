@@ -25,7 +25,7 @@ const slideOutAnimation = keyframes`
 `;
 
 const SideNavWrapper = styled.div<SideNavWrapperProps>`
-  position:${({expanded}) => expanded ? 'absolute' : 'relative'};
+  position:${({expanded,show}) => (!expanded  && show ) ? 'relative' : 'absolute'};
   float: left;
   z-index: 100;
   height: calc(100% - 3.5rem);

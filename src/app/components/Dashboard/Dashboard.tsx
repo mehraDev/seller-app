@@ -17,7 +17,7 @@ interface DashboardProps {
     const [activeFeature, setActiveFeature] = useState<string>(features[0].name); 
     const [isSideNavVisible, setIsSideNavVisible] = useState(false);
     const [isActiveFeatureProfile,setIsActiveFeatureProfile] = useState(false);
-
+    console.log('features',features)
     const handleSideNavProfileClick = () => {
       setIsActiveFeatureProfile(true);
       setActiveFeature(PROFILE_FEATURE_NAME);

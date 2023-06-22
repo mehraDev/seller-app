@@ -13,6 +13,18 @@ declare module 'styled-components' {
       primaryTextHover: string;
       primaryText: string;
       primaryTextActive: string;
+
+      pinkBg: string;
+      pinkBgHover: string;
+      pinkBorder: string;
+      pinkBorderHover: string;
+      pinkHover: string;
+      pink: string;
+      pinkActive: string;
+      pinkTextHover: string;
+      pinkText: string;
+      pinkTextActive: string;
+      
     };
     neutralColor: {
       text: string;
@@ -43,14 +55,14 @@ declare module 'styled-components' {
       fontSizeHeading5: string;
     };
     lineHeight: {
-      lineHeight: string;
-      lineHeightSM: string;
-      lineHeightLG: string;
-      lineHeightHeading1: string;
-      lineHeightHeading2: string;
-      lineHeightHeading3: string;
-      lineHeightHeading4: string;
-      lineHeightHeading5: string;
+      lineHeight: number;
+      lineHeightSM: number;
+      lineHeightLG: number;
+      lineHeightHeading1: number;
+      lineHeightHeading2: number;
+      lineHeightHeading3: number;
+      lineHeightHeading4: number;
+      lineHeightHeading5: number;
     };
     shadow :{
       boxShadow: string;

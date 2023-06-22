@@ -18,8 +18,7 @@ const SignupForm: React.FC<Props> = ({ onExistingUserClick }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    // Validate form fields
+    
     if (
       !firstName ||
       !lastName ||

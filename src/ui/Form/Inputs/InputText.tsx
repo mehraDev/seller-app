@@ -2,17 +2,21 @@ import React, { ChangeEvent } from "react";
 import styled, { css } from "styled-components";
 import { InputWrapper, Label } from "./styles";
 import { IInput } from "./interface";
+import Error from "ui/Error";
 
 interface IInputText extends IInput{
   value: string;
-  onChange: (value:string) => void
+  onChange: (value:string) => void,
+  borderColor?: string
+  error? : string
 }
-const Input = styled.input<{ hasValue: boolean }>`
+const Input = styled.input<{ hasValue: boolean ,borderColor:string}>`
   color: ${({theme}) => theme.neutralColor.text};
   font-weight: 400;
   border-width: 1px;
-  padding: 8px 8px;
+  padding: 8px ;
   font-size: 1rem;
+  width: 100%;
   
   border-color: ${({theme}) => theme.neutralColor.border};
   border-radius: 4px;
@@ -20,17 +24,9 @@ const Input = styled.input<{ hasValue: boolean }>`
   outline: none;
   transition: border-color 0.3s ease;
   &:focus  {
-    border-color:${({theme}) => theme.brandColor.primary};
+    border-color:${({borderColor,theme}) => borderColor ? borderColor : theme.brandColor.primary};
     outline: none;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
-  }
-  &:focus  + label{
-    border-color:${({theme}) => theme.brandColor.primary};
-    outline: none;
-    box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
-  }
-  &:focus + label {
-    color: ${({ theme }) => theme.brandColor.primary};
   }
 `;
 
@@ -40,7 +36,9 @@ const InputText: React.FC<IInputText> = ({
   onChange,
   placeholder,
   required,
-  labelTop = true
+  labelTop = true,
+  borderColor,
+  error
 }) => {
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     onChange(event.target.value);
@@ -53,6 +51,7 @@ const InputText: React.FC<IInputText> = ({
         {label}
         {required && '*'}
         </Label>}
+        <div>
       <Input
         type="text"
         value={value}
@@ -60,7 +59,10 @@ const InputText: React.FC<IInputText> = ({
         placeholder={placeholder}
         hasValue={value !== ""}
         required={required}
+        borderColor={borderColor}
       />
+       {error && <Error>{error}</Error>}
+       </div>
     </InputWrapper>
   );
 };

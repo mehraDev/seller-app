@@ -1,6 +1,6 @@
 import React, { ReactNode, Suspense } from 'react';
 import LoadingAnimation from 'ui/LoadingAnimation/LoadingAnimation';
-import BodyWrapper from './styles';
+import BodyWrapper, { ActiveComponentWrapper } from './styles';
 
 interface DashboardBodyProps {
   activeComponent: React.ComponentType<any> | undefined;
@@ -12,7 +12,10 @@ const DashboardBody: React.FC<DashboardBodyProps> = ({ activeComponent: ActiveCo
     <BodyWrapper className='dashboard-body'>
       {ActiveComponent ? (
         <LazyComponentWrapper>
-            <ActiveComponent/>
+          <ActiveComponentWrapper>
+          <ActiveComponent/>
+          </ActiveComponentWrapper>
+            
         </LazyComponentWrapper>
        
       ) : (

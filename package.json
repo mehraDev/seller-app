@@ -40,7 +40,8 @@
     "styled-components": "^5.3.9",
     "styled-reset": "^4.4.7",
     "typescript": "^4.9.5",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "workbox-core": "^7.0.0"
   },
   "scripts": {
     "start": "PORT=3002 react-scripts start",
@@ -82,7 +83,8 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "jest": "^27.5.1",
     "prettier": "2.8.7",
-    "webpack-cli": "^5.0.1"
+    "webpack-cli": "^5.0.1",
+    "workbox-webpack-plugin": "^7.0.0"
   },
   "jest": {
     "moduleNameMapper": {

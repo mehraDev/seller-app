@@ -104,7 +104,6 @@ if (isLoading) {
 };
 
 export const StyledWrapper = styled.div`
-    height: 100%;
 `;
 // export const FeatureHeader = styled.div`
 //   font-weight: bold;

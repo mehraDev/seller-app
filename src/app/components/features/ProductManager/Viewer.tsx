@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { IProduct } from "./interfaces/productInterface";
-import shopViewer from "./shops/shopViewer";
+import shopList from "./shops/supportedShopsList";
 
 export interface IViewer{
   products: IProduct[];
@@ -8,7 +8,7 @@ export interface IViewer{
 }
 
 const Viewer : React.FC<IViewer>= ({ products ,shop }) => {
-  const ShopViewer = shopViewer[shop]; 
+  const ShopViewer = shopList[shop]; 
   return (
     <StyledWrapper>
       <ShopViewer products={products}/>

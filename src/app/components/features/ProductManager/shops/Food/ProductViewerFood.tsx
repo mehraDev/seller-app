@@ -1,15 +1,16 @@
 import { IProductFood } from "../../interfaces/productInterface";
 import { IViewerFood } from "../../interfaces/viewerInterface";
-import FoodCard from "./FoodCard";
+import ProductCardFood from "./ProductCardFood";
 
-const Viewer : React.FC<IViewerFood>= ({ products }) => {
+
+const ProductViewerFood : React.FC<IViewerFood>= ({ products }) => {
     return (
     <>
         {products.map((foodItem:IProductFood) => (
-              <FoodCard product={foodItem} width={49} height={11}/>
+              <ProductCardFood product={foodItem} />
         ))}
     </>
     )
   };
 
-export default Viewer;
+export default ProductViewerFood;

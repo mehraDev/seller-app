@@ -8,7 +8,6 @@ import { getFeatureComponents } from './services';
 import { Feature } from './services/getComponentsFromFeatureList';
 import LoadingAnimation from 'ui/LoadingAnimation/LoadingAnimation';
 
-
 const Dashboard = lazy(() => import('app/components/Dashboard/Dashboard'));
 
 function DashboardHost() {
@@ -16,7 +15,6 @@ function DashboardHost() {
   const [loading, setLoading] = useState(true);
   const [features, setFeatures] = useState<Feature[] | []>([]);
   const [dashboardHeight, setDashboardHeight] = useState(window.innerHeight);
-
     useEffect(() => {
       const handleResize = () => {
         setDashboardHeight(window.innerHeight);
@@ -36,25 +34,44 @@ function DashboardHost() {
     }, []);
 
     useEffect(() => {
-      const unsubscribe = onAuthStateChanged(auth, async (user) => {
-        if (user) {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+        console.log('stored user exits')
+      } else {
+        const unsubscribe = onAuthStateChanged(auth, async (user) => {
+          if (user) {
+            try {
+              setUser(user);
+              localStorage.setItem('user', JSON.stringify(user.uid));
+            } catch (error) {
+              setLoading(false);
+            }
+          }
+        });
+    
+        return () => {
+          unsubscribe();
+        };
+      }
+    }, []);
+    
+    useEffect(() => {
+      if (user) {
+        // Perform actions when user is available
+        // For example, update the features or fetch additional data
+        const fetchData = async () => {
           try {
-            const featureList = await getFeatureComponents();
-            setFeatures(featureList);
-            setUser(user);
+            const updatedFeatureList = await getFeatureComponents();
+            setFeatures(updatedFeatureList);
             setLoading(false);
           } catch (error) {
-            console.error('Error fetching feature list:', error);
-            setLoading(false);
           }
-        }
-    });
+        };
     
-      return () => {
-        unsubscribe();
-      };
+        fetchData();
+      }
     }, [user]);
-
     // useEffect(() => {
     //   if(user){
     //     const stopOnlineIndicator = onlineIndicator();
