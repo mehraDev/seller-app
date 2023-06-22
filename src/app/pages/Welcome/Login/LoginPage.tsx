@@ -29,7 +29,7 @@ const LoginPage: React.FC<LoginPageProps> = () => {
         <p>Empowering Local Businesses, Digitally!</p>
       </div>
       <div>
-        <LoginForm />
+        <LoginForm  onAccountCreation={() => console.log('s')}/>
       </div>
     </>
   );

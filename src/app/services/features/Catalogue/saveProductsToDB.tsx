@@ -1,9 +1,9 @@
-import { Product } from 'app/components/features/ProductManager/interfaces/productInterface';
+import { IProduct } from 'app/components/features/ProductManager/interfaces/productInterface';
 import { openDB } from 'idb';
 const DB_NAME = 'myAppDB';
 const STORE_NAME = 'products';
 
-const saveProductsDB = async (products: Product[]) => {
+const saveProductsDB = async (products: IProduct[]) => {
   const db = await openDB(DB_NAME, 1, {
     upgrade(db) {
       db.createObjectStore(STORE_NAME, { keyPath: 'id' });

@@ -1,7 +1,7 @@
 import {doc, collection, setDoc} from 'firebase/firestore'
 import {db} from '../firebase'
 
-const addRegistrationDetailsToSeller = async (sellerId) => {
+const addRegistrationDetailsToSeller = async (sellerId: string) => {
   const registrationDetails = {
     shopName: 'Panj Tara',
     shopLocation: '123 M, Near Jhuthra Dharamshala surkhab chownk ',

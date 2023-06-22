@@ -29,6 +29,7 @@ const Login: React.FC<LoginProps> = ({ onAccountCreation }) => {
     setEmailError('');
     setPasswordError('');
     setErrorMessage('');
+    setShowPassword(false)
     // validation 
     if (!emailOrId) {
       setEmailError('Email is required');
@@ -68,7 +69,7 @@ const Login: React.FC<LoginProps> = ({ onAccountCreation }) => {
       />
       {emailError && 
         <ErrorWrapper>
-          <Error message={emailError} />
+          <Error children={emailError} />
           </ErrorWrapper>
       }
       <Input
@@ -79,12 +80,12 @@ const Login: React.FC<LoginProps> = ({ onAccountCreation }) => {
       />
       {passwordError && 
       <ErrorWrapper>
-      <Error message={passwordError} />
+      <Error children={passwordError} />
       </ErrorWrapper>
       }
       {errorMessage && 
         <ErrorWrapper>
-        <Error message={errorMessage} />
+        <Error children={errorMessage} />
         </ErrorWrapper>
       }
       <Button

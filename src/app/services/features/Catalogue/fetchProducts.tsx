@@ -1,9 +1,9 @@
-import { Product } from 'app/components/features/ProductManager/interfaces/productInterface';
+import { IProduct } from 'app/components/features/ProductManager/interfaces/productInterface';
 import { getDoc, doc } from 'firebase/firestore';
 import { auth, db } from 'firebaseServices/firebase';
 
 
-const fetchProducts = async (): Promise<Product[]> => { // Specify the return type as Promise<Products>
+const fetchProducts = async (): Promise<IProduct[]> => { // Specify the return type as Promise<Products>
   try {
     const user = auth.currentUser;
         if (!user) {
@@ -15,7 +15,7 @@ const fetchProducts = async (): Promise<Product[]> => { // Specify the return ty
     if (docSnapshot.exists()) {
       console.log('inside fetch products',`sellers/${user.uid}/products`,docSnapshot);
 
-      const products = docSnapshot.data() as Product[]; // Cast the data to the Products type
+      const products = docSnapshot.data() as IProduct[]; // Cast the data to the Products type
       return products; // Return the products data
     } else {
       throw new Error('Document does not exist');

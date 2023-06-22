@@ -34,7 +34,7 @@ const WelcomePage: React.FC<WelcomePageProps> = () => {
         <h2>Digibhoomi Connects Local Sellers and Buyers</h2>
       </BrandWrapper>
       <LoginWrapper>
-      <Login />
+      <Login onAccountCreation={() => console.log('los')}/>
       </LoginWrapper>
         
     </WelcomePageWrapper>

@@ -1,7 +1,7 @@
 import {collection, doc, setDoc} from 'firebase/firestore'
 import {db} from '../firebase'
 
-const addLicenseDetailsToSeller = async (sellerId, licenseType) => {
+const addLicenseDetailsToSeller = async (sellerId:string, licenseType:string) => {
   try {
     const licenseDocRef = doc(collection(db, 'sellers', sellerId, 'license'), 'licenseDetails')
     await setDoc(licenseDocRef, {

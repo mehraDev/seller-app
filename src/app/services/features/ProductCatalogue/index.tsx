@@ -1,8 +1,9 @@
-import { Product } from "app/components/features/ProductManager/interfaces/productInterface";
-import panjTaraData from "store/menu/menu";
-export const getProductCatalogueList = async (): Promise<Product[]> => {
+import { IProduct } from "app/components/features/ProductManager/interfaces/productInterface";
+import panjTaraData from "./dummyDAta";
+
+export const getProductCatalogueList = async (): Promise<IProduct[]> => {
     try {
-      const response: Product[] = panjTaraData;
+      const response: IProduct[] = panjTaraData;
       return response;
     } catch (error) {
       const errMsg = 'Failed to fetch products';

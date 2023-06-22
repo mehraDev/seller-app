@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent } from "react";
 import styled from "styled-components";
 import { InputWrapper, Label } from "./styles";
 import { IInput } from "./interface";
@@ -42,7 +42,7 @@ const InputInteger: React.FC<IInputInteger> = ({
   required,
   labelTop = true,
   width,
-  borderColor,
+  borderColor ='',
   error
 }) => {
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {

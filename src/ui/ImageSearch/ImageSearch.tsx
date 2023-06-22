@@ -93,7 +93,7 @@ const DotContainer = styled.div`
   justify-content: center;
 `;
 
-const Dot = styled.span`
+const Dot = styled.span<{index?:number}>`
   display: inline-block;
   width: 6px;
   height: 6px;
@@ -101,7 +101,7 @@ const Dot = styled.span`
   background-color: #ccc;
   margin: 0 2px;
   animation: ${LoaderAnimation} 1s infinite;
-  animation-delay: ${({ index }) => index * 0.1}s;
+  animation-delay: ${({ index }) =>index && index * 0.1}s;
 `;
 
 const NoImagesFound = styled.p`

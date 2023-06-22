@@ -12,8 +12,8 @@ import { sendMessageToServiceWorker } from "pwa/serviceWorkerRegistration";
 
 const AddProductForm = () => {
   const [itemName, setItemName] = useState("");
-  const [price, setPrice] = useState<number | string | undefined>(0);
-  const [image, setImage] = useState("");
+  const [price, setPrice] = useState<number  | undefined>(0);
+  const [image, setImage] = useState<File | null>(null);
   const [description, setDescription] = useState("");
   const [itemType, setItemType] = useState<string | 0>(0);
   const [nameError, setNameError] = useState('');
@@ -29,6 +29,7 @@ const AddProductForm = () => {
     
     if (!itemName) {
       setNameError('Please enter the product name.');
+    console.log(isAdding)
     }
     if (!price) {
       setPriceError('Please enter the product price.');
@@ -59,8 +60,8 @@ const AddProductForm = () => {
   
       if (success) {
         setItemName("");
-        setPrice("");
-        setImage("");
+        setPrice(undefined);
+        setImage(null);
         setDescription("");
         setItemType(0);
 
@@ -114,7 +115,7 @@ const AddProductForm = () => {
         error={typeError}
       />
       <ImageWrapper>
-        <InputImageButton onChange={(s) => {console.log(s);setImage(s)}}/>
+        <InputImageButton onChange={(s) => {setImage(s)}}/>
         {image && 
         <ImageViewerWrapper>
         <DescriptionText>Selected Image</DescriptionText>

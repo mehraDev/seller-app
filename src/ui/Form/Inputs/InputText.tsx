@@ -1,5 +1,5 @@
 import React, { ChangeEvent } from "react";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import { InputWrapper, Label } from "./styles";
 import { IInput } from "./interface";
 import Error from "ui/Error";
@@ -7,7 +7,7 @@ import Error from "ui/Error";
 interface IInputText extends IInput{
   value: string;
   onChange: (value:string) => void,
-  borderColor?: string
+  borderColor?: string | undefined
   error? : string
 }
 const Input = styled.input<{ hasValue: boolean ,borderColor:string}>`
@@ -37,7 +37,7 @@ const InputText: React.FC<IInputText> = ({
   placeholder,
   required,
   labelTop = true,
-  borderColor,
+  borderColor = '',
   error
 }) => {
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {

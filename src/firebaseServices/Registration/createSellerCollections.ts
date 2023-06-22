@@ -1,7 +1,7 @@
 import {collection, doc, setDoc} from 'firebase/firestore'
 import {db} from '../firebase'
 
-async function createSellerCollections(sellerId) {
+async function createSellerCollections(sellerId:string) {
   // Create the Seller Info collection
   const sellerInfoRef = doc(collection(db, 'sellers', sellerId, 'sellerInfo'), sellerId)
   await setDoc(sellerInfoRef, {

@@ -1,7 +1,7 @@
-import { Product } from 'app/components/features/ProductManager/interfaces/productInterface';
-import { addDoc, collection, doc, setDoc } from 'firebase/firestore';
+import { addDoc, collection, doc } from 'firebase/firestore';
 import { auth, db } from 'firebaseServices/firebase';
-import panjTaraData from "store/menu/menu";
+import panjTaraData from '../ProductCatalogue/dummyDAta';
+
 
 const uploadCatalogue = async ( ): Promise<void> => {
     try {

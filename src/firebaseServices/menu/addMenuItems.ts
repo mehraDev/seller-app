@@ -1,11 +1,11 @@
-import {collection, doc, setDoc, writeBatch} from '@firebase/firestore'
+import {collection, doc, writeBatch} from '@firebase/firestore'
 import {db} from '../firebase'
 
-async function addMenuItems(sellerId, menuItems) {
+async function addMenuItems(sellerId:string, menuItems:any) {
   console.log(`Adding menu items for ${sellerId} , menuItems: `, menuItems)
   const batch = writeBatch(db)
 
-  menuItems.forEach((item) => {
+  menuItems.forEach((item:any) => {
     const newItemRef = doc(collection(db, `sellers/${sellerId}/menu`))
     batch.set(newItemRef, item)
   })

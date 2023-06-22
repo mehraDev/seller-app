@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 interface ImageViewerProps {
-  images: string[];
+  images: string[] | File[];
   width?: string;
   height?: string;
 }
@@ -35,7 +35,7 @@ const ImageViewer: React.FC<ImageViewerProps> = ({ images, width, height }) => {
   return (
     <ImageGrid width={width} height={height}>
       {images.map((src, index) => (
-        <Image key={index} src={src} alt={`Image ${index}`} width={width} height={height}/>
+        <Image key={index}  alt={`Image ${index}`} width={width} height={height}/>
       ))}
     </ImageGrid>
   );
