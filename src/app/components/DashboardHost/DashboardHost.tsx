@@ -1,12 +1,13 @@
-import React, { lazy, useEffect, useState } from 'react';
+import { lazy, useEffect, useState } from 'react';
 import { User, getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from 'firebaseServices/firebase';
 import HostWrapper from './styles';
 
 import {  AuthenticationPage } from 'app/pages/Dashboard';
-import { getFeatureComponents } from './services';
+
 import { Feature } from './services/getComponentsFromFeatureList';
 import LoadingAnimation from 'ui/LoadingAnimation/LoadingAnimation';
+import { getFeatures } from './services';
 
 const Dashboard = lazy(() => import('app/components/Dashboard/Dashboard'));
 
@@ -37,7 +38,6 @@ function DashboardHost() {
       const storedUser = localStorage.getItem('user');
       if (storedUser) {
         setUser(JSON.parse(storedUser));
-        console.log('stored user exits')
       } else {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
           if (user) {
@@ -58,17 +58,14 @@ function DashboardHost() {
     
     useEffect(() => {
       if (user) {
-        // Perform actions when user is available
-        // For example, update the features or fetch additional data
         const fetchData = async () => {
           try {
-            const updatedFeatureList = await getFeatureComponents();
+            const updatedFeatureList = await getFeatures();
             setFeatures(updatedFeatureList);
             setLoading(false);
           } catch (error) {
           }
         };
-    
         fetchData();
       }
     }, [user]);
