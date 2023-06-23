@@ -1,6 +1,6 @@
 import { lazy } from 'react';
 import { IconEnum } from '../../../../ui/Icon/IconSidenav';
-import { FeaturesEnum } from './getFeaturesList';
+import { FeaturesEnum } from './getFeaturesFromShopType';
 
 const DashboardComponent = lazy(() => import('app/components/features/Dashboard/Dashboard'));
 const BillingComponent = lazy(() => import('app/components/features/Billing/Billing'));
@@ -69,8 +69,8 @@ const ComponentList : ComponentListType= {
     }
 };
 
-function getComponentsFromFeatureList(featureList: FeaturesEnum[]) :Feature[]{
+function getComponentsFromFeatures(featureList: FeaturesEnum[]) :Feature[]{
   return featureList.map((feature) => ComponentList[feature]);
 }
 
-export default getComponentsFromFeatureList;
+export default getComponentsFromFeatures;

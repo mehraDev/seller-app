@@ -11,7 +11,6 @@ import { Workbox } from 'workbox-window';
 registerServiceWorker();
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 if ('serviceWorker' in navigator) {
-  console.log('service worker fi')
   const workbox = new Workbox('/service-worker.js');
   workbox.register();
 }

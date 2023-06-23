@@ -1,4 +1,3 @@
-
 import SideNavWrapper, {AccountWrapper, SideNavAccountLabel, SideNavItemWrapper, SideNavLabel, SideNavListWrapper, ToggleButton} from './styles';
 
 import { useState } from 'react';

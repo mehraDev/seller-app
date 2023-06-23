@@ -3,7 +3,7 @@ import SideNav from './SideNav/SideNav';
 import DashboardBody from './Body/DashboardBody';
 import { DashboardWrapper } from './styles';
 import MobileHeader from 'ui/MobileHeader';
-import { Feature } from '../DashboardHost/services/getComponentsFromFeatureList';
+import { Feature } from '../DashboardHost/services/getComponentsFromFeatures';
 
 const SellerProfile = lazy(() => import('../Profile/Profile'));
 export const PROFILE_FEATURE_NAME = 'Profile';

@@ -1,5 +1,5 @@
-import getShopType from "./getShopType";
-import getFeaturesList from "./getFeaturesList";
-import getFeatures from "./getFeatures";
+import getShopType from "./fetchShopType";
+import getFeaturesList from "./getFeaturesFromShopType";
+import getFeatureComponents from "./getFeatureComponents";
 
-export {getShopType , getFeatures,getFeaturesList};
+export {getShopType , getFeatureComponents,getFeaturesList};

@@ -1,29 +1,21 @@
-import { auth } from "firebaseServices/firebase";
+
 import { fetchDocument } from "firebaseServices/firestore/document";
+import { getUserID } from "./getUserID";
 
-async function getShopType(): Promise<string | undefined> {
+async function getShopType(): Promise<string | 0> {
+  const userId = getUserID();
+  const PROFILE_LOCATION = `sellers/${userId}/private`;
   try {
-    const user = auth.currentUser;
-    if (user) {
-      console.log('user')
-      const userId = user.uid;
-      const location = `sellers/${userId}/private`;
-      const documentData = await fetchDocument(location, 'profile');
+    const documentData = await fetchDocument(PROFILE_LOCATION, 'profile');
 
-      if (documentData && documentData.shopType) {
-        const shopType = documentData.shopType;
-        return shopType;
-      } else {
-        console.log("Shop Type does not exist for", userId);
-        return undefined;
-      }
-    } else {
-      console.log("User is not logged in.");
-      return 'food';
-    }
+    if (documentData && documentData.shopType) {
+      const shopType = documentData.shopType;
+      return shopType;
+    } 
+    
+    return 0;
   } catch (error) {
-    console.error("Error retrieving shop type:", error);
-    throw new Error("Failed to retrieve shop type");
+    throw new Error("Failed to get shop type");
   }
 }
 

@@ -1,6 +1,3 @@
-import getShopType from "./getShopType";
-
-
 export enum FeaturesEnum {
   Home = "Home",
   Billing = "Billing",
@@ -13,10 +10,7 @@ export enum FeaturesEnum {
   ImagePoolManagerAdmin = 'ImagePoolManagerAdmin'
 }
 
-const getFeaturesList = async (): Promise<FeaturesEnum[]> => {
- try{
-  const shopType = await getShopType();
-
+const getFeaturesFromShopType =(shopType:string | 0): FeaturesEnum[] => {
   switch (shopType) {
     case 'food':
       return [
@@ -39,11 +33,8 @@ const getFeaturesList = async (): Promise<FeaturesEnum[]> => {
         FeaturesEnum.Inventory
       ];
     default:
-      return []; // Return an empty array if the shopType is not recognized
+      return [];
   }
- } catch (error){
-  throw error;
- }
 };
 
-export default getFeaturesList;
+export default getFeaturesFromShopType;

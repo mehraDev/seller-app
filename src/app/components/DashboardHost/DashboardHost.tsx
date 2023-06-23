@@ -1,21 +1,23 @@
 import { lazy, useEffect, useState } from 'react';
-import { User, getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from 'firebaseServices/firebase';
 import HostWrapper from './styles';
 
 import {  AuthenticationPage } from 'app/pages/Dashboard';
 
-import { Feature } from './services/getComponentsFromFeatureList';
+import { Feature } from './services/getComponentsFromFeatures';
 import LoadingAnimation from 'ui/LoadingAnimation/LoadingAnimation';
-import { getFeatures } from './services';
+import { getFeatureComponents } from './services';
+import { USER_ID, getUserID } from './services/getUserID';
 
 const Dashboard = lazy(() => import('app/components/Dashboard/Dashboard'));
 
 function DashboardHost() {
-  const [user, setUser] = useState<User | null>(null);
+  const [userId, setuserId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [features, setFeatures] = useState<Feature[] | []>([]);
   const [dashboardHeight, setDashboardHeight] = useState(window.innerHeight);
+
     useEffect(() => {
       const handleResize = () => {
         setDashboardHeight(window.innerHeight);
@@ -35,16 +37,17 @@ function DashboardHost() {
     }, []);
 
     useEffect(() => {
-      const storedUser = localStorage.getItem('user');
-      if (storedUser) {
-        setUser(JSON.parse(storedUser));
+      const id = getUserID();
+      if (id) {
+        setuserId(id);
       } else {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
           if (user) {
+            setuserId(user.uid);
             try {
-              setUser(user);
-              localStorage.setItem('user', JSON.stringify(user.uid));
+              localStorage.setItem(USER_ID, JSON.stringify(user.uid));
             } catch (error) {
+              console.error(error);
               setLoading(false);
             }
           }
@@ -57,20 +60,22 @@ function DashboardHost() {
     }, []);
     
     useEffect(() => {
-      if (user) {
-        const fetchData = async () => {
+      if (userId) {
+        const loadFeatures = async () => {
           try {
-            const updatedFeatureList = await getFeatures();
+            const updatedFeatureList = await getFeatureComponents();
             setFeatures(updatedFeatureList);
             setLoading(false);
           } catch (error) {
+            setLoading(false);
           }
         };
-        fetchData();
+        loadFeatures();
       }
-    }, [user]);
+    }, [userId]);
+    
     // useEffect(() => {
-    //   if(user){
+    //   if(userId){
     //     const stopOnlineIndicator = onlineIndicator();
     
     //     return () => {
@@ -78,17 +83,17 @@ function DashboardHost() {
     //     };
     //   }
       
-    // }, [user]); 
+    // }, [userId]); 
 
   const handleLogout = async () => {
     const auth = getAuth();
     await signOut(auth);
-    setUser(null);
+    setuserId(null);
   };
 
   return (
     <HostWrapper height={dashboardHeight}>
-      {user ? 
+      {userId ? 
         <>
           {loading ? 
             <LoadingAnimation />
