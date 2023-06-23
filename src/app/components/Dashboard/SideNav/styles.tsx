@@ -111,6 +111,7 @@ export const SideNavAccountLabel = styled.span<SideNavAccountLabelProps>`
   display: ${({show}) => show  ? 'flex' : 'none'};
   margin-left: 1rem;
   margin-right: 0.5rem;
+  text-transform: capitalize;
 `
 export const ToggleButton = styled.button`
     padding: 0.5rem;

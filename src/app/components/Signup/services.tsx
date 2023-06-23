@@ -2,17 +2,11 @@ import { createUserWithEmailAndPassword, UserCredential } from 'firebase/auth';
 import { auth } from 'firebaseServices/firebase';
 import { createDocument } from 'firebaseServices/firestore';
 
-interface SellerSignUpData {
-    firstName: string;
-    lastName: string;
-    shopName: string;
-    phone: string;
-    email: string;
+interface ISellerForm  extends IProfile {
     password: string;
-    shopType: string;
   }
 
-  interface Profile {
+export  interface IProfile {
     firstName: string;
     lastName: string;
     shopName: string;
@@ -49,7 +43,7 @@ async function createLicense(userCredential: UserCredential) : Promise<void> {
   }
 }
 
-  async function createUserProfile(userCredential: UserCredential, profile: Profile): Promise<void> {
+  async function createUserProfile(userCredential: UserCredential, profile: IProfile): Promise<void> {
     try {
         await createDocument('sellers', userCredential.user.uid);
       } catch (error: any) {
@@ -62,19 +56,10 @@ async function createLicense(userCredential: UserCredential) : Promise<void> {
       }
   }
   
-  async function signupAndCreateUserProfile(data: SellerSignUpData): Promise<void> {
-    const { email, password, firstName, lastName,shopName,phone,shopType } = data;
-    const profile = {
-      firstName,
-      lastName,
-      shopName,
-      shopType,
-      phone,
-      email
-    }
+  async function signupAndCreateUserProfile(data: ISellerForm): Promise<void> {
     try {
-      const result = await signupUserWithEmailAndPassword(email, password);
-      await createUserProfile(result, profile);
+      const result = await signupUserWithEmailAndPassword(data.email, data.password);
+      await createUserProfile(result, data);
       await createLicense(result);
     } catch (error) {
       throw error;

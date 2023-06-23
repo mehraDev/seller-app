@@ -1,10 +1,11 @@
 import SideNavWrapper, {AccountWrapper, SideNavAccountLabel, SideNavItemWrapper, SideNavLabel, SideNavListWrapper, ToggleButton} from './styles';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Icon, { IconName, IconSidenav } from 'ui/Icon';
 import { IconEnum } from 'ui/Icon/IconSidenav';
 import LogoSideNav from 'ui/Logo';
 import { PROFILE_FEATURE_NAME } from '../Dashboard';
+import { getProfile } from 'app/components/DashboardHost/services';
 
 interface ISideNav {
   navList: { name: string; icon: keyof typeof IconEnum }[];
@@ -17,7 +18,7 @@ interface ISideNav {
 
 const SideNav: React.FC<ISideNav> = ({onProfileClick, navList, activeItem,onItemClick ,show,hideSideNav}) => {
   const [isExpanded, setIsExpanded] = useState(true);
-
+  const [shopName, setShopName] = useState<string>('');
   const itemClickHandler = (activeItem:string) => {
     onItemClick(activeItem);
     if(isExpanded){
@@ -32,7 +33,21 @@ const SideNav: React.FC<ISideNav> = ({onProfileClick, navList, activeItem,onItem
     }
   }
 
-  console.log(isExpanded)
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const profile = await getProfile();
+        if(profile){
+          setShopName(profile.shopName );
+        }
+      } catch (error) {
+        console.error("Error retrieving profile:", error);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
   return (
     <SideNavWrapper show={show} expanded={isExpanded}>
       <LogoSideNav hideName={!isExpanded} sizeLarge={2}/>
@@ -59,7 +74,7 @@ const SideNav: React.FC<ISideNav> = ({onProfileClick, navList, activeItem,onItem
           >
             <IconSidenav zoom={!isExpanded} iconName={'Account'} />
             <SideNavAccountLabel show={isExpanded}>
-            Panj Tara Dhaba
+            {shopName}
             </SideNavAccountLabel>
           </SideNavItemWrapper>
         </AccountWrapper>

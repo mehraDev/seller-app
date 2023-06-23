@@ -1,5 +1,5 @@
 import { lazy, useEffect, useState } from 'react';
-import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+import {  getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from 'firebaseServices/firebase';
 import HostWrapper from './styles';
 
@@ -64,6 +64,7 @@ function DashboardHost() {
         const loadFeatures = async () => {
           try {
             const updatedFeatureList = await getFeatureComponents();
+            
             setFeatures(updatedFeatureList);
             setLoading(false);
           } catch (error) {
