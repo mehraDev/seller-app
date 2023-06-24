@@ -3,7 +3,7 @@ export const USER_ID = 'userID';
 
 const getUserID = () => {
     if(auth && auth.currentUser){
-        return auth.currentUser
+        return auth.currentUser.uid
     }
 
     const savedUser = localStorage.getItem(USER_ID);

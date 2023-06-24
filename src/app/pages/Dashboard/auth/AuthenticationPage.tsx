@@ -5,9 +5,10 @@ import Login from 'app/pages/Login';
 import { AuthWrapper } from './styles';
 
 interface IAuthenticationPage {
+  onSignUp: (flag:boolean) => void
 }
 
-const AuthenticationPage: React.FC<IAuthenticationPage> = () => {
+const AuthenticationPage: React.FC<IAuthenticationPage> = ({onSignUp}) => {
   const [showLogin, setShowLogin] = useState<boolean>(true);
   
   const handleShowSignup = () => {
@@ -23,7 +24,7 @@ const AuthenticationPage: React.FC<IAuthenticationPage> = () => {
         {showLogin ? (
         <Login onAccountCreation={handleShowSignup} />
       ) : (
-        <Signup onExistingUserClick={handleShowLogin} />
+        <Signup onExistingUserClick={handleShowLogin} onSignUp={onSignUp}/>
       )}
     </AuthWrapper>
   );

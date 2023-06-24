@@ -4,9 +4,10 @@ import signupAndCreateUserProfile from './services';
 
 interface Props {
   onExistingUserClick: () => void;
+  onSignUp: (flag:boolean) => void;
 }
 
-const SignupForm: React.FC<Props> = ({ onExistingUserClick }) => {
+const SignupForm: React.FC<Props> = ({ onExistingUserClick,onSignUp }) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [shopName, setShopName] = useState('');
@@ -44,6 +45,7 @@ const SignupForm: React.FC<Props> = ({ onExistingUserClick }) => {
 
     try {
       await signupAndCreateUserProfile(formData);
+      onSignUp(false);
     } catch (error: any) {
       console.error('Error signing up:', error.code, error.message);
     }

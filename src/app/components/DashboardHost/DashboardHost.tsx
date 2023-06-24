@@ -17,6 +17,7 @@ function DashboardHost() {
   const [loading, setLoading] = useState(true);
   const [features, setFeatures] = useState<Feature[] | []>([]);
   const [dashboardHeight, setDashboardHeight] = useState(window.innerHeight);
+  const [signingUp, setSigningUp] = useState(false);
 
     useEffect(() => {
       const handleResize = () => {
@@ -50,6 +51,8 @@ function DashboardHost() {
               console.error(error);
               setLoading(false);
             }
+          } else {
+            setSigningUp(true);
           }
         });
     
@@ -64,16 +67,17 @@ function DashboardHost() {
         const loadFeatures = async () => {
           try {
             const updatedFeatureList = await getFeatureComponents();
-            
-            setFeatures(updatedFeatureList);
-            setLoading(false);
+              setFeatures(updatedFeatureList);
+              setLoading(false);
           } catch (error) {
             setLoading(false);
           }
         };
-        loadFeatures();
+        if(!signingUp){
+          loadFeatures();
+        }
       }
-    }, [userId]);
+    }, [userId,signingUp]);
     
     // useEffect(() => {
     //   if(userId){
@@ -92,6 +96,9 @@ function DashboardHost() {
     setuserId(null);
   };
 
+  const onSignUP = (flag: boolean) => {
+    setSigningUp(flag)
+  }
   return (
     <HostWrapper height={dashboardHeight}>
       {userId ? 
@@ -102,7 +109,7 @@ function DashboardHost() {
             <Dashboard features={features} onLogout={handleLogout} />}
         </>
       : 
-      <AuthenticationPage />
+      <AuthenticationPage onSignUp={onSignUP}/>
       }
     </HostWrapper>
   );
