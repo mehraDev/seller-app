@@ -2,7 +2,7 @@ import { lazy } from 'react';
 import { IconEnum } from '../../../../ui/Icon/IconSidenav';
 import { FeaturesEnum } from './getFeaturesFromShopType';
 
-const DashboardComponent = lazy(() => import('app/components/features/Dashboard/Dashboard'));
+const DashboardComponent = lazy(() => import('app/components/features/Home/Home'));
 const BillingComponent = lazy(() => import('app/components/features/Billing/Billing'));
 const OrdersComponent = lazy(() => import('app/components/features/Orders/Orders'));
 const StatisticsComponent = lazy(() => import('app/components/features/Statistics/Statistics'));
