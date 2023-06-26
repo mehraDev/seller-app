@@ -1,19 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { getProductCatalogueList } from 'app/services/features/ProductCatalogue';
 import { IProduct } from './interfaces/productInterface';
 import LoadingAnimation from 'ui/LoadingAnimation/LoadingAnimation';
 import styled from 'styled-components';
 import Icon, { IconName } from 'ui/Icon';
 import Viewer from './Viewer';
 import AddProduct from './AddProduct';
-
-
+import { getProducts } from './services';
 
 const ProductManager: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [hasData, setHasData] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [shopType, setShopType] = useState<string>(''); 
+  const [, setError] = useState<string | null>(null);
   const [products, setProducts] = useState<IProduct[]>([]);
   const [viewMode, setViewMode] = useState< 'list' | 'tile'>('tile');
   const [optionsList,setOptionsList] = useState(false);
@@ -39,42 +35,24 @@ const ProductManager: React.FC = () => {
   }
 
   useEffect(() => {
-    const checkAuthorization = (): boolean => {
-      return true;
-    };
-
     const loadFeatureData = async (): Promise<void> => {
       try {
-        const response = await getProductCatalogueList();
-        // await getProducts();
-        setShopType('food');
-        setHasData(true);
+        const response = await getProducts();
         setProducts(response);
-        // await saveProductsToDB(response);
+        setIsLoading(false);
       } catch (error: any) {
         console.log(error)
         setError(error.message);
         setIsLoading(false);
       }
     };
-
-    if (checkAuthorization()) {
-      if (!hasData) {
-        loadFeatureData();
-      } else {
-        setIsLoading(false);
-      }
-    } else {
-      
-    }
-  }, [hasData]);
+    loadFeatureData();
+  }, []);
+  
 if (isLoading) {
     return <LoadingAnimation/>
   }
 
-  if (error) {
-    return <div>Eror</div>;
-  }
     
   return (
     <StyledWrapper>
@@ -97,9 +75,9 @@ if (isLoading) {
         </OptionsWrapper>
       </ControlsWrapper>
       {selectedAction === 'viewer' && 
-      <Viewer products={products} shop={shopType}/>
+      <Viewer products={products} shop={'food'}/>
       }
-      {selectedAction === 'add' && <AddProduct shop={shopType} onClose={handleGoBack}/>}
+      {selectedAction === 'add' && <AddProduct shop={'food'} onClose={handleGoBack}/>}
     </StyledWrapper>)
 };
 

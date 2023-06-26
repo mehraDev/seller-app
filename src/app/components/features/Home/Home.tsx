@@ -2,7 +2,8 @@ import { getProfile } from "app/components/DashboardHost/services";
 import { IProfile } from "app/components/Signup/services";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { Text } from "ui/basic";
+import {  Text } from "ui/basic";
+import ProductWidget from "./widgets/ProductWidget";
 
 const ShopName = styled(Text)`
 `;
@@ -35,6 +36,7 @@ const ShopCardComponent = () => {
         <ShopName s="20" w={7} m={[2]} c="#013f54" tt="upp">
           {shopName}
         </ShopName>
+        <ProductWidget/>
     </div>
     
   );
