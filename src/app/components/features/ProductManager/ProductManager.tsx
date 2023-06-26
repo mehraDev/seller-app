@@ -6,6 +6,7 @@ import Icon, { IconName } from 'ui/Icon';
 import Viewer from './Viewer';
 import AddProduct from './AddProduct';
 import { getProducts } from './services';
+import InitialMessage from './InitialMessage';
 
 const ProductManager: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -53,6 +54,9 @@ if (isLoading) {
     return <LoadingAnimation/>
   }
 
+  if(!products.length){
+    return <InitialMessage/>
+  }
     
   return (
     <StyledWrapper>
@@ -78,7 +82,9 @@ if (isLoading) {
       <Viewer products={products} shop={'food'}/>
       }
       {selectedAction === 'add' && <AddProduct shop={'food'} onClose={handleGoBack}/>}
-    </StyledWrapper>)
+    </StyledWrapper>
+  )
+
 };
 
 export const StyledWrapper = styled.div`
