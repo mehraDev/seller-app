@@ -1,5 +1,6 @@
+import { IProduct } from 'app/interfaces/Shop/product';
 import { openDB, DBSchema } from 'idb';
-import { IProduct } from 'app/components/features/ProductManager/interfaces/productInterface';
+
 
 const DB_NAME = 'my-database';
 const OBJECT_STORE_NAME = 'product-catalogue';

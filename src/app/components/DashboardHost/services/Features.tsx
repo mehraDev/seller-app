@@ -1,7 +1,7 @@
 import { lazy } from 'react';
 import { IconEnum } from '../../../../ui/Icon/IconSidenav';
-import { FeaturesEnum } from './getFeaturesFromShopType';
 
+const CatalogGenerator = lazy(() => import('app/components/features/CatalogGenerator/CatalogGenerator'));
 const DashboardComponent = lazy(() => import('app/components/features/Home/Home'));
 const BillingComponent = lazy(() => import('app/components/features/Billing/Billing'));
 const OrdersComponent = lazy(() => import('app/components/features/Orders/Orders'));
@@ -9,19 +9,32 @@ const StatisticsComponent = lazy(() => import('app/components/features/Statistic
 const DeliveryComponent = lazy(() => import('app/components/features/Delivery/Delivery'));
 const ProductsManager = lazy(() => import('app/components/features/ProductManager/ProductManager'));
 const TransactionsComponent = lazy(() => import('app/components/features/Transactions/Transactions'));
-const StorageManagerAdmin = lazy(() => import('app/components/features/StorageManagerAdmin/StorageManagerAdmin'));
+const ImagePoolManager = lazy(() => import('app/components/features/ImagePoolManager/ImagePoolManager'));
 
-export interface Feature {
+export interface IFeature {
   name: string;
   component: React.ComponentType;
   icon: IconEnum;
 }
 
 type ComponentListType = {
-  [key in FeaturesEnum]: Feature;
+  [key in FeaturesEnum]: IFeature;
 };
 
-const ComponentList : ComponentListType= {
+export enum FeaturesEnum {
+  Home = "Home",
+  Billing = "Billing",
+  Orders = "Orders",
+  Statistics = "Statistics",
+  Delivery = "Delivery",
+  Inventory = "Inventory",
+  Transactions = "Transactions",
+  Products = "Products",
+  ImagePoolManager = 'ImagePoolManager',
+  CatalogGenerator = 'CatalogGenerator'
+}
+
+const Features : ComponentListType= {
     Home: {
       name: 'Home',
       component: DashboardComponent,
@@ -62,15 +75,16 @@ const ComponentList : ComponentListType= {
       component: DeliveryComponent,
       icon: IconEnum.Inventory,
     },
-    ImagePoolManagerAdmin: {
-      name: 'Storage Manager Admin',
-      component: StorageManagerAdmin,
+    ImagePoolManager: {
+      name: 'Image Pool Manager',
+      component: ImagePoolManager,
+      icon: IconEnum.Catalogue
+    },
+    CatalogGenerator: {
+      name: 'Catalog Generator',
+      component: CatalogGenerator,
       icon: IconEnum.Catalogue
     }
 };
 
-function getComponentsFromFeatures(featureList: FeaturesEnum[]) :Feature[]{
-  return featureList.map((feature) => ComponentList[feature]);
-}
-
-export default getComponentsFromFeatures;
+export default Features

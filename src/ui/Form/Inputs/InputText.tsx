@@ -9,6 +9,7 @@ interface IInputText extends IInput{
   onChange: (value:string) => void,
   borderColor?: string | undefined
   error? : string
+  onBlur?: () => void;
 }
 const Input = styled.input<{ hasValue: boolean ,borderColor:string}>`
   color: ${({theme}) => theme.neutralColor.text};
@@ -38,7 +39,8 @@ const InputText: React.FC<IInputText> = ({
   required,
   labelTop = true,
   borderColor = '',
-  error
+  error,
+  onBlur
 }) => {
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     onChange(event.target.value);
@@ -51,7 +53,7 @@ const InputText: React.FC<IInputText> = ({
         {label}
         {required && '*'}
         </Label>}
-        <div>
+        <div >
       <Input
         type="text"
         value={value}
@@ -60,6 +62,7 @@ const InputText: React.FC<IInputText> = ({
         hasValue={value !== ""}
         required={required}
         borderColor={borderColor}
+        onBlur={onBlur}
       />
        {error && <Error>{error}</Error>}
        </div>

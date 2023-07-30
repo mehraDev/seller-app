@@ -13,6 +13,7 @@ export  interface IProfile {
     phone: string;
     email: string;
     shopType: string;
+    shopImage?:string;
   }
 
 async function signupUserWithEmailAndPassword(email: string, password: string): Promise<UserCredential> {

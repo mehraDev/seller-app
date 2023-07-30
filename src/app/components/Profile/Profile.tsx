@@ -1,16 +1,41 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import UserInfo from './UserInfo';
+import { getProfile } from '../DashboardHost/services';
+import { IProfile } from '../Signup/services';
+import prof from '../../../assets/shop/shop-ph.svg'
 
-interface IProfile {
-}
+const ProfileCard = styled.div`
+`;
 
 const Profile: React.FC<IProfile> = () => {
+  const [profile, setProfile] = useState<IProfile | null>(null);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const profileData = await getProfile();
+        if (profileData) {
+          setProfile(profileData);
+        }
+      } catch (error) {
+        console.error('Failed to fetch profile:', error);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+  const shopInfo = {
+    shopName: profile?.shopName || 'My Shop',
+    shopImage: profile?.shopImage || prof,
+    location: 'New York',
+    description: 'Welcome to our shop!',
+  };
 
   return (
-    <div>
-      <h2>{'sellerName'}</h2>
-      <p>Location: {'location'}</p>
-      <p>License Info: {'licenseInfo'}</p>
-    </div>
+    <ProfileCard>
+      <UserInfo info={shopInfo} />
+    </ProfileCard>
   );
 };
 

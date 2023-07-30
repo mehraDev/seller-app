@@ -4,7 +4,7 @@ import media from "ui/Utils/Media/media";
 const MobileHeaderWrapper = styled.div`
   position: absolute;
   top: 0;
-  z-index: 100;
+  z-index: 3;
   width: 100vw;
   display: flex;
   align-items: center;

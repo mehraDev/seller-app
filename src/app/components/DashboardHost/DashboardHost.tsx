@@ -5,7 +5,7 @@ import HostWrapper from './styles';
 
 import {  AuthenticationPage } from 'app/pages/Dashboard';
 
-import { Feature } from './services/getComponentsFromFeatures';
+import { IFeature } from './services/Features';
 import LoadingAnimation from 'ui/LoadingAnimation/LoadingAnimation';
 import { getFeatureComponents } from './services';
 import { USER_ID, getUserID } from './services/getUserID';
@@ -15,7 +15,7 @@ const Dashboard = lazy(() => import('app/components/Dashboard/Dashboard'));
 function DashboardHost() {
   const [userId, setuserId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const [features, setFeatures] = useState<Feature[] | []>([]);
+  const [features, setFeatures] = useState<IFeature[] | []>([]);
   const [dashboardHeight, setDashboardHeight] = useState(window.innerHeight);
   const [signingUp, setSigningUp] = useState(false);
 

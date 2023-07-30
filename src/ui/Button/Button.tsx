@@ -1,5 +1,6 @@
 import React, { ButtonHTMLAttributes } from 'react';
 import styled from 'styled-components';
+import theme from 'ui/Utils/Media/Theme/theme';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary';
@@ -16,7 +17,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 const Button: React.FC<ButtonProps> = ({
   children,
   variant = 'primary',
-  size = 'medium',
+  size ,
   color,
   bg,
   border,
@@ -32,12 +33,13 @@ const Button: React.FC<ButtonProps> = ({
 
 const ButtonWrapper = styled.button<ButtonProps>`
   background-color: ${({bg , variant}) => 
-    bg ? bg:   variant === 'primary' ? '#007aff' : 'transparent'};
+    bg ? bg:   variant === 'primary' ? theme.brandColor.primary : 'transparent'};
   color: ${({color,variant}) => 
   (color ? color : variant === 'primary' ? '#ffffff' : '#007aff')};
   border: ${({color , border,variant}) =>
     (border ? color : variant === 'primary' ? '#ffffff' : '#007aff')};
   border-radius: 4px;
+  padding: ${({padding}) => padding ? padding : '0.5rem 1rem'} ;
   ${(props) =>
     props.fullWidth &&
     `
@@ -64,15 +66,15 @@ const ButtonWrapper = styled.button<ButtonProps>`
       ? '0.8rem'
       : props.size === 'medium'
       ? '1rem'
-      : '1.2rem'};
-  font-weight: bold;
+      : ''};
+
   cursor: pointer;
   transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out,
     border-color 0.2s ease-in-out;
 
   &:hover {
     background-color: ${(props) =>
-      props.variant === 'primary' ? '#0062cc' : '#007aff'};
+      props.variant === 'primary' ?  theme.brandColor.primaryActive : '#007aff'};
     color: ${(props) => (props.variant === 'primary' ? '#ffffff' : '#ffffff')};
     border-color: ${(props) =>
       props.variant === 'primary' ? 'none' : '#0062cc'};

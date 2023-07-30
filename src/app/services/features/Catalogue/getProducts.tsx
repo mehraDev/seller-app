@@ -1,6 +1,4 @@
-import { IProduct } from "app/components/features/ProductManager/interfaces/productInterface";
-
-
+import { IProduct } from "app/interfaces/Shop/product";
 import fetchProducts from "./fetchProducts";
 import { auth } from "firebaseServices/firebase";
 export const getProducts = async (): Promise<IProduct[]> => {

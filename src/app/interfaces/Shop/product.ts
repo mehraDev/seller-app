@@ -1,12 +1,12 @@
 export interface IProduct {
-    id: number;
+    id?: number;
     name: string;
     price?: number | undefined;
     description?: string;
-    image?: string | File | null;
-    
+    image?: string ;
 }
 
 export interface IProductFood extends IProduct {
-  isVeg? : boolean;
+  veg? : boolean;
+  category?: string[] | string;
 }

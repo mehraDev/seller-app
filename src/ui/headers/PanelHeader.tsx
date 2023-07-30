@@ -1,15 +1,15 @@
 import styled, { css } from "styled-components";
+import { Row } from "ui/basic";
 
-export const PanelHeader = styled.div`
-  margin-bottom: 0.5rem;
-  padding: 1rem;
-  font-size: large;
-  display: flex;
-  flex-direction: row;
-  font-weight: 700;
+export const PanelHeader = styled(Row)`
   align-items: center;
-  border-bottom: 1px solid ${({theme }) => theme.neutralColor.border};
-  color: ${({theme }) => theme.brandColor.primaryActive};
+  justify-content: space-between;
+   border-bottom: 1px solid ${({theme }) => theme.neutralColor.border};
+   padding: 1rem;
+   margin-bottom: 0.5rem;
+   font-size: large;
+   font-weight: 700;
+   color: ${({theme }) => theme.brandColor.primaryActive};
   ${({ color }) =>
     color &&
     css`
@@ -23,4 +23,4 @@ export const PanelHeader = styled.div`
     text-align: center;
     margin-right: 2rem;
   }
-`;
+`

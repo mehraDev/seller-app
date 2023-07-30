@@ -1,16 +1,6 @@
-export enum FeaturesEnum {
-  Home = "Home",
-  Billing = "Billing",
-  Orders = "Orders",
-  Statistics = "Statistics",
-  Delivery = "Delivery",
-  Inventory = "Inventory",
-  Transactions = "Transactions",
-  Products = "Products",
-  ImagePoolManagerAdmin = 'ImagePoolManagerAdmin'
-}
+import { FeaturesEnum } from "./Features";
 
-const getFeaturesFromShopType =(shopType:string | 0): FeaturesEnum[] => {
+const ShopFeatures =(shopType:string | 0): FeaturesEnum[] => {
   switch (shopType) {
     case 'food':
       return [
@@ -21,7 +11,8 @@ const getFeaturesFromShopType =(shopType:string | 0): FeaturesEnum[] => {
         FeaturesEnum.Transactions,
         FeaturesEnum.Statistics,
         FeaturesEnum.Products,
-        FeaturesEnum.ImagePoolManagerAdmin
+        FeaturesEnum.ImagePoolManager,
+        FeaturesEnum.CatalogGenerator
       ];
 
     case 'clothing':
@@ -37,4 +28,4 @@ const getFeaturesFromShopType =(shopType:string | 0): FeaturesEnum[] => {
   }
 };
 
-export default getFeaturesFromShopType;
+export default ShopFeatures;

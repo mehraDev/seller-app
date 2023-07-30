@@ -1,11 +1,11 @@
 import React, { ChangeEvent } from "react";
-import styled from "styled-components";
+import styled, { useTheme } from "styled-components";
 import { InputWrapper, Label } from "./styles";
 import { IInput } from "./interface";
 import Error from "ui/Error";
 interface IInputInteger extends IInput{
   value: number | string | undefined;
-  onChange: (value:number) => void;
+  onChange: (value:number | undefined) => void;
   width? : string
   borderColor? : string;
   error? : string
@@ -19,7 +19,7 @@ const Input = styled.input<{borderColor: string}>`
   font-size: 1rem;
   border-color: ${({theme}) => theme.neutralColor.border};
   transition: border-color 0.3s ease;
-  width: ${({width}) => width ? width : ''} ;
+  width: ${({width}) => width ? width : '100%'} ;
   border-radius: 4px;
   border-style: solid;
   &:focus {
@@ -29,7 +29,7 @@ const Input = styled.input<{borderColor: string}>`
   }
   &:active {
     outline: none;
-    border-color:${({borderColor,theme}) => borderColor ? borderColor : theme.brandColor.primary};
+    border-color:${({borderColor}) => borderColor };
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
   }
 
@@ -42,15 +42,17 @@ const InputInteger: React.FC<IInputInteger> = ({
   required,
   labelTop = true,
   width,
-  borderColor ='',
+  borderColor ,
   error
 }) => {
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const inputValue = Number(event.target.value);
-    if (!isNaN(inputValue) && (!required || inputValue >= 0)) {
-      onChange(inputValue);
-    }
-  };
+     if(inputValue === 0) {
+      onChange(undefined)
+     }
+    else {onChange(inputValue);}
+  }
+  const theme = useTheme()
 
   return (
     <InputWrapper top={labelTop}>
@@ -67,7 +69,7 @@ const InputInteger: React.FC<IInputInteger> = ({
         required={required}
         placeholder="0"
         width={width}
-        borderColor={borderColor}
+        borderColor={borderColor ? borderColor : theme.brandColor.primaryBorderHover}
       />
       {error && <Error>{error}</Error>}
        </div>

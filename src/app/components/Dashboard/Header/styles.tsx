@@ -65,7 +65,7 @@ export const ProfileIconPopupWrapper = styled.div`
   position: absolute;
   top: 60px;
   right: 0;
-  z-index: 100;
+  z-index: 3;
   display: ${(props: { show: boolean }) => (props.show ? 'block' : 'none')};
   width: 200px;
   padding: 10px;

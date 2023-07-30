@@ -1,12 +1,12 @@
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from 'firebaseServices/firebase';
 
-async function createDocument(location: string, documentId: string,data?: any): Promise<void> {
+async function createDocument(location: string, documentId?: string,data?: any): Promise<void> {
   try {
-    const documentRef = doc(db, location, documentId);
+    const documentRef = documentId ? doc(db, location, documentId) : doc(db, location);
     const documentData = data || {};
     await setDoc(documentRef, documentData);
-    console.log(`Document created successfully at: ${location} ${documentId}` );
+    console.log(`Document created successfully at: ${location} ${documentId}`,documentData );
   } catch (error: any) {
     console.error('Error creating document:', error);
     throw new Error('Failed to create document');

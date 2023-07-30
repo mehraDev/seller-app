@@ -1,38 +1,44 @@
 import React, { useState, useEffect } from 'react';
-import { IProduct } from './interfaces/productInterface';
 import LoadingAnimation from 'ui/LoadingAnimation/LoadingAnimation';
 import styled from 'styled-components';
-import Icon, { IconName } from 'ui/Icon';
 import Viewer from './Viewer';
-import AddProduct from './AddProduct';
+import AddProduct from './Form/AddProduct';
 import { getProducts } from './services';
-import InitialMessage from './InitialMessage';
+import OptionsButton from 'ui/MobileHeader/OptionsButton';
+import { IProduct } from 'app/interfaces';
+import { Box, Col } from 'ui/basic';
+import WelcomeCard from './WelcomeCard';
+import { Backdrop } from 'ui/Backdrop';
 
 const ProductManager: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
+  const [isAddMode,setIsAddMode] = useState(false);
+  const [isUploadMode,setIsUploadMode] = useState(false);
+
   const [, setError] = useState<string | null>(null);
   const [products, setProducts] = useState<IProduct[]>([]);
   const [viewMode, setViewMode] = useState< 'list' | 'tile'>('tile');
-  const [optionsList,setOptionsList] = useState(false);
-  const [selectedAction, setSelectedAction] = useState<'add' | 'edit'  | 'upload' |  'viewer'>('viewer');
-
-  const handleOptionClick = (action: 'add' | 'edit' | 'upload' | 'viewer') => {
-    setTimeout(() => {
-      setSelectedAction(action);
-      setOptionsList(!optionsList)
-    },100)
-  }
+  const [screen, setScreen] = useState<'add' | 'edit'  | 'upload' |  'viewer'>('viewer');
   
-  const handleViewOptionClick = () => {
+  const actions: ("add" | "edit" | "upload" | "viewer")[] = ['add', 'edit', 'upload', 'viewer'];
+
+  const handleOptionClick = (optionIndex: number) => {
     setTimeout(() => {
-      viewMode === 'list' ? setViewMode('tile') : setViewMode('list');
-      setOptionsList(!optionsList)},
-      100)
-  }
+      const action = actions[optionIndex];
+      setScreen(action);
+    }, 100);
+  };
 
   const handleGoBack = () => {
-    setSelectedAction('viewer');
-    setOptionsList(false)
+    setScreen('viewer');
+  }
+
+  const openAddFormScreen = () => {
+    setScreen('add');
+  }
+
+  const openUploadScreen = () => {
+    setScreen('upload');
   }
 
   useEffect(() => {
@@ -49,18 +55,22 @@ const ProductManager: React.FC = () => {
     };
     loadFeatureData();
   }, []);
+  const options = [
+    <div>Add Product</div>,
+    <div >Edit</div>,
+    <div>
+      {viewMode === 'list' ? 'Tile View' : 'List View'}
+    </div>,
+    <div>Upload</div>,
+  ];
   
 if (isLoading) {
     return <LoadingAnimation/>
   }
-
-  if(!products.length){
-    return <InitialMessage/>
-  }
     
   return (
-    <StyledWrapper>
-      <ControlsWrapper>
+    <Col>
+      {/* <ControlsWrapper>
         <OptionsWrapper>
         <OptionIcon>
           <Icon name={IconName.Ellipsis} width={1.5} height={1.5} onClick={() => setOptionsList(!optionsList)} />
@@ -77,28 +87,25 @@ if (isLoading) {
           </OptionsList>
         }
         </OptionsWrapper>
-      </ControlsWrapper>
-      {selectedAction === 'viewer' && 
-      <Viewer products={products} shop={'food'}/>
-      }
-      {selectedAction === 'add' && <AddProduct shop={'food'} onClose={handleGoBack}/>}
-    </StyledWrapper>
+      </ControlsWrapper> */}
+      <OptionsButton optionsList={options} onOptionClick={handleOptionClick} />
+     { products.length ? 
+      <Viewer products={products} shop={'food'}/> :
+      <WelcomeCard onAddProductClick={() => setIsAddMode(true)} onUploadFromFileClick={() => setIsUploadMode(true)}/>
+     }
+     {isAddMode && 
+  <Backdrop >
+      <Box a='center' j='center' h="100%">
+        <AddProduct shop={'food'} onClose={() => setIsAddMode(false) } />
+      </Box>
+  </Backdrop>
+}
+       
+    </Col>
   )
 
 };
 
-export const StyledWrapper = styled.div`
-`;
-// export const FeatureHeader = styled.div`
-//   font-weight: bold;
-//   padding: 1rem;
-//   font-family: 'Raleway';
-//   color: rgba(59,69,78,1.00);
-//   font-size: 1.5rem;
-//   font-weight: 600;
-//   line-height: 40px;
-
-// `
 export const ControlsWrapper = styled.div`
   width: 100%;
 `;
@@ -111,7 +118,7 @@ export const OptionsWrapper = styled.div`
     align-items: end;
     display: flex;
     flex-direction: column;
-    z-index: 200;
+    z-index: 3;
     position: absolute;
     width: 70%;
 `;

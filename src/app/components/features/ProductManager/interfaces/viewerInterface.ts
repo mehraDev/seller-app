@@ -1,4 +1,4 @@
-import { IProduct, IProductFood } from "./productInterface";
+import { IProduct, IProductFood } from "app/interfaces";
 
 export interface IViewer{
     products: IProduct[];

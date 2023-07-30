@@ -12,10 +12,11 @@
  * @property {'none' | 'cap' | 'upp' | 'low'} [textTransform] - Text transform property
  */
 
-import styled from "styled-components";
+import styled, { css } from "styled-components";
+import theme from "ui/Utils/Media/Theme/theme";
 
 interface IText {
-  s?: string;
+  s?: string; //px
   w?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
   c?: string;
   m?: number[];
@@ -24,11 +25,13 @@ interface IText {
   mt?: string;
   mr?: string;
   ml?: string;
-  tt?: 'none' | 'cap' | 'upp' | 'low';
+  tt?: "none" | "cap" | "upp" | "low";
+  type?: "heading";
+  hc?: string; 
 }
 
 const Text = styled.div<IText>`
-  font-size: ${(props) => (props.s ? props.s + "px" : "")};
+  font-size: ${(props) => (props.s ? props.s + "px" : '')};
   font-weight: ${(props) => (props.w ? props.w + "00" : "")};
   color: ${(props) => (props.c ? props.c : "")};
   margin: ${(props) =>
@@ -37,19 +40,31 @@ const Text = styled.div<IText>`
   margin-top: ${(props) => (props.mt ? props.mt : "")};
   margin-right: ${(props) => (props.mr ? props.mr : "")};
   margin-left: ${(props) => (props.ml ? props.ml : "")};
-  
+
   text-transform: ${(props) => {
     switch (props.tt) {
-      case 'cap':
-        return 'capitalize';
-      case 'upp':
-        return 'uppercase';
-      case 'low':
-        return 'lowercase';
+      case "cap":
+        return "capitalize";
+      case "upp":
+        return "uppercase";
+      case "low":
+        return "lowercase";
       default:
         return props.tt;
     }
   }};
-`
+  ${(props) =>
+    props.type === "heading" &&
+    css`
+      font-family: "Raleway", sans-serif;
+    `}
+    ${(props) =>
+    props.hc &&
+    css`
+      &:hover {
+        color: ${props.hc};
+      }
+    `}
+`;
 
 export default Text;

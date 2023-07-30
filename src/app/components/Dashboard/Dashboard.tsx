@@ -3,12 +3,12 @@ import SideNav from './SideNav/SideNav';
 import DashboardBody from './Body/DashboardBody';
 import { DashboardWrapper } from './styles';
 import MobileHeader from 'ui/MobileHeader';
-import { Feature } from '../DashboardHost/services/getComponentsFromFeatures';
+import { IFeature } from '../DashboardHost/services/Features';
 
 const SellerProfile = lazy(() => import('../Profile/Profile'));
 export const PROFILE_FEATURE_NAME = 'Profile';
 interface DashboardProps {
-    features: Feature[];
+    features: IFeature[];
     onLogout: () => void;
   }
 

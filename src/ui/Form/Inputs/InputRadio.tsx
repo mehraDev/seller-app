@@ -21,35 +21,21 @@ const RadioButtonOption = styled.label`
   align-items: center;
   margin-right: 1rem;
 `;
-
-// const RadioButtonInput = styled.input`
-
-//     appearance: none;
-//     width: 10px;
-//     height: 10px;
-//     border-radius: 50%;
-//     background-color: ${({theme}) => theme.brandColor.pinkActive};
-//   margin: 0px;
-// `;
 const RadioButtonInput = styled.input`
   appearance: none;
   width: 16px;
   height: 16px;
   border-radius: 2px;
-  background-color: ${({ theme }) => theme.brandColor.pinkBg};
-  margin: 0;
-  padding: 4px; /* Add padding to create spacing around the input */
+  background-color: ${({ theme }) => theme.neutralColor.bgLayout};
+  padding: 4px;
   transition: background-color 0.3s ease;
-
   &:checked {
-    background-color: ${({ theme }) => theme.brandColor.pink};
+    background-color: ${({ theme }) => theme.brandColor.primaryActive};
   }
 `;
 
 const RadioButtonInputLabel = styled.label`display: inline-flex;
-  align-items: center;
   margin-left: 0.5rem;
-  margin-bottom: 4px;
 `;
 
 
@@ -88,9 +74,6 @@ const InputRadio: React.FC<IInputRadio> = ({
               onChange={handleInputChange}
               required={required}
             />
-            
-            
-            {/* <RadioButtonIcon checked={value === option.value} /> */}
             <RadioButtonInputLabel>{option.label}</RadioButtonInputLabel>
           </RadioButtonOption>
         ))}
