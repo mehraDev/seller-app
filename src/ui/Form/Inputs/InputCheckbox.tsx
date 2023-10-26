@@ -73,13 +73,13 @@ const InputCheckbox: React.FC<IInputCheckbox> = ({
           {required && <sup>*</sup>}
         </Label>
       )}
-      <Row a="center" p="0.5rem 0rem">
+      <Row a="center">
         <CheckboxButtonWrapper>
           {options.map((option, index) => (
             <CheckboxOption key={option.value}>
               <CheckboxInput
                 type="checkbox"
-                name={label}
+                name={option.value}
                 checked={option.selected}
                 onChange={() => handleInputChange(index)}
                 required={required}
