@@ -19,7 +19,7 @@ const SuggestionList = styled.ul`
 const ListItem = styled.li`
   padding: 8px;
   cursor: pointer;
-
+  text-transform: capitalize;
   &:hover {
     background-color: #f2f2f2;
   }
