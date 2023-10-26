@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunkdigibhoomi_seller=self.webpackChunkdigibhoomi_seller||[]).push([[518],{7518:function(e,i,n){n.r(i);n(2791);var l=n(184);i.default=function(){return(0,l.jsx)("div",{children:"Billing Component"})}}}]);
-//# sourceMappingURL=518.e05d6085.chunk.js.map
