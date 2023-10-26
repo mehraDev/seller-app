@@ -33,7 +33,7 @@ interface IText {
 const Text = styled.div<IText>`
   font-size: ${(props) => (props.s ? props.s + "px" : '')};
   font-weight: ${(props) => (props.w ? props.w + "00" : "")};
-  color: ${(props) => (props.c ? props.c : "")};
+  color: ${(props) => (props.c ? props.c : theme.neutralColor.text)};
   margin: ${(props) =>
     props.m ? props.m.map((item) => item + "rem").join(" ") : ""};
   margin-bottom: ${(props) => (props.mb ? props.mb : "")};

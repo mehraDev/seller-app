@@ -61,7 +61,7 @@ const Features : ComponentListType= {
       icon: IconEnum.Delivery,
     },
     Products: {
-      name: 'Products',
+      name: 'Products Manager',
       component: ProductsManager,
       icon: IconEnum.Catalogue,
     },

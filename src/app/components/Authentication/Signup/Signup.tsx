@@ -5,13 +5,15 @@ import { InputPassword, InputTelephone, InputText } from 'ui/Form';
 import Button from 'ui/Button';
 import { IFormSignUp } from 'app/services/Authentication';
 import { EShop } from 'app/enums';
-import { LoadingAnimation } from 'ui/LoadingAnimation';
+import Icon, { IconName } from 'ui/Icon';
+import { useTheme } from 'styled-components';
 
 interface Props {
-  onSignUp: (data: IFormSignUp) => void;
+  onSignUp: (data: IFormSignUp) => Promise<boolean>
 }
 
 const SignupForm: React.FC<Props> = ({ onSignUp }) => {
+  const theme = useTheme()
   const [shopName, setShopName] = useState('');
   const [shopNameErrorMessage, setShopNameErrorMessage] = useState('');
   const [email, setEmail] = useState('');
@@ -22,12 +24,11 @@ const SignupForm: React.FC<Props> = ({ onSignUp }) => {
   const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [confirmPasswordErrorMessage, setConfirmPasswordErrorMessage] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [formError, setFormError] = useState('');
+  const [isSigningUp, setIsSigningUp] = useState(false);
+  const [signupError, setSignupError] = useState('');
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
     const formData: IFormSignUp = {
       shopName,
       email,
@@ -35,13 +36,15 @@ const SignupForm: React.FC<Props> = ({ onSignUp }) => {
       phone,
       shopType: EShop.Food
     };
-    try {
-      onSignUp(formData);
-    } catch (error: any) {
-      console.log('Error during signup: ', error);
-      setFormError(error?.message)
-    } finally{
-      setIsLoading(false);
+    try{
+      setIsSigningUp(true);
+      await onSignUp(formData);
+    }catch(error) {
+      setSignupError('Oops! Something went wrong. ');
+      throw error;
+    }
+    finally{
+      setIsSigningUp(false);
     }
   };
 
@@ -51,6 +54,7 @@ const SignupForm: React.FC<Props> = ({ onSignUp }) => {
       setShopNameErrorMessage('Use only letters, numbers, and spaces.');
     }
   };
+
   const handleChangeBusinessName = (v:string) => {
     setShopName(v);
     setShopNameErrorMessage('');
@@ -122,9 +126,8 @@ const SignupForm: React.FC<Props> = ({ onSignUp }) => {
       <Row a='center' p={'0 0 2rem'}>
         <Text s='18' w={7} type='heading'>Create your account</Text>
       </Row>
-      <Form onSubmit={handleSignUp}>
+      <Form onSubmit={handleSignUp} style={{gap:'2rem'}}>
         <InputText
-          p='0 0 1rem'
           error={shopNameErrorMessage}
           placeholder="Business Name"
           value={shopName}
@@ -134,7 +137,6 @@ const SignupForm: React.FC<Props> = ({ onSignUp }) => {
           tt='cap'
         />
         <InputText
-          p='0 0 1rem'
           placeholder="Email"
           value={email}
           required={true}
@@ -166,14 +168,17 @@ const SignupForm: React.FC<Props> = ({ onSignUp }) => {
           placeholder='Confirm Password'
           onClick={() => setConfirmPasswordErrorMessage('')}
         />
-        <Row p='1rem'>
-        <Button margin='1.5rem 0' width='100%' padding='1rem' type='submit' disabled={!isValidForm}>
-              {
-              isLoading  ?  <LoadingAnimation/> :
-              <Text s='18' w={5} mb='2px' mt='2px'>Continue</Text>
+        <Row style={{position:'relative'}}>
+              {signupError && 
+                <Row a="center" style={{position:'absolute'}}>
+                  <Icon name={IconName.Alert} color={theme.errorColor.errorText} height={0.8} width={0.8} isHoverable={false}/>
+                  <Text s="12" w={5} c={theme.errorColor.errorText}>{signupError}</Text>
+                </Row>
               }
-              </Button>
-        </Row>
+            </Row>
+        <Button loading={isSigningUp} width='100%' padding='1rem' type='submit' disabled={!isValidForm || isSigningUp}>
+              <Text s='18' w={5} mb='2px' mt='2px'>{isSigningUp ? `Signing up...` :  `Continue` }</Text>
+        </Button>
       </Form>
     </SignupFormWrapper>
   );

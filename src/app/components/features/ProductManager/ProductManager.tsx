@@ -1,109 +1,107 @@
 import React, { useState, useEffect } from 'react';
 import LoadingAnimation from 'ui/LoadingAnimation/LoadingAnimation';
-import styled from 'styled-components';
-import Viewer from './Viewer';
-import AddProduct from './Form/AddProduct';
-import { getProducts } from './services';
-import OptionsButton from 'ui/MobileHeader/OptionsButton';
+import styled, { useTheme } from 'styled-components';
+import {  uploadMenu } from './services';
 import { IProduct } from 'app/interfaces';
-import { Box, Col } from 'ui/basic';
-import WelcomeCard from './WelcomeCard';
-import { Backdrop } from 'ui/Backdrop';
+import { useOptionsButton } from 'app/components/Dashboard';
+import { OptionsCard } from 'ui/OptionsCard';
+import ProductsEditor from './Components/ProductsEditor';
+import ProductsViewer from './Components/ProductsViewer/ProductsViewer';
+import { EShop } from 'app/enums';
+import { Action } from './Components/ProductsEditor/ProductsEditor';
+import Icon, { IconName } from 'ui/Icon';
+import { IAllProducts } from './services/uploadMenu';
+import { Drawer } from 'ui/Drawer';
+import { Row } from 'ui/basic';
+import { useSelector } from 'react-redux';
+import { RootState } from 'store/store';
+
+enum Mode {
+  Viewer = 'viewer',
+  Editor = 'edit'
+}
+
 
 const ProductManager: React.FC = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [isAddMode,setIsAddMode] = useState(false);
-  const [isUploadMode,setIsUploadMode] = useState(false);
+  const theme = useTheme();
+  const shop: EShop = EShop.Food;
+  const {setDisplayOptions,displayOptions,setHasOptionButton} = useOptionsButton();
+  const [preview,setPreview] = useState<IProduct | null>(null);
 
-  const [, setError] = useState<string | null>(null);
-  const [products, setProducts] = useState<IProduct[]>([]);
-  const [viewMode, setViewMode] = useState< 'list' | 'tile'>('tile');
-  const [screen, setScreen] = useState<'add' | 'edit'  | 'upload' |  'viewer'>('viewer');
-  
-  const actions: ("add" | "edit" | "upload" | "viewer")[] = ['add', 'edit', 'upload', 'viewer'];
-
-  const handleOptionClick = (optionIndex: number) => {
-    setTimeout(() => {
-      const action = actions[optionIndex];
-      setScreen(action);
-    }, 100);
+  const [mode, setMode] = useState<Mode>(Mode.Viewer);
+  const { list: products, isLoading } = useSelector(
+    (state: RootState) => state.products
+  );
+ 
+  const handleInitialAddProduct = () => {
+    setMode(Mode.Editor);
+  }
+  const handleUploadProducts = async (uploadData: IAllProducts) => {
+    try {
+      return await uploadMenu(uploadData);
+    } catch (error) {
+      throw(error);
+    }
   };
-
-  const handleGoBack = () => {
-    setScreen('viewer');
-  }
-
-  const openAddFormScreen = () => {
-    setScreen('add');
-  }
-
-  const openUploadScreen = () => {
-    setScreen('upload');
-  }
-
-  useEffect(() => {
-    const loadFeatureData = async (): Promise<void> => {
-      try {
-        const response = await getProducts();
-        setProducts(response);
-        setIsLoading(false);
-      } catch (error: any) {
-        console.log(error)
-        setError(error.message);
-        setIsLoading(false);
-      }
-    };
-    loadFeatureData();
-  }, []);
-  const options = [
-    <div>Add Product</div>,
-    <div >Edit</div>,
-    <div>
-      {viewMode === 'list' ? 'Tile View' : 'List View'}
-    </div>,
-    <div>Upload</div>,
-  ];
   
+  useEffect(() => {
+    setHasOptionButton(true);
+    return () => {
+      setHasOptionButton(false);
+    };
+
+  }, [ setHasOptionButton]);
+
 if (isLoading) {
     return <LoadingAnimation/>
   }
-    
-  return (
-    <Col>
-      {/* <ControlsWrapper>
-        <OptionsWrapper>
-        <OptionIcon>
-          <Icon name={IconName.Ellipsis} width={1.5} height={1.5} onClick={() => setOptionsList(!optionsList)} />
-        </OptionIcon>
-        {optionsList && 
-          <OptionsList>
-            <li onClick={() => handleOptionClick('add')}>Add Product</li>
-            <li onClick={() => handleOptionClick('edit')}>Edit</li>
-            {viewMode === 'list' ?
-            <li onClick={() => handleViewOptionClick()}>Tile View</li>  :
-            <li onClick={() => handleViewOptionClick()}>List View</li>
-          }
-          <li onClick={() => handleOptionClick('upload')}>Upload</li>
-          </OptionsList>
-        }
-        </OptionsWrapper>
-      </ControlsWrapper> */}
-      <OptionsButton optionsList={options} onOptionClick={handleOptionClick} />
-     { products.length ? 
-      <Viewer products={products} shop={'food'}/> :
-      <WelcomeCard onAddProductClick={() => setIsAddMode(true)} onUploadFromFileClick={() => setIsUploadMode(true)}/>
-     }
-     {isAddMode && 
-  <Backdrop >
-      <Box a='center' j='center' h="100%">
-        <AddProduct shop={'food'} onClose={() => setIsAddMode(false) } />
-      </Box>
-  </Backdrop>
-}
-       
-    </Col>
-  )
+  
+  const options = [
+    { label: !products.length ? 'Add Products' : 'Edit Products', onClick : handleInitialAddProduct  }
+  ];
 
+  const displayAddProductFormInitially = !products.length;
+  
+  return (
+    <>
+      {mode === Mode.Viewer ? (
+        <>
+          <ProductsViewer shop={EShop.Food}/>
+          <Row w='initial' style={{
+              background: theme.brandColor.primary,
+              boxShadow:theme.shadow.shadow1,
+              position:'absolute', bottom:'1rem',right:'1rem'
+
+            }}
+            br='12px'>
+          <Icon name={IconName.Edit} 
+            clickEffectTime={100}
+            onClick={() => setMode(Mode.Editor)}
+             padding='1rem'
+            color={theme.neutralColor.bgContainer}
+            height={1.5}
+            br='12px'
+            width={1.5}
+          />
+          </Row>
+        </>
+        )
+        :
+        <Drawer isOpen={mode === Mode.Editor} h='100%' bg={theme.neutralColor.bgContainer}>
+          <ProductsEditor
+            onUpload={handleUploadProducts}
+            initialMode={displayAddProductFormInitially ? Action.Add : Action.None }
+            initialProducts={products}
+            onClose={() => setMode(Mode.Viewer)}
+            shop={shop}
+            />
+        </Drawer>
+      }
+      {displayOptions &&
+        <OptionsCard options={options} closeCard={() => setDisplayOptions(false)}/>
+      }
+    </>
+  );
 };
 
 export const ControlsWrapper = styled.div`

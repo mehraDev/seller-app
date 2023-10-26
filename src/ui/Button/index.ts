@@ -1,3 +1,3 @@
-import Button from "./Button";
-
+import Button, { ButtonUnderlined } from "./Button";
+export { ButtonUnderlined };
 export default Button;

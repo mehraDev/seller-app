@@ -10,7 +10,7 @@ const fetchProducts = async (): Promise<IProduct[]> => { // Specify the return t
         if (!user) {
           throw new Error('User is not authenticated');
         }
-    const docRef = doc(db, `sellers/${user.uid}/products`, 'list');
+    const docRef = doc(db, `sellers/${user.uid}/products`, 'all');
     const docSnapshot = await getDoc(docRef);
         
     if (docSnapshot.exists()) {

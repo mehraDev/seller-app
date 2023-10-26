@@ -1,16 +1,16 @@
 import React, {  Suspense } from "react";
-import { LazyFoodProductForm } from "./supportedForms";
-import { IForm } from "../ProductManager/shops/Food/Form";
+import { IForm } from "../ProductManager/Components/ProductForm/Variants/Food";
 
 interface IProductForm extends IForm{
   shopType: string;
 }
 
-const ProductForm: React.FC<IProductForm> = ({ shopType,onSubmit }) => {
+const ProductForm: React.FC<IProductForm> = ({ shopType }) => {
   const renderProductForm = () => {
     switch (shopType) {
       case "food":
-        return <LazyFoodProductForm onSubmit={onSubmit}/>;
+        return null
+        //  <LazyFoodProductForm onSubmit={onSubmit}/>;
       default:
         return null;
     }

@@ -1,12 +1,7 @@
 export interface ISellerProfile {
-  firstName: string;
-  lastName?: string;
-  shopName: string;
-  phone?: number;
-  email?: string;
-  shopType: string;
-  address?: string;
-  fb?: string;
-  wa?: string;
-  about?:string
+  user: string;
+  name: string;
+  address: string;
+  about: string[];
+  type: string;
 }

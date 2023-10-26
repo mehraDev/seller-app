@@ -1,12 +1,41 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { CSSProperties, useEffect, useState } from "react";
-import { faImage,faChevronLeft,faRing,faCircleExclamation,faGear,faHouse,faXmark,faBell, faArrowLeft, faArrowRight,faBars,faEllipsisVertical,faChevronDown,faChevronUp, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
-import styled from "styled-components";
+import { 
 
+  faCheck,
+  faRotateLeft,
+  faEyeSlash,
+  faEye,
+  faPlus,
+  faQrcode,
+  faTrashRestore,
+  faImage,faChevronLeft,faRing,faCircleExclamation,faGear,faHouse,faXmark,faBell, faArrowLeft, faArrowRight,faBars,faEllipsisVertical,faChevronDown,faChevronUp, faEdit, faTrash, faLocation, faLeaf, faDiamond, faPhone,
+  faXmarkCircle,
+  faTimes,
+  faSearch,
+  faSortDown,
+  faCrop
+} from '@fortawesome/free-solid-svg-icons';
+
+  import styled from "styled-components";
+import {
+  faFacebook,
+  faInstagram,
+  faWhatsapp,
+} from "@fortawesome/free-brands-svg-icons";
 
 export enum IconName {
+  Crop='crop',
+  Check = 'check',
+  Clear = "clear",
+  Diamond = "diamond",
+  DownArrow = 'downArrow',
+  Facebook = "facebook",
+  Instagram = "instagram",
   Notification = 'notification',
+  Leaf = "leaf",
   LeftArrow = 'leftArrow',
+  Location = "location",
   RightArrow = 'rightArrow',
   Bars = 'bars',
   Ellipsis = 'ellipsis',
@@ -20,7 +49,17 @@ export enum IconName {
   GoBack = 'goBack',
   Image = 'image',
   Edit ='edit',
-  Delete = 'delete'
+  Delete = 'delete',
+  PassHide = 'passwordhide',
+  PassShow = 'passwordshow',
+  Plus = 'plus',
+  Phone = "phone",
+  Qr = 'qr',
+  Recover = 'recover',
+  Search = "search",
+  Undo = 'undo',
+  Whatsapp = "whatsapp",
+  Xmark = 'xmark'
 }
 
 interface Icons {
@@ -28,8 +67,17 @@ interface Icons {
 }
 
 export const icons: Icons = {
+  crop : faCrop,
+  check: faCheck,
+  clear: faTimes,
+  diamond: faDiamond,
+  downArrow: faSortDown,
+  facebook: faFacebook,
+  instagram: faInstagram,
   notification: faBell,
+  leaf: faLeaf,
   leftArrow: faArrowLeft,
+  location: faLocation,
   rightArrow: faArrowRight,
   bars: faBars,
   ellipsis: faEllipsisVertical,
@@ -43,7 +91,17 @@ export const icons: Icons = {
   goBack: faChevronLeft,
   image: faImage,
   edit: faEdit,
-  delete: faTrash
+  delete: faTrash,
+  passwordshow: faEye,
+  passwordhide: faEyeSlash,
+  plus : faPlus,
+  phone: faPhone,
+  qr : faQrcode,
+  search: faSearch,
+  undo: faRotateLeft,
+  recover:faTrashRestore,
+  whatsapp: faWhatsapp,
+  xmark:faXmarkCircle
 };
 
 
@@ -54,21 +112,29 @@ interface IconProps {
   width?: number;
   height?: number;
   borderRadius?: number;
+  onBlur? : () => void;
   onClick? : () => void,
   isHoverable? : boolean,
-  clickEffect? : boolean
+  clickEffectTime? : number,
+  padding?: string;
+  style?: CSSProperties;
+  br? : string
 }
 
 const Icon: React.FC<IconProps> = ({
   name,
+  br,
   className,
   color,
   width ,
   height ,
-  borderRadius = 2.5,
+  borderRadius = 0.25,
   isHoverable = true,
-  clickEffect = true,
-  onClick
+  clickEffectTime = 100,
+  onBlur,
+  onClick,
+  padding,
+  style
 }) => {
   const [, setIsHovered] = useState(false);
   const icon = icons[name];
@@ -78,11 +144,11 @@ const Icon: React.FC<IconProps> = ({
     if (isClicked) {
       const timeout = setTimeout(() => {
         setIsClicked(false);
-      }, 100);
+      }, clickEffectTime);
 
       return () => clearTimeout(timeout);
     }
-  }, [isClicked]);
+  }, [clickEffectTime, isClicked]);
   
   const handleClick = () => {
     setIsClicked(true);
@@ -95,14 +161,16 @@ const Icon: React.FC<IconProps> = ({
     color,
     width: width ? `${width}rem` : '',
     height:  height ? `${height}rem`: '',
-    borderRadius: `${borderRadius}rem`,
+    borderRadius: `${br ? br :  borderRadius + 'rem'}`,
     cursor: isHoverable ? 'pointer' : 'default',
-    background: (isClicked && clickEffect) ? '#04000008' : '',
-    padding: '4px',
+    background: (isClicked && clickEffectTime) ? '#04000008' : '',
+    padding: padding ? padding : "4px",
+    ...style,
   };
   return (
-<IconWrapper>
+<IconWrapper >
 <FontAwesomeIcon
+      onBlur={onBlur}
       icon={icon}
       className={className}
       style={{ ...iconStyle}}

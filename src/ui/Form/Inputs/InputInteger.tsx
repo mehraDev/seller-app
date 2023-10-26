@@ -4,8 +4,8 @@ import { InputWrapper, Label } from "./styles";
 import { IInput } from "./interface";
 import Error from "ui/Error";
 interface IInputInteger extends IInput{
-  value: number | string | undefined;
-  onChange: (value:number | undefined) => void;
+  value: number | string | undefined ;
+  onChange: (value:number | '') => void;
   width? : string
   borderColor? : string;
   error? : string
@@ -18,7 +18,7 @@ const Input = styled.input<{borderColor: string}>`
   padding: 8px;
   font-size: 1rem;
   border-color: ${({theme}) => theme.neutralColor.border};
-  transition: border-color 0.3s ease;
+  transition: border-color 0.2s ease;
   width: ${({width}) => width ? width : '100%'} ;
   border-radius: 4px;
   border-style: solid;
@@ -45,13 +45,19 @@ const InputInteger: React.FC<IInputInteger> = ({
   borderColor ,
   error
 }) => {
+
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const inputValue = Number(event.target.value);
-     if(inputValue === 0) {
-      onChange(undefined)
-     }
-    else {onChange(inputValue);}
-  }
+    const value = event.target.value;
+    const integerValue   = Number(value);
+
+    if (integerValue >= 0 && value !== '') {
+        onChange(integerValue);
+    } else if(value === ''){
+        onChange(value)
+    }
+
+  };
+
   const theme = useTheme()
 
   return (
@@ -69,7 +75,7 @@ const InputInteger: React.FC<IInputInteger> = ({
         required={required}
         placeholder="0"
         width={width}
-        borderColor={borderColor ? borderColor : theme.brandColor.primaryBorderHover}
+        borderColor={borderColor ? borderColor : theme.brandColor.primary}
       />
       {error && <Error>{error}</Error>}
        </div>

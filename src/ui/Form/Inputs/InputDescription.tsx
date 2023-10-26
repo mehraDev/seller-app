@@ -19,13 +19,13 @@ const TextArea = styled.textarea`
   color: ${({theme}) => theme.neutralColor.text};
   font-weight: 400;
   &:focus {
-    border-color:${({theme}) => theme.brandColor.primaryBorderHover};
+    border-color:${({theme}) => theme.brandColor.primary};
     outline: none;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
   }
   &:active {
     outline: none;
-    border-color:${({theme}) => theme.brandColor.primaryBorderHover};
+    border-color:${({theme}) => theme.brandColor.primary};
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
   }
 

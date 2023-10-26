@@ -65,8 +65,22 @@ declare module "styled-components" {
       lineHeightHeading5: number;
     };
     shadow: {
+      shadow1;
       boxShadow: string;
       boxShadowSecondary: string;
+      boxShadowTertiary: string;
+    };
+    errorColor: {
+      errorBg: string;
+      errorBgHover: string;
+      errorBorder: string;
+      errorBorderHover: string;
+      errorHover: string;
+      error: string;
+      errorActive: string;
+      errorTextHover: string;
+      errorText: string;
+      errorTextActive: string;
     };
   }
 }

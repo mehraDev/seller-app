@@ -1,6 +1,5 @@
 enum ShopType {
-    Food = "food",
-    // Add other shop types here
-  }
-  
-  export default ShopType
+  Food = "food",
+}
+
+export default ShopType;

@@ -3,6 +3,7 @@ import { auth } from "firebaseServices/firebase";
 import { createDocument } from "firebaseServices/firestore";
 import { generateUserID } from "./utils";
 import { EShop } from "app/enums";
+import { ISellerContacts, ISellerProfile } from "app/interfaces";
 
 export interface IFormSignUp extends IProfileSignup {
   password: string;
@@ -52,34 +53,32 @@ async function signupUserWithEmailAndPassword(email: string, password: string): 
 
 async function createInitialUserProfile(userCredential: UserCredential, profile: IProfileSignup): Promise<void> {
   const userID = generateUserID(profile.shopName, profile.phone);
+  const userProfile: ISellerProfile = {
+    user: userID,
+    name: profile.shopName,
+    type: profile.shopType,
+    about: [],
+    address: "",
+  };
+  const userContacts: ISellerContacts = {
+    ph: [
+      {
+        name: profile.shopName,
+        value: profile.phone,
+      },
+    ],
+    wa: [],
+    fb: [],
+    insta: [],
+  };
+
   try {
-    await createDocument("sellers", userCredential.user.uid, {
-      user: userID,
-      shopName: profile.shopName,
-      shopType: profile.shopType,
-      about: [],
-    });
+    await createDocument("sellers", userCredential.user.uid, userProfile);
   } catch (error: any) {
     throw new Error("Failed to create user profile: cannot create seller document");
   }
   try {
-    await createDocument(`sellers/${userCredential.user.uid}/private`, "contacts", {
-      ph: [
-        {
-          name: profile.shopName,
-          value: profile.phone,
-        },
-      ],
-      wa: [],
-      fb: [],
-      insta: [],
-      mail: [
-        {
-          name: profile.shopName,
-          value: profile.email,
-        },
-      ],
-    });
+    await createDocument(`sellers/${userCredential.user.uid}/private`, "contacts", userContacts);
   } catch (error) {
     throw new Error("Failed to create user profile: Cannot create private collection");
   }
@@ -91,6 +90,7 @@ async function createInitialUserProfile(userCredential: UserCredential, profile:
 }
 
 async function signupAndCreateUserProfile(data: IFormSignUp): Promise<void> {
+  console.log(data);
   try {
     const result = await signupUserWithEmailAndPassword(data.email, data.password);
     const initialSignupProfile: IProfileSignup = {
@@ -100,7 +100,6 @@ async function signupAndCreateUserProfile(data: IFormSignUp): Promise<void> {
       shopType: data.shopType,
     };
     await createInitialUserProfile(result, initialSignupProfile);
-    // await createLicense(result);
   } catch (error) {
     throw error;
   }

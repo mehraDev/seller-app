@@ -11,7 +11,7 @@ const Backdrop: React.FC<IBackdrop> = ({ onClose, children }) => {
   const theme = useTheme();
 
   return (
-    <Wrapper style={{ background: theme.neutralColor.fill }}>
+    <Wrapper style={{ background: theme.neutralColor.bgMask }}>
       <Col
         h="100%"
         j="center"
@@ -28,10 +28,10 @@ const Backdrop: React.FC<IBackdrop> = ({ onClose, children }) => {
 
 const Wrapper = styled(Box)`
   width: 100%;
-  height: 100vh;
-  position: absolute;
+  position: fixed;
+  height: 100%;
   top: 0;
-  left: 0;
+  left:0;
   z-index: 9;
 `;
 

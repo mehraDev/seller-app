@@ -5,14 +5,7 @@ const ShopFeatures =(shopType:string | 0): FeaturesEnum[] => {
     case 'food':
       return [
         FeaturesEnum.Home,
-        FeaturesEnum.Orders,
-        FeaturesEnum.Delivery,
-        FeaturesEnum.Billing,
-        FeaturesEnum.Transactions,
-        FeaturesEnum.Statistics,
         FeaturesEnum.Products,
-        FeaturesEnum.ImagePoolManager,
-        FeaturesEnum.CatalogGenerator
       ];
 
     case 'clothing':

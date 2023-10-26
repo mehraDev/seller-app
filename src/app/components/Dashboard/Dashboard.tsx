@@ -1,23 +1,36 @@
 import React, {  lazy, useEffect, useState } from 'react';
 import SideNav from './SideNav/SideNav';
 import DashboardBody from './Body/DashboardBody';
-import { DashboardWrapper } from './styles';
-import MobileHeader from 'ui/MobileHeader';
+import MobileHeader from 'app/components/Dashboard/Header/MobileHeader';
 import { IFeature } from '../DashboardHost/services/Features';
+import styled from 'styled-components';
+import { Box } from 'ui/basic';
+import { OptionsProvider } from './Header/MobileHeader/OptionsProvider';
+import {  useDispatch } from 'react-redux';
+import { fetchProfile } from 'store/modules/profileSlice';
+import { StorageKeys, saveToSessionStorage } from 'utils/sessionStorageManager';
+import { AppDispatch } from 'store/store';
+import { fetchContacts } from 'store/modules/contactsSlice';
+import { useDashboardFeatureContext } from 'app/contexts/Dashboard/DashboardFeatureContext';
 
 const SellerProfile = lazy(() => import('../Profile/Profile'));
 export const PROFILE_FEATURE_NAME = 'Profile';
 interface DashboardProps {
     features: IFeature[];
-    onLogout: () => void;
+    onLogout?: () => void;
   }
 
   const Dashboard: React.FC<DashboardProps> = ({ features }) =>  {
-    const [dashboardHeight, setDashboardHeight] = useState(window.innerHeight);
-    const [activeFeature, setActiveFeature] = useState<string>(features[0].name); 
+    const { activeFeature, setActiveFeature } = useDashboardFeatureContext();
     const [isSideNavVisible, setIsSideNavVisible] = useState(false);
     const [isActiveFeatureProfile,setIsActiveFeatureProfile] = useState(false);
-    
+
+    useEffect(() => {
+      if(features.length > 0 && !activeFeature) {
+        setActiveFeature(features[0].name);
+      }
+    }, [features, activeFeature, setActiveFeature]);
+
     const handleSideNavProfileClick = () => {
       setIsActiveFeatureProfile(true);
       setActiveFeature(PROFILE_FEATURE_NAME);
@@ -25,25 +38,8 @@ interface DashboardProps {
     const handleFeatureChange = (feature: string) => {
       setActiveFeature(feature);
       setIsActiveFeatureProfile(false)
+      saveToSessionStorage(StorageKeys.ACTIVE_FEATURE, feature);
     };
-
-    useEffect(() => {
-      const handleResize = () => {
-        setDashboardHeight(window.innerHeight);
-      };
-  
-      const handleOrientationChange = () => {
-        setDashboardHeight(window.innerHeight);
-      };
-  
-      window.addEventListener('resize', handleResize);
-      window.addEventListener('orientationchange', handleOrientationChange);
-  
-      return () => {
-        window.removeEventListener('resize', handleResize);
-        window.removeEventListener('orientationchange', handleOrientationChange);
-      };
-    }, []);
 
     const sideNavList = features.map((feature) => {
       return {
@@ -58,23 +54,43 @@ interface DashboardProps {
     }else{
       activeComponent = features.find(feature => feature.name === activeFeature)?.component;
     }
-    const showMobileHeading = activeFeature !== features[0].name ? activeFeature.toUpperCase() : '';
+    const dispatch = useDispatch<AppDispatch>();
+    
+    useEffect(() => {
+      if (!activeFeature && features.length > 0) {
+        setActiveFeature(features[0].name);
+      }
+    }, [features, setActiveFeature, activeFeature]);
+
+    useEffect(() => {
+      dispatch(fetchProfile());
+      dispatch(fetchContacts());
+    }, [dispatch]);
 
     return (
-      <DashboardWrapper height={dashboardHeight}>
+      <OptionsProvider>
+      <DashboardWrapper>
         <SideNav
             navList={sideNavList}
             activeItem={activeFeature}
             onItemClick={handleFeatureChange}
-            show={isSideNavVisible}
+            hidden={!isSideNavVisible}
             hideSideNav={() => setIsSideNavVisible(false)}
             onProfileClick={() => handleSideNavProfileClick()}
         />
-        <MobileHeader heading={showMobileHeading} toggleSideNav={() => setIsSideNavVisible(!isSideNavVisible)}/>
+        <MobileHeader heading={activeFeature} 
+          toggleSideNav={() => setIsSideNavVisible(!isSideNavVisible)}/>
         <DashboardBody activeComponent={activeComponent} />
       </DashboardWrapper>
+      </OptionsProvider>
     );
   };
+  
+  const DashboardWrapper = styled(Box)`
+  min-width: 256px;
+  position: fixed;
+  height:100%
+  `
   
   export default Dashboard;
 

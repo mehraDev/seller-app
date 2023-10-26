@@ -1,7 +1,8 @@
 import { runTransaction } from "firebase/firestore";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { ref, uploadBytes } from "firebase/storage";
+import { EFirebaseErrorCode, FirebaseErrorType } from "firebaseServices/Error";
 import { db, storage } from "firebaseServices/firebase";
-import { createDocument } from "firebaseServices/firestore";
+import { createAutoIdDocument } from "firebaseServices/firestore";
 
 interface ImageFile extends File {}
 
@@ -11,10 +12,13 @@ async function uploadImageToFirebase(image: ImageFile, imageName: string, locati
     const imageRef = ref(storageRef, `${location}/${imageName}`);
     await uploadBytes(imageRef, image);
   } catch (error) {
-    if (error.code === "storage/unauthorized") {
+    const firebaseError = error as FirebaseErrorType;
+    if (firebaseError.code === EFirebaseErrorCode.Unauthorized) {
       throw new Error(`Permission denied. You do not have access to upload image "${imageName}" at location "${location}".`);
+    } else if (firebaseError.code === EFirebaseErrorCode.NotFound) {
+      throw new Error(`Image "${imageName}" not found at location "${location}".`);
     } else {
-      throw new Error(`Failed to upload image "${imageName}" at location "${location}". Error: ${error.message}`);
+      throw new Error(`Failed to upload image "${imageName}" at location "${location}". Error: ${firebaseError.message}`);
     }
   }
 }
@@ -26,17 +30,10 @@ export interface ImageMetadata {
 const uploadImageWithMetadata = async (imageFile: File, storageFolderPath: string, firestoreCollectionPath: string, imageName: string, metadata: ImageMetadata): Promise<void> => {
   try {
     await runTransaction(db, async (transaction) => {
-      // Upload image to Firebase Storage
       await uploadImageToFirebase(imageFile, imageName, storageFolderPath);
-
-      // Get the image download URL
-      const imageUrl = await getDownloadURL(ref(storage, `${storageFolderPath}/${imageName}`));
-
-      // Store metadata in Firestore
-      await createDocument(firestoreCollectionPath, "", {
+      await createAutoIdDocument(firestoreCollectionPath, {
         ...metadata,
         imageName,
-        imageUrl,
       });
     });
   } catch (error) {

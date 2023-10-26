@@ -2,15 +2,16 @@
 import React, { useState } from "react";
 import { Text, Col, Grid, Row } from "ui/basic";
 import Button from "ui/Button";
-import { getExtension, removeExtension } from "../services";
+import { getExtension } from "../services"; //removeExtension
 import PreviewCard from "./PreviewCard";
-import { ImageMetadata } from "firebaseServices/Storage/uploadImageToFirebase";
-import { uploadPublicImagesArray } from "app/services/Images/pool/imageUtils";
+// import { ImageMetadata } from "firebaseServices/Storage/uploadImageToFirebase";
+import { uploadPoolImages } from "app/services/Images/pool/imageUtils";
 import theme from "ui/Utils/Media/Theme/theme";
 import { PanelHeader } from "ui/headers";
 import Icon, { IconName } from "ui/Icon";
-import { InputFile } from "ui/Form";
+// import { InputFile } from "ui/Form";
 import { LoadingAnimation } from "ui/LoadingAnimation";
+import { Backdrop } from "ui/Backdrop";
 
 
 interface ImageUploaderProps {
@@ -21,21 +22,21 @@ interface ImageUploaderProps {
 
 const ImageUploader: React.FC<ImageUploaderProps> = ({ onUpload, onClose, path }) => {
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
-  const [uploading, setIsUploading] = useState<boolean>(false);
-  const [uploadMessage, setUploadMessage] = useState<string>("");
+  const [isUploading, setIsUploading] = useState<boolean>(false);
+  const [, setUploadMessage] = useState<string>("");
   const [names, setNames] = useState<string[]>([]);
 
-  const handleInputFile = (files: FileList | null) => {
-    if (files) {
-      const mergedFiles = selectedImages ? [...selectedImages, ...Array.from(files)] : Array.from(files);
-      setSelectedImages(mergedFiles);
-      const newNames = mergedFiles.map((image) => {
-        const fileNameWithoutExtensioin = removeExtension(image.name);
-        return fileNameWithoutExtensioin;
-      });
-      setNames(newNames);
-    }
-  };
+  // const handleInputFile = (files: FileList | null) => {
+  //   if (files) {
+  //     const mergedFiles = selectedImages ? [...selectedImages, ...Array.from(files)] : Array.from(files);
+  //     setSelectedImages(mergedFiles);
+  //     const newNames = mergedFiles.map((image) => {
+  //       const fileNameWithoutExtensioin = removeExtension(image.name);
+  //       return fileNameWithoutExtensioin;
+  //     });
+  //     setNames(newNames);
+  //   }
+  // };
 
   const handleUpdateName = (newName: string, index: number) => {
     setNames((prevNames) => {
@@ -71,37 +72,38 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onUpload, onClose, path }
         return `${name}.${extension}`;
       });
 
-      // Call the uploadPublicImagesArray function only for public pool locations
       if (path.includes("/p")) {
-        const metadata: ImageMetadata = {
-          timestamp: Date.now(), // Add a timestamp for the image upload
-        };
-        await uploadPublicImagesArray(
-          selectedImages.map((image, index) => ({
-            image,
-            imageName: namesWithExtension[index],
-            metadata,
-          })),
-          path.split("/")[1] // Extract the shop name from the location
+        const shopName =  path.split("/")[1];
+        const timestamp = Date.now();
+        const imagesArr =  selectedImages.map((image, index) => ({
+          image,
+          name: names[index],
+          imageName: namesWithExtension[index],
+          meta: {
+            timestamp,
+            oname: names[index]
+          }
+        }));
+        await uploadPoolImages(
+          imagesArr,
+          shopName
         );
       }
       setUploadMessage("Success");
     } catch (error) {
-      console.log("Error Uploading Images: ", error);
       setUploadMessage("Images Upload Failed");
     } finally {
       setIsUploading(false);
-      setSelectedImages([]); // Clear selected images after upload
-      setNames([]); // Clear image names after upload
+      setSelectedImages([]);
+      setNames([]);
     }
   };
 
   const handleDownloadZip = () => {
-    // Add download zip functionality here
   };
 
-  const isUploadingInProgress = uploading || uploadMessage !== "";
-
+  const isUploadingInProgress = isUploading ;
+  console.log(!selectedImages.length,'!selectedImages.length')
   return (
     <Col style={{ background: theme.neutralColor.bgContainer }} h="100%" w="100%">
       <PanelHeader>
@@ -112,8 +114,8 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onUpload, onClose, path }
         <Button size="small" onClick={handleDownloadZip}>
           Download Zip
         </Button>
-        <InputFile multiple={true} accept=".jpg,.png,.gif" onFileChange={handleInputFile} />
-        <Button size="small" onClick={handleUploadImages} disabled={isUploadingInProgress || names.some((name) => name.trim() === "")}>
+        {/* <InputFile  multiple={true} accept=".jpg,.png,.gif" onFileChange={handleInputFile} /> */}
+        <Button size="small" onClick={handleUploadImages} disabled={isUploadingInProgress || !selectedImages.length || names.some((name) => name === '')}>
           Save to Pool
         </Button>
       </Row>
@@ -134,10 +136,12 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onUpload, onClose, path }
           ))}
         </Grid>
       )}
-      {/* Show loading spinner during upload */}
-      {isUploadingInProgress && <LoadingAnimation />}
-      {/* Show upload message after upload completion */}
-      {uploadMessage && <Text>{uploadMessage}</Text>}
+      {isUploading &&
+      <Backdrop>
+         <LoadingAnimation />
+      </Backdrop>
+      }
+      {/* {uploadMessage && <Text>{uploadMessage}</Text>} */}
     </Col>
   );
 };

@@ -1,19 +1,17 @@
-import { fetchDocument } from "firebaseServices/firestore/document";
-const SELLERS_ROOT = "sellers";
-async function fetchShopType(userId: string): Promise<string> {
-  try {
-    const location = `${SELLERS_ROOT}/${userId}/private`;
-    const documentData = await fetchDocument(location, "profile");
+import { auth } from "firebaseServices/firebase";
 
-    if (documentData && documentData.shopType) {
-      const shopType = documentData.shopType;
-      return shopType;
+const getSellerId = () => {
+  try {
+    const user = auth.currentUser;
+    if (user) {
+      return user.uid;
     } else {
-      return "";
+      return null;
     }
   } catch (error) {
-    throw new Error("Failed to fetch shop type");
+    console.error("Error getting current seller ID from Firebase Auth:", error);
+    return null;
   }
-}
+};
 
-export { fetchShopType };
+export { getSellerId };

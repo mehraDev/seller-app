@@ -5,11 +5,13 @@ interface ILabel {
 }
 
 interface IInputWrapper {
-    top?: boolean
+    top?: boolean,
+    width? : string
 }
 
 export const InputWrapper = styled.div<IInputWrapper>`
   display: flex;
+  width: ${({width}) => width ? width : '100%' };
   flex-direction: ${({top}) => top ? 'column' : 'row'};
   align-items: ${({top}) => top ? '' : 'center'};
 `;

@@ -1,12 +1,13 @@
-export interface IProduct {
-    id?: number;
-    name: string;
-    price?: number | undefined;
-    description?: string;
-    image?: string ;
+export interface IProductBase {
+  id?: string;
+  name: string;
+  price: number | "";
+  description?: string;
+  image?: string;
 }
 
-export interface IProductFood extends IProduct {
-  veg? : boolean;
-  category?: string[] | string;
+export interface IProductFood extends IProductBase {
+  veg: boolean;
+  category?: string;
 }
+export type IProduct = IProductBase | IProductFood;

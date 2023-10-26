@@ -22,11 +22,12 @@ const ImageSelection: React.FC<ImageSelectionProps> = ({
     const fetchImages = async () => {
       try {
         const poolPath = `s/food/p`;
-        const poolImages = await searchFolder(poolPath, name);
-        setPImages(poolImages);
+        const poolImages  = await searchFolder(poolPath, name);
+        const poolImageUrls = poolImages.map((fileData) => fileData.url);
+        setPImages(poolImageUrls);
         const userPath = `s/food/usr/${sellerId}/p/`;
         const userImages = await searchFolder(userPath, name);
-        setUsrImages(userImages);
+        setUsrImages(userImages.map(image => image.name));
         console.log(userImages);
       } catch (error) {
         console.error("Error fetching images:", error);

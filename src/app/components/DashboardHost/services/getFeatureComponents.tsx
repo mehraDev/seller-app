@@ -1,12 +1,12 @@
 
 import Features, { FeaturesEnum, IFeature } from "./Features";
 import shopFeatures from "./shopFeatures";
-import getProfile from "./getProfile";
+import { getSellerProfile } from "app/services/Shop";
 
 const getFeatures = async (): Promise<FeaturesEnum[]> => {
-  const profile = await getProfile();
-  if(profile && profile.shopType){
-    const features = shopFeatures(profile.shopType);
+  const profile = await getSellerProfile();
+  if(profile && profile.type){
+    const features = shopFeatures(profile.type);
     return features;
   }
   return [];

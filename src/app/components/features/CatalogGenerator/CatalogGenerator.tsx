@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import ProductForm from "./ProductForm";
-import Viewer from "../ProductManager/Viewer";
+import Viewer from "../ProductManager/Components/ProductsViewer/ProductsViewer";
 import Box, { Col, Row } from "ui/basic/Box";
 import { IProductFood } from "app/interfaces";
 import ImageSelection from "./ImageSelection/ImageSelection";
 import { Text } from "ui/basic";
-import { fetchShopType } from "app/services/Shop";
 
 const CatalogGenerator: React.FC = () => {
-  const [sellerId, setSellerId] = useState("");
+  const [sellerId] = useState("");
   const [products, setProducts] = useState<IProductFood[]>([]);
   const [shopType, setShopType] = useState<string>('food');
   const [formStage ,  setFormStage] = useState<'info' | 'image'>('info');
@@ -31,7 +29,7 @@ const CatalogGenerator: React.FC = () => {
     const onSellerId = async (sellerId: string) => {
       try {
         // Simulated API call
-        const shop = await fetchShopType(sellerId)
+        const shop =  'food' ;//await fetchShopType(sellerId)
         setShopType(shop);
         setIsLoading(false);
       } catch (error) {
@@ -46,10 +44,10 @@ const CatalogGenerator: React.FC = () => {
   }, [sellerId]);
 
 
-  const handleInfoSubmit = (product: IProductFood) => {
-    setFormStage( 'image')
-    setFormProduct( product);
-  }
+  // const handleInfoSubmit = (product: IProductFood) => {
+  //   setFormStage( 'image')
+  //   setFormProduct( product);
+  // }
   // const handleAddProduct = (product: IProductFood) => {
    
   // };
@@ -99,7 +97,7 @@ const CatalogGenerator: React.FC = () => {
     URL.revokeObjectURL(url);
     document.body.removeChild(link);
   };
-  const [sellerIdInput,setSellerIdInput] = useState('');
+  // const [sellerIdInput,setSellerIdInput] = useState('');
   // if(!sellerId){
   //   return(
   //     <Box>
@@ -116,7 +114,7 @@ const CatalogGenerator: React.FC = () => {
   }
   return (
     <Wrapper>
-      <Row>
+      {/* <Row>
         <Text>{shopType}</Text>
       </Row>
       <ControlPanel>
@@ -127,8 +125,10 @@ const CatalogGenerator: React.FC = () => {
       <Row>
         <Box j="center">
         {formStage === 'info' ? 
-        (<ProductForm shopType={'food'} onSubmit={(product) => handleInfoSubmit(product)}/>) :
-          <ImageSelection name={formProduct?.name as string} sellerId={sellerId} onImageSelected={function (imageUrl: string): void {
+        // <ProductForm shopType={'food'} onSubmit={(product) => handleInfoSubmit(product)}/>
+        <div></div>
+         :
+          <ImageSelection name={formProduct?.name as string} sellerId={sellerId} onImageSelected={function (: string): void {
               throw new Error("Function not implemented.");
             } }/>
         }
@@ -136,7 +136,7 @@ const CatalogGenerator: React.FC = () => {
         <Box j="center">
           {products.length ? <Viewer shop={shopType} products={products}/> : <Col w="initial">Emprty List</Col>}
         </Box>
-      </Row>
+      </Row> */}
     </Wrapper>
   );
 };

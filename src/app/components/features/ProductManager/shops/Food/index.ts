@@ -1,5 +1,5 @@
-import AddProductForm from "./Form";
-import ProductViewerFood from "./ViewerFood";
+import AddProductForm from "./FormFood";
+import ProductViewerFood from "../../Components/ProductsViewer/Shops/ViewerFood";
 
 export default ProductViewerFood;
-export {AddProductForm as Form}
+export { AddProductForm as Form };

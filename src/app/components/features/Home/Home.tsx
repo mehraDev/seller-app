@@ -1,45 +1,50 @@
-import { getProfile } from "app/components/DashboardHost/services";
-import { IProfile } from "app/components/Signup/services";
-import { useEffect, useState } from "react";
-import styled from "styled-components";
-import {  Text } from "ui/basic";
-import ProductWidget from "./widgets/ProductWidget";
-
-const ShopName = styled(Text)`
-`;
-
-
-const ShopCardComponent = () => {
-  const [profile, setProfile] = useState<IProfile | 0>(0);
-
-  useEffect(() => {
-    async function fetchProfile() {
-      try {
-        const profileData = await getProfile();
-        if (profileData !== 0) {
-          setProfile(profileData);
-        } else {
-          setProfile(0);
-        }
-      } catch (error) {
-        console.error("Failed to fetch profile:", error);
-      }
-    }
-
-    fetchProfile();
-  }, []);
+import { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "store/store";
+import { useTheme } from "styled-components";
+import Popup from "ui/Popup";
+import {  Col, Row } from "ui/basic"
+import ShopQRCard from "./Components/ShopQRCard";
+import { ProductsViewerWidget } from "./Components/Widgets/ProductViewer";
+import { ProfileHomeWidget } from "./Components/Widgets";
+import QRWidget from "./Components/Widgets/QRWidget/QRWidget";
+import { getSellerLogo } from "app/services/Shop";
+import { fetchProducts } from "store/modules/productSlice";
+const Home = () => {
+  const theme = useTheme();
+  const [isViewQr,setIsViewQr] = useState(false);
+  const { profile } = useSelector((state: RootState) => state.user);
+  const userId  = profile?.user ?profile?.user :'Business Name';
+  const toggleViewQr = (flag: boolean) => {
+    setIsViewQr(flag);
+  }
+  const dispatch = useDispatch<AppDispatch>();
   
-  const shopName = profile !== 0 ? profile.shopName : "My Store";
+  useEffect(() => {
+    dispatch(fetchProducts());
+  }, [dispatch]);
+  const profileImageUrl = getSellerLogo();
+  const homeRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div>
-        <ShopName s="20" w={7} m={[2]} c="#013f54" tt="upp">
-          {shopName}
-        </ShopName>
-        <ProductWidget/>
-    </div>
+    <>
+      <Col style={{gap:'0.5rem',background:theme.neutralColor.bgLayout,overflow:'scroll'}} h='100%' ref={homeRef}>
+        <Row style={{position:'relative'}}>
+            <ProfileHomeWidget/>
+        </Row>
+        <Row style={{position:'relative'}}>
+            <QRWidget/>
+        </Row>
+        <Row style={{position:'relative',borderTop:'1px dashed ' + theme.neutralColor.borderSecondary}}>
+          <ProductsViewerWidget containerRef={homeRef}/>
+        </Row>
+        <Popup onClose={() => toggleViewQr(false)} isOpen={isViewQr} title={"Shop Qr Code"} >
+          <ShopQRCard userName={userId} logo={profileImageUrl} onClose={() => toggleViewQr(false)}/>
+          </Popup>
+      </Col>
+    </>
     
   );
 };
 
-export default ShopCardComponent;
+export default Home;

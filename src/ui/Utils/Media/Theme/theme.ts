@@ -9,8 +9,6 @@ const brandColor = {
   primaryTextHover: "#2692eb",
   primaryText: "#0174de",
   primaryTextActive: "#0059b8",
-
-  // color: Pink
   pinkBg: "#fdeaf1",
   pinkBgHover: "#f7c7dc",
   pinkBorder: "#f199b1",
@@ -25,6 +23,18 @@ const brandColor = {
   red: "#d90429",
 };
 
+const errorColor = {
+  errorBg: "#fff2f0",
+  errorBgHover: "#ffefed",
+  errorBorder: "#ffc9c4",
+  errorBorderHover: "#ffa19c",
+  errorHover: "#ff7573",
+  error: "#f5474a",
+  errorActive: "#cf3239",
+  errorTextHover: "#ff7573",
+  errorText: "#f5474a",
+  errorTextActive: "#cf3239",
+};
 const neutralColor = {
   text: "rgba(0, 0, 0, 0.88)",
   textSecondary: "rgba(0, 0, 0, 0.65)",
@@ -38,7 +48,7 @@ const neutralColor = {
   fillQuaternary: "rgba(0, 0, 0, 0.02)",
   bgContainer: "#ffffff",
   bgElevated: "#ffffff",
-  bgLayout: "#f5f5f5",
+  bgLayout: "#f0f1f3b0",
   bgSpotlight: "rgba(0, 0, 0, 0.85)",
   bgMask: "rgba(0, 0, 0, 0.45)",
 };
@@ -65,8 +75,10 @@ const lineHeight = {
   lineHeightHeading5: 1.5,
 };
 const shadow = {
+  shadow1: "rgba(0, 0, 0, 0.082) 0px 1px 4px",
   boxShadowSecondary: "rgba(60, 66, 87, 0.08) 0px 15px 35px 0px, rgba(0, 0, 0, 0.12) 0px 5px 15px 0px",
   boxShadow: "0 6px 16px 0 rgba(0, 0, 0, 0.08),0 3px 6px -4px rgba(0, 0, 0, 0.12),0 9px 28px 8px rgba(0, 0, 0, 0.05)",
+  boxShadowTertiary: "0 4px 8px 0 rgba(0, 0, 0, 0.06), 0 2px 4px -2px rgba(0, 0, 0, 0.08), 0 6px 16px 4px rgba(0, 0, 0, 0.03)",
 };
 
 const theme = {
@@ -75,6 +87,7 @@ const theme = {
   font,
   lineHeight,
   shadow,
+  errorColor,
 };
 
 export default theme;

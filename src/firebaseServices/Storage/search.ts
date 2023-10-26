@@ -12,9 +12,6 @@ export const searchFolder = async (folderPath: string, fileName: string, maxResu
     const folderData = await list(folderRef, { maxResults });
 
     const filesMetaData = folderData.items;
-    filesMetaData.map((file) => {
-      console.log(file.name, " ", fileName);
-    });
     const matchingFiles = filesMetaData.filter((file) => file.name.includes(fileName));
 
     const fileDataPromises = matchingFiles.map(async (file) => {
