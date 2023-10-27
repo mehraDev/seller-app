@@ -44,14 +44,15 @@ const FormProductFood: React.FC<IFormProductFood> = ({ onSubmit, products, editP
   };
 
   const initialVariants = (editProduct && editProduct.variants && editProduct.variants.length) ? editProduct.variants : [defaultVariant];
+  const [variants, setVariants] = useState<IVariant[]>(initialVariants);
+  const [isMultiVariant, setIsMultiVariant] = useState((!!editProduct && !!editProduct.variants));
   const [name, setName] = useState(initialName);
   const [itemType, setItemType] = useState<'veg' | 'nonVeg' |null>(initialItemType);
   const [category,setCategory]  = useState<string>(initialCategory)
   const [description, setDescription] = useState(initialDescription);
   const initialPrice = editProduct && editProduct.price ? editProduct.price : '' ;
   const [price, setPrice] = useState<number  | ''>(initialPrice);
-  const [variants, setVariants] = useState<IVariant[]>(initialVariants);
-  const [isMultiVariant, setIsMultiVariant] = useState(false);
+  
   const [image, setImage] = useState<string>(initialImage);
 
   const [nameError, setNameError] = useState('');
@@ -69,15 +70,20 @@ const FormProductFood: React.FC<IFormProductFood> = ({ onSubmit, products, editP
     if (Object.values(errors).some(error => error)) {
       return;
     }
+    const isVeg = itemType !== 'nonVeg' ? true : false;
     const newProduct: IProductFood = {
       name,
       price,
       description,
-      veg: itemType === 'veg',
+      veg: isVeg,
       category,
       image,
-      variants
     };
+
+    const isVariant = isMultiVariant ? true : false;
+    if(isVariant){
+      newProduct.variants = variants;
+    }
     onSubmit(newProduct, image);
   };
 
@@ -133,14 +139,8 @@ const FormProductFood: React.FC<IFormProductFood> = ({ onSubmit, products, editP
     clearError()
   }
   const handlePreview = () => {
-    const formData = {
-      name,
-      price,
-      description,
-      itemType,
-      category,
-    };
   }
+
   const isSaveDisabled = !(name && ((!isMultiVariant && price) || (isMultiVariant && variants.every(val => val.name !== '' && val.price > 0))) && itemType);
   const handleVariantChange = (field: 'name' | 'price', value: string | number, index: number) => {
     const updatedVariants = [...variants];
