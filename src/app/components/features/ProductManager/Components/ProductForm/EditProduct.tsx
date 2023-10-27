@@ -27,7 +27,7 @@ const EditProduct: React.FC<IEditProduct> = ({ shop ,onClose, products,onSave, a
       break;
   }
   const handleSaveProduct = (item: IProduct, additionalData: any) => {
-    onSave(item, additionalData);
+    onSave({ id: activeEditProduct?.id,...item}, additionalData);
 };
   return (
     <Col  style={{ background: '#fff',boxShadow: theme.shadow.boxShadow,borderRadius:'1rem 1rem 0 0'}} h='100%'>
