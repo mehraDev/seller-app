@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import InputText from "./InputText";
 import { Box, Col } from "ui/basic";
 import styled from "styled-components";
+import { IInput } from "./interface";
 
 const SuggestionList = styled.ul`
   position: absolute;
@@ -25,7 +26,7 @@ const ListItem = styled.li`
   }
 `;
 
-interface IInputWithSuggestions {
+interface IInputWithSuggestions extends IInput{
   suggestions: string[];
   onChange: (value: string) => void;
   disabled?: boolean;
