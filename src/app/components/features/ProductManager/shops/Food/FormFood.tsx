@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Form, { InputDescription, InputInteger, InputRadio, InputText, CategoryHierarchySelector } from "ui/Form";
-import  styled from "styled-components";
+import  styled, { useTheme } from "styled-components";
 import { IProduct, IProductFood } from "app/interfaces";
 import Button, { ButtonUnderlined } from "ui/Button";
 import { Col, Img, Row ,Text} from "ui/basic";
@@ -8,7 +8,7 @@ import { createCategoryTree } from "../../utils";
 import { ImageUploadWithPreview } from "ui/Image";
 import { PRODUCT_CARD_DIMENSIONS } from "../../Components/ProductsCard/dimensionsConstants";
 import { EShop } from "app/enums";
-import { IVariant } from "app/interfaces/Shop/product";
+import { IFoodTag, IVariant,EFoodTagType } from "app/interfaces/Shop/product";
 import InputCheckbox from "ui/Form/Inputs/InputCheckbox";
 import InputWithSuggestions from "ui/Form/Inputs/InputWithSuggestions";
 import Icon, { IconName } from "ui/Icon";
@@ -31,6 +31,7 @@ interface ICategory {
 }
 
 const FormProductFood: React.FC<IFormProductFood> = ({ onSubmit, products, editProduct })=> {
+  const theme = useTheme()
   const categories: ICategory = createCategoryTree(products);
   const initialName = editProduct ? editProduct.name : "";
   const initialItemType = editProduct ? (editProduct.veg ? "veg" : "nonVeg") : null;
@@ -52,7 +53,8 @@ const FormProductFood: React.FC<IFormProductFood> = ({ onSubmit, products, editP
   const [description, setDescription] = useState(initialDescription);
   const initialPrice = editProduct && editProduct.price ? editProduct.price : '' ;
   const [price, setPrice] = useState<number  | ''>(initialPrice);
-  
+  const [tags, setTags] = useState<IFoodTag[]>(editProduct ? editProduct.tags || [] : []);
+  const [newTagName, setNewTagName] = useState<string>('');
   const [image, setImage] = useState<string>(initialImage);
 
   const [nameError, setNameError] = useState('');
@@ -62,7 +64,37 @@ const FormProductFood: React.FC<IFormProductFood> = ({ onSubmit, products, editP
   const imageWidth = PRODUCT_CARD_DIMENSIONS[EShop.Food].width
   const imageHeight = PRODUCT_CARD_DIMENSIONS[EShop.Food].height
   const imageAspectRatio = +(imageWidth / imageHeight).toFixed(2);
+  const getUniqueVariantNames = (products: IProductFood[]): string[] => {
+    const uniqueVariantsSet: Set<string> = new Set();
 
+    products.forEach(product => {
+        if (product.variants) {
+            product.variants.forEach(variant => {
+                if (variant.name) {
+                    uniqueVariantsSet.add(variant.name);
+                }
+            });
+        }
+    });
+
+    return Array.from(uniqueVariantsSet);
+}
+const getUniqueTagNames = (products: IProductFood[]): string[] => {
+  const uniqueTagsSet: Set<string> = new Set();
+
+  Object.values(EFoodTagType).forEach(tag => uniqueTagsSet.add(tag));
+  
+  products.forEach(product => {
+      if (product.tags) {
+          product.tags.forEach(tag => {
+              if (tag) {
+                  uniqueTagsSet.add(tag.name);
+              }
+          });
+      }
+  });
+  return Array.from(uniqueTagsSet);
+}
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const errors = validateForm();
@@ -84,9 +116,22 @@ const FormProductFood: React.FC<IFormProductFood> = ({ onSubmit, products, editP
     if(isVariant){
       newProduct.variants = variants;
     }
+    if(tags && tags.length){
+      newProduct.tags = tags;
+    }
     onSubmit(newProduct, image);
   };
 
+  const handleAddTag = () => {
+    if (newTagName && !tags.some(tag => tag.name.toLowerCase() === newTagName.toLowerCase())) {
+      setTags(prevTags => [...prevTags, {name:newTagName}]);
+    }
+    setNewTagName('');
+};
+
+const handleDeleteTag = (tagIndex: number) => {
+    setTags(prevTags => prevTags.filter((_, index) => index !== tagIndex));
+};
   const validateForm = () => {
     const errors = {
       name: '',
@@ -143,15 +188,11 @@ const FormProductFood: React.FC<IFormProductFood> = ({ onSubmit, products, editP
 
   const isSaveDisabled = !(name && ((!isMultiVariant && price) || (isMultiVariant && variants.every(val => val.name !== '' && val.price > 0))) && itemType);
   const handleVariantChange = (field: 'name' | 'price', value: string | number, index: number) => {
-    const updatedVariants = [...variants];
-     
-      if (field === 'name') {
-        updatedVariants[index][field] = value as string;
-      } else if (field === 'price') {
-        updatedVariants[index][field] = value as number;
-      }
-    setVariants(updatedVariants);
-  };
+    setVariants(prevVariants => prevVariants.map((variant, i) => {
+        if (i !== index) return variant;
+        return { ...variant, [field]: value };
+    }));
+};
   
   const handleAddVariant = () => {
     setVariants([...variants, { variantId: `${variants.length+1}`, name: '', price: 0 }]);
@@ -194,7 +235,7 @@ const FormProductFood: React.FC<IFormProductFood> = ({ onSubmit, products, editP
                 label="Variant"
                 placeholder="Variant Name"
                 onChange={(value) => handleVariantChange('name', value, index )}
-                suggestions={[]}
+                suggestions={getUniqueVariantNames(products)}
               />
               <InputInteger
                 label="Price"
@@ -250,6 +291,28 @@ const FormProductFood: React.FC<IFormProductFood> = ({ onSubmit, products, editP
         label="Description"
         placeholder="Enter product details."
       />
+
+      <Row style={{ gap: '1rem' }} a="end">
+          <Row w="10rem">
+            <InputWithSuggestions
+              label="Tag"
+              placeholder="Enter Tag"
+              onChange={(tag) => setNewTagName(tag)}
+              value={newTagName}
+              suggestions={getUniqueTagNames(products)}
+            />
+          </Row>
+          <Button type="button" disabled={!newTagName} onClick={handleAddTag}>Add Tag</Button>
+        </Row>
+        <Row style={{ gap: '1rem' }}>
+          {tags.map((tag,index) => (
+            <Row a="center" key={index} p='2px 8px' w="initial"  style={{background: tag.color ? tag.color : theme.brandColor.pink ,gap:'0.5rem'}} br="0.5rem">
+              <Text tt="cap" s="12" w={4} c={theme.neutralColor.bgContainer}>{tag.name}</Text>
+              <Icon name={IconName.Clear} color={theme.neutralColor.bgContainer} onClick={() => handleDeleteTag(index)}/>
+            </Row>
+          ))}
+        </Row>
+
       <Col a="center" style={{gap:'0.5rem'}}>
         <Row p='0.5rem 0' a="center" j="end">
           <Row><Text w={5}>Product Image</Text></Row>

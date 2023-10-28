@@ -21,13 +21,12 @@ export interface IProductFood extends IProductBase {
   tags?: IFoodTag[];
 }
 export interface IFoodTag {
-  label: string;
-  type: EFoodTagType | string;
+  name: EFoodTagType | string;
   color?: string;
 }
 
 export enum EFoodTagType {
-  BEST_SELLER = "BEST_SELLER",
+  BEST_SELLER = "BEST SELLER",
   RECOMMENDED = "RECOMMENDED",
 }
 
