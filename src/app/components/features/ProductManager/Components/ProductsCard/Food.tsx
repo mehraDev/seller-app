@@ -3,6 +3,8 @@ import { useState } from "react";
 import styled, { useTheme } from "styled-components";
 import { Box, Col, Img, Row, Text } from "ui/basic";
 import DrawerPreviewProduct from "../DrawerPreviewProduct/DrawerPreviewProduct";
+import Button from "ui/Button";
+import { IVariant } from "app/interfaces/Shop/product";
 
 export enum EItemCardFood {
   Card = "card",
@@ -38,7 +40,7 @@ const ItemFoodCard: React.FC<IItemFoodCard> = ({
   const { category }  = item;
   const categoryFormat = category ?  category?.replaceAll('/', ' / ') : 'Others';
   const isCategory = mode === EItemCardFood.Preview;
-  const {description} = item;
+  const {description,tags} = item;
 
   const isDescription = (mode === EItemCardFood.Preview && description);
   const fd = isRow ? "rr" : "c";
@@ -49,11 +51,20 @@ const ItemFoodCard: React.FC<IItemFoodCard> = ({
   const imgHeight = mode === EItemCardFood.Preview ? '100%' : '7rem';
   const detailsPadding = mode ===  EItemCardFood.Preview ? '1rem 0.5rem' : "0.5rem 0 0 ";
   const imageRadius =  mode === EItemCardFood.Preview ?  "8px 8px 0 0 " :  "8px";
+
+  const defaultVariant = item.variants  ? item.variants.find(variant => variant.default) || item.variants[0]
+  : null;
+ 
+  const [selectedVariant, setSelectedVariant] = useState<IVariant | null>(defaultVariant);
+
+  const handleVariantClick = (variant: IVariant) => {
+      setSelectedVariant(variant);
+  };
   return (
     <>
-    <Box fd={fd} a="start" style={{ gap: isRow ? "1rem" : "" }} onClick={previewHandler}>
+    <Box fd={fd} a="start" style={{ gap: isRow ? "1rem" : "" }} >
       {item.image ? (
-      <Row w={imgWidth} h={imgHeight} style={{ borderRadius:imageRadius }}>
+      <Row w={imgWidth} h={imgHeight} style={{ borderRadius:imageRadius }} onClick={previewHandler}>
           <Img
             src={item.image}
             alt={item.name}
@@ -63,7 +74,8 @@ const ItemFoodCard: React.FC<IItemFoodCard> = ({
       </Row>
        ) : null}
       <Col p={detailsPadding} j="center" style={{ gap: detailsGap }}>
-        <Row a="center">
+        <Col onClick={previewHandler}  style={{ gap: detailsGap }}>
+        <Row a="center" style={{ gap: '0.5rem' }}>
           <Row
             w="initial"
             p="2px"
@@ -75,6 +87,13 @@ const ItemFoodCard: React.FC<IItemFoodCard> = ({
           >
             {isVeg ?    <VegIcon /> :  <NonVegIcon/>}
           </Row>
+          <Row style={{ gap: '0.5rem' }}>
+          {tags && tags.map((tag,index) => (
+            <Row a="center" key={index} p='2px 8px' w="initial"  style={{background: tag.color ? tag.color : theme.brandColor.pink ,gap:'0.5rem',borderRadius:'4px'}} >
+              <Text tt="upp" s="10" w={4} c={theme.neutralColor.bgContainer}>{tag.name}</Text>
+            </Row>
+          ))}
+        </Row>
         </Row>
         { isCategory  ? 
           <Text s="12" w={6} c={theme.neutralColor.textTertiary}>{`In ${categoryFormat}`}</Text> :
@@ -90,8 +109,15 @@ const ItemFoodCard: React.FC<IItemFoodCard> = ({
           {item.name}
         </Text>
         <Text w={5} s="14" c={theme.neutralColor.textSecondary}>
-          &#x20B9; {item.price}
+          &#x20B9; {selectedVariant ? selectedVariant.price : item.price}
         </Text>
+        </Col>
+        {mode === EItemCardFood.Preview && item.variants && item.variants.length ? <Row a="center" style={{gap:'1rem'}}>
+          {item.variants.map(variant => (
+            <Button variant={selectedVariant?.variantId === variant.variantId ? 'primary' :"secondary"} size="small" padding="4px 6px" onClick={() => handleVariantClick(variant)}>{variant.name}</Button>
+          ))}
+        </Row>
+        : null}
         {isDescription && (
           <Row>
             <Text s="12" w={5} c={theme.neutralColor.textTertiary}>
