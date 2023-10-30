@@ -24,7 +24,7 @@ import { InputFile } from "ui/Form";
 import { EPopupModes } from "ui/Popup/PopupStatus";
 import InputSearch from "ui/Form/Inputs/InputSearch";
 import PopupWarning from "ui/Popup/PopupWarning";
-import { generateTimestampId, generateUniqueTimestampId } from "firebaseServices/Utils/UniqueID";
+import {  generateUniqueTimestampId } from "firebaseServices/Utils/UniqueID";
 import { fetchProducts } from "store/modules/productSlice";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "store/store";
@@ -245,23 +245,21 @@ const ProductsEditor : React.FC<IProductsEditor>= ({onClose,onUpload,shop,initia
       try {
         const loadedImages = await Promise.all(imageFiles.map(readFileAsDataURL));
         const products: IProduct[] = loadedImages.map((image, index) => ({
-          id: `${generateTimestampId()}${index}`,
-          name: `Product ${index + 1}`,
+          id: `${generateUniqueTimestampId()}`,
+          name: `P ${index + 1}`,
           price: 0,
           veg:true,
           description: ``,
           image: image
       }));
-      setMultiEditProducts(products);
-        if(loadedImages.length > 0) {
+        if(products.length > 0) {
             setShowMultiEdit(true); 
+          setMultiEditProducts(products);
         }
     } catch (error) {
         console.error('Error reading file:', error);
     }
   };
-  
-
     const handleUploadFromFile = (files: FileList) => {
       const file = files[0];
       if (file.name.endsWith('.dbmenu')) {
@@ -273,10 +271,7 @@ const ProductsEditor : React.FC<IProductsEditor>= ({onClose,onUpload,shop,initia
               if (jsonData.hasOwnProperty('products')) {
                 const products: IProduct[] = jsonData.products;
                 if(products.length){
-                  const productsWithIds = products.map((product) =>
-                    product.id ? product : { ...product, id: generateUniqueTimestampId() }
-                  );
-                  // console.log(productsWithIds);
+                  const productsWithIds = products.map((product) => ({ ...product, id: generateUniqueTimestampId() }));
                   setImportedProducts((prevProducts) => [...productsWithIds,...prevProducts]);
                   const importedAbsoluteImageProducts = addImageUrlsToProducts(productsWithIds,shop);
                   setNewProducts([...importedAbsoluteImageProducts,...newProducts]);
@@ -290,7 +285,6 @@ const ProductsEditor : React.FC<IProductsEditor>= ({onClose,onUpload,shop,initia
               } else {
                 setPopupMode(EPopupModes.Error);
                 setPopupMessage('No Products Found');
-                console.error('The JSON data does not contain a "products" property.');
               }
             } catch (error) {
               console.error('Error parsing JSON data:', error);
@@ -303,20 +297,15 @@ const ProductsEditor : React.FC<IProductsEditor>= ({onClose,onUpload,shop,initia
       } else {
         setPopupMode(EPopupModes.Error);
         setPopupMessage('Invalid File');
-        console.error('Invalid file extension. Please select a .dbmenu file.');
       }
     };
     const handleClosePopup = () => {
       setPopupMode(EPopupModes.None);
       setPopupMessage('');
     }
-
     const handleSearch = (q:string) => {
       setQuery(q);
     }
-    const handlePreviewProduct = (prodcut:IProduct | null) => {
-      setPreview(prodcut);
-    };
 
     const lists = [
         { listType: ELists.New, products: newProducts, title: "Recently Added", titleColor : theme.neutralColor.text },
@@ -399,22 +388,18 @@ const ProductsEditor : React.FC<IProductsEditor>= ({onClose,onUpload,shop,initia
   let ProductCard = supportedProductCards[shop] as React.FC<IItemCard>;
   let EditComponent =  EditProduct;
   return (
-    <Col h="100%" style={{background:theme.neutralColor.fillQuaternary,borderBottom: `1px solid ${theme.neutralColor.borderSecondary}`}}>
+    <Col h="100%" style={{background:theme.neutralColor.bgContainer,borderBottom: `1px solid ${theme.neutralColor.borderSecondary}`}}>
       <Col style={{boxShadow:theme.shadow.shadow1, background: theme.neutralColor.bgContainer,borderBottom: `1px solid ${theme.neutralColor.borderSecondary}`}}>
-        <Row a="center" w="inherit" p='1rem 0.5rem 0' >
-          <Row a='center'>
+        <Row a="center" w="inherit" p='0.5rem' style={{borderBottom: `1px solid ${theme.neutralColor.border}`}} >
             <Icon height={1.5} color={theme.brandColor.red} width={1.5} name={IconName.Close} onClick={handleCloseEditor} />
             <Text w={7} s='18'  ml="0.5rem" c={theme.neutralColor.text}>Products Editor</Text>
-          </Row>
           
         </Row>
-        <Row p={'0.5rem' }>
-        <Row j="between" a='center' style={{gap:'1rem'}} p='0 1rem'>
+        <Row j="between" a='center' style={{gap:'1rem'}} p='0.5rem 1rem'>
             <Row style={{gap:'1rem'}}>
             <InputFile
-            width={'initial'}
+              width={'initial'}
               variant="secondary"
-              accept="image/*"
               multiple={true}
               size="small" padding="2px 6px"
               label="Multi Upload" onFileChange={handleMultiUpload} />
@@ -431,7 +416,6 @@ const ProductsEditor : React.FC<IProductsEditor>= ({onClose,onUpload,shop,initia
             : 
             null}
               </Row>
-          </Row>
         </Row>
         <Row p={'0.5rem 1rem' }>
           <InputSearch value={query} onChange={handleSearch} onClear={() => setQuery('')} placeholder={'Search...'}/>
@@ -455,7 +439,6 @@ const ProductsEditor : React.FC<IProductsEditor>= ({onClose,onUpload,shop,initia
                     products={products}
                     shop={shop}
                     listTitle={title}
-                    onPreview={handlePreviewProduct}
                     titleColor={titleColor}
                   />
                 ))

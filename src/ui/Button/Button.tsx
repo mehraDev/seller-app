@@ -60,9 +60,7 @@ const ButtonWrapper = styled.button<IButton>`
   border: ${({ color, border, variant, disabled }) => {
     if (border) {
       return border;
-    } else if (variant === 'primary') {
-      return '#ffffff';
-    } else if (variant === 'secondary' ) {
+    } else if (variant === 'primary' || variant === 'secondary') {
       if(disabled){
         return `1px solid ${theme.neutralColor.textTertiary}`;
       }

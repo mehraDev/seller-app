@@ -19,7 +19,6 @@ interface IProductListEditable {
     shop: EShop;
     listTitle: string;
     listType: ELists;
-    onPreview?: (product: IProduct | null) => void;
     titleColor?: string
   }
   const ProductListEditable: React.FC<IProductListEditable> = ({
@@ -27,7 +26,6 @@ interface IProductListEditable {
     handleEditProduct,
     products, shop, listTitle,
     listType,
-    onPreview,
     titleColor
   }) => {
     
@@ -40,15 +38,9 @@ interface IProductListEditable {
       [ELists.Deleted]: '#FF3B30',
     };
     let ProductCard = supportedProductCards[shop] as React.FC<IItemCard>;
-    const handlePreviewProduct = (item: IProduct) => {
-       if(onPreview){
-        onPreview(item)
-       }
-    }
     
     const CardControl: React.FC<ICardControl> = ({ product }) => {
       let controlsComponent: React.ReactNode = null;
-      const theme = useTheme();
       const editColor = 'rgb(0 86 227)';
       const deleteColor = 'rgb(191 18 18)';
       const recoverColor = 'rgb(238 148 0)';
@@ -139,7 +131,7 @@ interface IProductListEditable {
                   background: theme.neutralColor.bgContainer,
                 }}
               >
-                <ProductCard item={product} onPreview={handlePreviewProduct} showCategory={true}/>
+                <ProductCard item={product} showCategory={true}/>
                 <Row style={{gap: '0.5rem'}} a="center" j='end' p='0.5rem 1rem'>
                       <CardControl product={product}/>
                     </Row>

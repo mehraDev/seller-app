@@ -4,7 +4,7 @@ import CategoryViewer from "../Common/CategoryViewer";
 
 const ViewerFood: React.FC<IViewerFood> = ({ products }) => {
   return (
-    <CategoryViewer products={products} onCategoryPositionsUpdate={() => console.log('')} />
+    <CategoryViewer products={products} />
   );
 };
 

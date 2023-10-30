@@ -26,7 +26,6 @@ const ProductManager: React.FC = () => {
   const theme = useTheme();
   const shop: EShop = EShop.Food;
   const {setDisplayOptions,displayOptions,setHasOptionButton} = useOptionsButton();
-  const [preview,setPreview] = useState<IProduct | null>(null);
 
   const [mode, setMode] = useState<Mode>(Mode.Viewer);
   const { list: products, isLoading } = useSelector(
@@ -64,9 +63,7 @@ if (isLoading) {
   
   return (
     <>
-      {mode === Mode.Viewer ? (
-        <>
-          <ProductsViewer shop={EShop.Food}/>
+      <ProductsViewer shop={EShop.Food}/>
           <Row w='initial' style={{
               background: theme.brandColor.primary,
               boxShadow:theme.shadow.shadow1,
@@ -84,19 +81,15 @@ if (isLoading) {
             width={1.5}
           />
           </Row>
-        </>
-        )
-        :
-        <Drawer isOpen={mode === Mode.Editor} h='100%' bg={theme.neutralColor.bgContainer}>
-          <ProductsEditor
-            onUpload={handleUploadProducts}
-            initialMode={displayAddProductFormInitially ? Action.Add : Action.None }
-            initialProducts={products}
-            onClose={() => setMode(Mode.Viewer)}
-            shop={shop}
-            />
+          <Drawer isOpen={mode === Mode.Editor} h='100%' >
+            <ProductsEditor
+              onUpload={handleUploadProducts}
+              initialMode={displayAddProductFormInitially ? Action.Add : Action.None }
+              initialProducts={products}
+              onClose={() => setMode(Mode.Viewer)}
+              shop={shop}
+              />
         </Drawer>
-      }
       {displayOptions &&
         <OptionsCard options={options} closeCard={() => setDisplayOptions(false)}/>
       }
