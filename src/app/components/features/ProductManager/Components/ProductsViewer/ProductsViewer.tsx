@@ -1,4 +1,4 @@
-import React, {  useEffect, useRef, useState } from "react";
+import React, {   useLayoutEffect, useRef, useState } from "react";
 import { IProduct } from "app/interfaces";
 import { Col, Row,Text } from "ui/basic";
 import { EShop } from "app/enums";
@@ -17,7 +17,6 @@ export interface IProductsViewer {
 }
 
 const ProductsViewer: React.FC<IProductsViewer> = ({  shop,scrollRef }) => {
-  
   const { list: products, isLoading } = useSelector(
     (state: RootState) => state.products
   );
@@ -25,45 +24,47 @@ const ProductsViewer: React.FC<IProductsViewer> = ({  shop,scrollRef }) => {
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const absoluteImageProducts: IProduct[] = addImageUrlsToProducts(products,shop);
   const [searchContainerHeight, setSearchContainerHeight] = useState(0);
-  const [viewerTopPosition, setViewerTopPosition] = useState(0);
+  const [searchStickyPosition,setSearchStickyPosition] = useState(0);
   const theme = useTheme();
   let Viewer = supportedProductViewers[shop] as React.FC<IViewer>;
 
-  const [preview,setPreview] = useState<IProduct | null>(null)
   const [searchTerm , setSearchTerm] = useState("");
-
-  const handlePreviewProduct = (prodcut:IProduct | null) => {
-    setPreview(prodcut);
-  }
-  useEffect(() => {
-    if (viewerRef.current) {
-        const topPosition = viewerRef.current.getBoundingClientRect().top;
-        setViewerTopPosition(topPosition - searchContainerHeight + 10);
-    }
-}, [searchContainerHeight]);
-
-  useEffect(() => {
-    if (searchContainerRef.current) {
-      const height = searchContainerRef.current.offsetHeight;
-      setSearchContainerHeight(height);
-    }
-  }, []);
   
+
+  useLayoutEffect(() => {
+    const calculateAndSetPosition = () => {
+        if (searchContainerRef.current) {
+            const searchTopOffsetAbsolute = searchContainerRef.current.getBoundingClientRect().top;
+            const searchHeight = searchContainerRef.current.getBoundingClientRect().height;
+            setSearchContainerHeight(searchHeight);
+            setSearchStickyPosition(searchTopOffsetAbsolute);
+        }
+    };
+    
+    calculateAndSetPosition();
+    window.addEventListener('load', calculateAndSetPosition);
+  
+    return () => {
+        window.removeEventListener('load', calculateAndSetPosition);
+    };
+  }, []);
+ 
   const handleSearch = (query: string) => {
     setSearchTerm(query);
   };
   const filterProducts = absoluteImageProducts.filter((product) =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
-    return (
+
+return (
   <>
   <Col p='0 0 7rem' h="100%" style={{overflow: 'scroll'}} ref={viewerRef}>
     {
       isLoading ? 
       <LoadingAnimation/>
       : 
-      <Col style={{gap:'1rem'}}>
-            <Sticky height={searchContainerHeight ? searchContainerHeight : undefined } at={viewerTopPosition} stickyStyle={{position:'fixed',top:0, zIndex:1,boxShadow: theme.shadow.boxShadowTertiary}} containerRef={scrollRef? scrollRef: viewerRef}>
+      <Col style={{gap:'1rem'}} >
+            <Sticky height={searchContainerHeight} at={searchStickyPosition} stickyStyle={{position:'fixed',top:0, zIndex:1,boxShadow: theme.shadow.shadow1}} containerRef={scrollRef || viewerRef}>
               <Row ref={searchContainerRef} p='0.5rem 1rem' style={{background:theme.neutralColor.bgContainer}}>
                 <InputSearch placeholder="Search in products..." value={searchTerm} onChange={handleSearch} onClear={() => setSearchTerm('')}/>
               </Row>
