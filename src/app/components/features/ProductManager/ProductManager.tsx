@@ -31,7 +31,7 @@ const ProductManager: React.FC = () => {
   const { list: products, isLoading } = useSelector(
     (state: RootState) => state.products
   );
- 
+  const { profile } = useSelector((state: RootState) => state.user);
   const handleInitialAddProduct = () => {
     setMode(Mode.Editor);
   }
@@ -63,33 +63,33 @@ if (isLoading) {
   
   return (
     <>
-      <ProductsViewer shop={EShop.Food}/>
-          <Row w='initial' style={{
-              background: theme.brandColor.primary,
-              boxShadow:theme.shadow.shadow1,
-              position:'absolute', bottom:'1rem',right:'1rem'
+      <ProductsViewer shop={profile?.type || EShop.Base}/>
+      <Row w='initial' style={{
+          background: theme.brandColor.primary,
+          boxShadow:theme.shadow.shadow1,
+          position:'absolute', bottom:'1rem',right:'1rem'
 
-            }}
-            br='12px'>
-          <Icon name={IconName.Edit} 
-            clickEffectTime={100}
-            onClick={() => setMode(Mode.Editor)}
-             padding='1rem'
-            color={theme.neutralColor.bgContainer}
-            height={1.5}
-            br='12px'
-            width={1.5}
+        }}
+        br='12px'>
+      <Icon name={IconName.Edit} 
+        clickEffectTime={100}
+        onClick={() => setMode(Mode.Editor)}
+          padding='1rem'
+        color={theme.neutralColor.bgContainer}
+        height={1.5}
+        br='12px'
+        width={1.5}
+      />
+      </Row>
+      <Drawer isOpen={mode === Mode.Editor} h='100%' >
+        <ProductsEditor
+          onUpload={handleUploadProducts}
+          initialMode={displayAddProductFormInitially ? Action.Add : Action.None }
+          initialProducts={products}
+          onClose={() => setMode(Mode.Viewer)}
+          shop={shop}
           />
-          </Row>
-          <Drawer isOpen={mode === Mode.Editor} h='100%' >
-            <ProductsEditor
-              onUpload={handleUploadProducts}
-              initialMode={displayAddProductFormInitially ? Action.Add : Action.None }
-              initialProducts={products}
-              onClose={() => setMode(Mode.Viewer)}
-              shop={shop}
-              />
-        </Drawer>
+      </Drawer>
       {displayOptions &&
         <OptionsCard options={options} closeCard={() => setDisplayOptions(false)}/>
       }
