@@ -7,13 +7,12 @@ interface IDrawer {
   isOpen: boolean;
   onClose?: () => void;
   children: ReactNode;
-  h? : string;
-  j? : 'center' | 'start' | 'end';
+  h?: string;
+  j?: 'center' | 'start' | 'end';
 }
 
-
 const slideUp = keyframes`
-   0% {
+  0% {
     transform: translateY(100%);
   }
   100% {
@@ -24,53 +23,77 @@ const slideUp = keyframes`
 const slideDown = keyframes`
   0% {
     transform: translateY(0);
-
   }
   100% {
     transform: translateY(100%);
   }
 `;
 
+const DrawerContainer = styled(Box)<{ bg: string }>`
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  z-index: 9;
+  background: ${({ bg }) => bg};
+`;
+
+const AnimatedCol = styled(Col)<{ open: boolean }>`
+  animation: ${props => props.open ? slideUp : slideDown} 0.3s forwards;
+`;
+
 const Drawer: React.FC<IDrawer> = ({ bg, children, isOpen, h = '90%', j = 'end' }) => {
   const theme = useTheme();
-  const [openDrawer, setOpenDrawer] = useState(false);
-  const [renderDrawer, setRenderDrawer] = useState(false);
   
+  const [isOpenDrawer, setIsOpenDrawer] = useState(false);
+  const [renderDrawer, setRenderDrawer] = useState(false);
+  const [opened, setOpened] = useState(false);
+
   useEffect(() => {
     if (isOpen) {
-        setRenderDrawer(true);
-        setOpenDrawer(true);
+      setRenderDrawer(true);
+      setIsOpenDrawer(true);
     } else {
-      setOpenDrawer(false);
+      setIsOpenDrawer(false);
     }
   }, [isOpen]);
 
   const handleAnimationEnd = () => {
-    if (!openDrawer) {
+    console.log('Animation ended',)
+    if (isOpen) {
+      setOpened(true);
+    }else{
+      setOpened(false);
       setRenderDrawer(false);
     }
   };
 
-  if ( !renderDrawer) {
-    return null;
-  }
+  const backgroundColor = opened && isOpen ?  bg || theme.neutralColor.bgMask : 'transparent';
 
   return (
-      <Box j="end" a="end" h="100%" style={{position:'fixed',left:0,bottom:0,zIndex:9 ,background: bg ? bg : theme.neutralColor.bgMask}}>
-      <AnimatedCol
-        h={h}
-        j={j}
-        open={openDrawer}
-        onAnimationEnd={handleAnimationEnd}
-      >
-        {children}
-      </AnimatedCol>
-      </Box>
+    <>
+     { 
+      renderDrawer
+      ?
+      <DrawerContainer 
+      j="end" 
+      a="end" 
+      h="100%" 
+      bg={backgroundColor}
+    >
+        <AnimatedCol 
+          h={h} 
+          j={j} 
+          open={isOpenDrawer} 
+          onAnimationEnd={handleAnimationEnd}
+        >
+          {children}
+        </AnimatedCol>
+    </DrawerContainer>
+  : 
+null
+}
+</>
   );
 };
-
-const AnimatedCol = styled(Col)<{ open: boolean }>`
-  animation: ${props => props.open ? slideUp : slideDown} 0.3s  forwards;
-`;
 
 export default Drawer;
