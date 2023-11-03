@@ -29,6 +29,11 @@ import { fetchProducts } from "store/modules/productSlice";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "store/store";
 import MultiEdit from "./MultiEdit/MultiEdit";
+import { isProductValid } from "../../utils/validators/isProductValid";
+import compressImage from "ui/Image/utils/ImageCompression";
+import convertHEICToJPEG from "ui/Image/utils/imageConversion";
+import compressAndConvertImage from "ui/Image/utils/resizeImage";
+import resizeImage from "ui/Image/utils/resizeImage";
 
 export interface IProductsEditor {
     initialProducts: IProduct[];
@@ -55,13 +60,13 @@ const ProductsEditor : React.FC<IProductsEditor>= ({onClose,onUpload,shop,initia
     const absoluteImageProducts: IProduct[] = addImageUrlsToProducts(initialProducts,shop);
     const [action,setAction] = useState<Action>(initialMode);
     const [preview,setPreview] = useState<IProduct | null>(null)
-    const [uploading, setUploading] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const [unModifiedProducts,setUnmodifiedProducts] = useState<IProduct[]>(absoluteImageProducts);
     const [newProducts,setNewProducts] = useState<IProduct[]>([]);
     const [modifiedProducts,setModifiedProducts] = useState<IProduct[]>([]);
     const [deletedProducts,setDeletedProducts] = useState<IProduct[]>([]);
-    const [ importedProducts,setImportedProducts] = useState<IProduct[]>([]);
+    const [importedProducts,setImportedProducts] = useState<IProduct[]>([]);
 
     const [uploadStatus, setUploadStatus] = useState<'success' | 'error' | 'none'>('none');
     const [activeProduct,setActiveProduct] = useState<IProduct | null>(null);
@@ -72,6 +77,7 @@ const ProductsEditor : React.FC<IProductsEditor>= ({onClose,onUpload,shop,initia
     const [resetPopup,setResetPopup] = useState(false);
     const [closeEditorPopup,setCloseEditorPopup] = useState(false);
 
+    const [isUploading,setIsUploading] = useState(false);
     const [multiEditProducts, setMultiEditProducts] = useState<IProduct[]>([]);
     const [showMultiEdit, setShowMultiEdit] = useState<boolean>(false);
     const hasChanges = newProducts.length || modifiedProducts.length || deletedProducts.length ;
@@ -105,12 +111,6 @@ const ProductsEditor : React.FC<IProductsEditor>= ({onClose,onUpload,shop,initia
     setShowMultiEdit(false);
     setMultiEditProducts([])
 }
-  
-  const areItemsValid = (items: IProduct[]): boolean => {
-    return items.every(item => item.name && (item.price !== null && item.price !== 0));
-}
-
-
     const handleEditProductSave = (product:IProduct) => {
       switch (activeList) {
           case ELists.Unmodified:
@@ -201,7 +201,7 @@ const ProductsEditor : React.FC<IProductsEditor>= ({onClose,onUpload,shop,initia
     
 
     const handleUpdateProducts = async () => {
-      setUploading(true);
+      setLoading(true);
         try {
             const finalProducts : IAllProducts = {
               newProducts,
@@ -219,7 +219,7 @@ const ProductsEditor : React.FC<IProductsEditor>= ({onClose,onUpload,shop,initia
           setUploadStatus('error');
           console.log('error',error);
         } finally{
-          setUploading(false);
+          setLoading(false);
         };
     };
 
@@ -233,6 +233,8 @@ const ProductsEditor : React.FC<IProductsEditor>= ({onClose,onUpload,shop,initia
     }
 
     const handleMultiUpload = async (files: FileList) => {
+      setIsUploading(true);
+
       const readFileAsDataURL = async (file: File): Promise<string> => {
           return new Promise((resolve, reject) => {
               const reader = new FileReader();
@@ -242,8 +244,33 @@ const ProductsEditor : React.FC<IProductsEditor>= ({onClose,onUpload,shop,initia
           });
       };
       const imageFiles = Array.from(files).filter(file => file.type.startsWith('image/'));
+      const compressFile= async (file: File): Promise<File> => {
+        try {
+          if (file) {
+            if (file.type === "image/heic") {
+              console.log("Converting HEIC to JPEG");
+              file = await convertHEICToJPEG(file);
+              console.log("After convertsion from HEIC to Webp: ", (file.size / 1024).toFixed(2), "KB");
+
+            }
+            const cp  =  await resizeImage(file,200);
+            const compressed =  await compressImage(cp);
+            console.log('compressing',compressed);
+
+            if (!compressed) {
+              throw new Error('Compression returned null.');
+            }
+            return compressed;
+          }
+          return file;
+        } catch (error) {
+          console.error('Error converting file:', error);
+          throw error; // rethrow the error to be handled in the catch block of handleMultiUpload
+        }
+      };
       try {
-        const loadedImages = await Promise.all(imageFiles.map(readFileAsDataURL));
+        const processedFiles = await Promise.all(imageFiles.map(compressFile));
+        const loadedImages = await Promise.all(processedFiles.map(readFileAsDataURL));
         const products: IProduct[] = loadedImages.map((image, index) => ({
           id: `${generateUniqueTimestampId()}`,
           name: `P ${index + 1}`,
@@ -257,9 +284,12 @@ const ProductsEditor : React.FC<IProductsEditor>= ({onClose,onUpload,shop,initia
           setMultiEditProducts(products);
         }
     } catch (error) {
-        console.error('Error reading file:', error);
+        alert('Error reading file:');
+    } finally{
+      setIsUploading(false);
     }
-  };
+    };
+
     const handleUploadFromFile = (files: FileList) => {
       const file = files[0];
       if (file.name.endsWith('.dbmenu')) {
@@ -387,6 +417,19 @@ const ProductsEditor : React.FC<IProductsEditor>= ({onClose,onUpload,shop,initia
   const noProducts = !newProducts.length &&  !unModifiedProducts.length && !modifiedProducts.length && !deletedProducts.length;
   let ProductCard = supportedProductCards[shop] as React.FC<IItemCard>;
   let EditComponent =  EditProduct;
+  
+  // const validateProduct = async (products: IProduct[]): Promise<boolean> => {
+  //     const allProducts = [...newProducts, ...unModifiedProducts, ...modifiedProducts];
+  //     const isValid = await isProductValid(allProducts, product, shop);
+  //   return isValid;
+  // };
+  const validateProductForShop = async (
+    product: IProduct, 
+    allProducts: IProduct[]
+): Promise<boolean> => {
+    return isProductValid(product, allProducts, shop);
+};
+
   return (
     <Col h="100%" style={{background:theme.neutralColor.bgContainer,borderBottom: `1px solid ${theme.neutralColor.borderSecondary}`}}>
       <Col style={{boxShadow:theme.shadow.shadow1, background: theme.neutralColor.bgContainer,borderBottom: `1px solid ${theme.neutralColor.borderSecondary}`}}>
@@ -459,10 +502,13 @@ const ProductsEditor : React.FC<IProductsEditor>= ({onClose,onUpload,shop,initia
           <Drawer isOpen={showMultiEdit ? true : false}  h="100%">
           {showMultiEdit && 
             <MultiEdit 
-            prevItems={[...newProducts,...unModifiedProducts,...modifiedProducts]}
-              allItemsValid={areItemsValid}
-              onSave={handleMultiEditSave} items={multiEditProducts}  CardComponent={ProductCard} onClose={handleMultiEditClose}
-              EditComponent={EditComponent}
+              prevProducts={[...newProducts,...unModifiedProducts,...modifiedProducts]}
+              validator={validateProductForShop}
+              onSave={handleMultiEditSave}
+              newProducts={multiEditProducts}
+              ProductCard={ProductCard}
+              onClose={handleMultiEditClose}
+              Editor={EditComponent}
             />
           }
           </Drawer>
@@ -484,7 +530,12 @@ const ProductsEditor : React.FC<IProductsEditor>= ({onClose,onUpload,shop,initia
             title={'Discard Unsaved Changes?'}  message={`You have unsaved changes. Are you sure you want to close the editor and discard all changes?`}
             onCancel={() => setCloseEditorPopup(false)}
             onConfirm={onCloseEditor} />
-        {uploading && (
+        {loading && (
+        <Backdrop>
+          <LoadingAnimation/>
+        </Backdrop>
+        )}
+         {isUploading && (
         <Backdrop>
           <LoadingAnimation/>
         </Backdrop>

@@ -21,7 +21,7 @@ export interface IFormProduct {
 };
 
 export interface IFormProductFood {
-  onSubmit: (item: IProductFood, additionalData: any) => void;
+  onSubmit: (item: IProductFood, additionalData?: any) => void;
   products: IProductFood[];
   editProduct?: IProductFood;
 }
@@ -97,11 +97,12 @@ const getUniqueTagNames = (products: IProductFood[]): string[] => {
 }
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const errors = validateForm();
+    console.log('clicked')
+    // const errors = validateForm();
     
-    if (Object.values(errors).some(error => error)) {
-      return;
-    }
+    // if (Object.values(errors).some(error => error)) {
+    //   return;
+    // }
     const isVeg = itemType !== 'nonVeg' ? true : false;
     const newProduct: IProductFood = {
       name,
@@ -119,7 +120,7 @@ const getUniqueTagNames = (products: IProductFood[]): string[] => {
     if(tags && tags.length){
       newProduct.tags = tags;
     }
-    onSubmit(newProduct, image);
+    onSubmit(newProduct);
   };
 
   const handleAddTag = () => {

@@ -13,14 +13,12 @@ export enum EItemCardFood {
 }
 export interface IItemFoodCard {
   item: IProductFood;
-  onPreview?: (item: IProductFood) => void;
   mode?: EItemCardFood;
   showCategory? : boolean;
 }
 
 const ItemFoodCard: React.FC<IItemFoodCard> = ({
   item,
-  onPreview,
   mode = EItemCardFood.Strip,
   showCategory= false
 }) => {
@@ -39,7 +37,7 @@ const ItemFoodCard: React.FC<IItemFoodCard> = ({
   const isRow = mode === EItemCardFood.Strip;
   const { category }  = item;
   const categoryFormat = category ?  category?.replaceAll('/', ' / ') : 'Others';
-  const isCategory = mode === EItemCardFood.Preview;
+  const isCategory = showCategory || mode === EItemCardFood.Preview;
   const {description,tags} = item;
 
   const isDescription = (mode === EItemCardFood.Preview && description);
@@ -96,7 +94,7 @@ const ItemFoodCard: React.FC<IItemFoodCard> = ({
         </Row>
         </Row>
         { isCategory  ? 
-          <Text s="12" w={6} c={theme.neutralColor.textTertiary}>{`In ${categoryFormat}`}</Text> :
+          <Text tt="cap" s="12" w={6} c={theme.neutralColor.textTertiary}>{`In ${categoryFormat}`}</Text> :
           null
         }
         <Text
