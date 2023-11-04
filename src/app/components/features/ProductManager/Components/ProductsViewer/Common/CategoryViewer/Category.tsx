@@ -15,7 +15,7 @@ interface ICategory {
 
 interface ICategoryList {
   isTopLevel?:boolean;
-  onCategoryPosition: (category: string, position: number) => void;
+  onCategoryPosition?: (category: string, position: number) => void;
   categoryName: string;
   category: ICategory;
   scrollContainer?: React.RefObject<HTMLDivElement>;
@@ -54,44 +54,12 @@ const Category: React.FC<ICategoryList> = ({
         elementTop = categoryRect.top + window.pageYOffset;
       }
 
-      onCategoryPosition(categoryName, elementTop);
+       if(onCategoryPosition) {
+        onCategoryPosition(categoryName, elementTop) ;
+       }
     };
     calculatePosition();
   }, [categoryName, onCategoryPosition, expandedCategories, scrollContainer]);
-
-  useEffect(() => {
-    const handleResize = () => {
-      const calculatePosition = () => {
-        const categoryContainer = categoryContainerRef.current;
-        const scrollContainerElement = scrollContainer
-          ? scrollContainer.current
-          : window;
-        if (!categoryContainer || !scrollContainerElement) return;
-
-        const categoryRect = categoryContainer.getBoundingClientRect();
-        let elementTop = 0;
-
-        if (scrollContainerElement instanceof HTMLElement) {
-          const scrollRect = scrollContainerElement.getBoundingClientRect();
-          elementTop =
-            categoryRect.top -
-            scrollRect.top +
-            scrollContainerElement.scrollTop;
-        } else {
-          elementTop = categoryRect.top + window.pageYOffset;
-        }
-
-        onCategoryPosition(categoryName, elementTop);
-      };
-      calculatePosition();
-    };
-
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, [categoryName, onCategoryPosition, scrollContainer]);
 
   const categoryProducts = category.products
   if (!categoryProducts || categoryProducts.length === 0) {

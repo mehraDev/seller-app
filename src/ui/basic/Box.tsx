@@ -89,9 +89,9 @@ const Row = styled(Box)<IRow>`
   flex-direction: row;
 `;
 
-interface IColumn extends IBox {}
+export interface ICol extends IBox {}
 
-const Col = styled(Box)<IColumn>`
+const Col = styled(Box)<ICol>`
   flex-direction: column;
 `;
 

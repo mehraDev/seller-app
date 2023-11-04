@@ -9,7 +9,7 @@ interface ICategoryviewer {
   products: IProductFood[];
   scrollContainer?: React.RefObject<HTMLDivElement>;
   onActive?: (value: string) => void;
-  onCategoryPositionsUpdate: (category: string, postion: number) => void;
+  onCategoryPositionsUpdate?: (category: string, postion: number) => void;
 }
 
 const CategoryViewer: React.FC<ICategoryviewer> = ({

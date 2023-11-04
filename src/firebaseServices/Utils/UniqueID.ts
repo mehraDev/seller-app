@@ -4,8 +4,7 @@ function generateTimestampId(): string {
 }
 function generateUniqueTimestampId(): string {
   const timestamp = Date.now();
-  const randomComponent = Math.floor(Math.random() * 1000000); // Adjust the range as needed.
-  return `${timestamp}_${randomComponent}`;
+  return `${timestamp}_${generateUniqueId()}`;
 }
 function generateUniqueId(): string {
   const randomComponent = Math.floor(Math.random() * 1000000);

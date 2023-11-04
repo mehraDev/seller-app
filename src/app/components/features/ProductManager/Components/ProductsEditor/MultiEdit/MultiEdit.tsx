@@ -6,37 +6,55 @@ import { IProduct } from "app/interfaces";
 import CardWithControls from "../../CardWithControls/CardWithControls";
 import Button from "ui/Button";
 import { IEditProduct } from "../../ProductForm/EditProduct";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Drawer } from "ui/Drawer";
 
-interface IMultiEdit {
-    items: IProduct[];
-    prevItems: IProduct[];
-    CardComponent: React.FC<IItemCard>;
+interface IMultiUpload {
+    newProducts: IProduct[];
+    prevProducts: IProduct[];
+    ProductCard: React.FC<IItemCard>;
     onClose : () => void;
     onSave : (items: IProduct[]) => void;
-    EditComponent: React.FC<IEditProduct>;
-    allItemsValid: (items: IProduct[]) => boolean;
+    Editor: React.FC<IEditProduct>;
+    validator: (item:IProduct ,allItems: IProduct[]) =>  Promise<boolean>;
 }
-const MultiEdit: React.FC<IMultiEdit> = ({ items, CardComponent,onClose,onSave,EditComponent,allItemsValid,prevItems }) => {
-    const [editingProduct, setEditingProduct] = useState<IProduct | null>(null);
-    const [activeItems, setActiveItems] = useState<any[]>(items);
-    const handleCloseEditor = () =>{
-        onClose()
-    }
+const MultiEdit: React.FC<IMultiUpload> = ({ newProducts, ProductCard,onClose,onSave,Editor,validator,prevProducts }) => {
     const theme = useTheme();
 
-    const handleEdit = (product:IProduct) => {
+    const [editingProduct, setEditingProduct] = useState<IProduct | null>(null);
+    const [activeItems, setActiveItems] = useState<IProduct[]>(newProducts);
+    const handleCloseEditor = useCallback(() => onClose(), [onClose]);
+    
+    const [productValidities, setProductValidities] = useState<boolean[]>([]);
+    useEffect(() => {
+        const validateProducts = async () => {
+            let validityArray: boolean[] = [];
+            for (let product of activeItems) {
+                const isValid = await validator(product, prevProducts);
+                validityArray.push(isValid);
+            }
+            setProductValidities(validityArray);
+        };
+        validateProducts();
+    }, [activeItems, prevProducts, validator]);
+      
+
+    const handleEdit = (product: IProduct) => {
         setEditingProduct(product);
-    }
-    const handleEditSave = (editedItem: IProduct) => {
-        setActiveItems(prevItems => 
-            prevItems.map(item => 
-                item.id === editedItem.id ? editedItem : item
-            )
-        );
-        setEditingProduct(null);
     };
+
+   
+
+    const handleEditSave = async (editedItem: IProduct) => {
+        setActiveItems(prevItems => 
+                    prevItems.map(item => 
+                        item.id === editedItem.id ? editedItem : item
+                    )
+                );
+       
+        setEditingProduct(null);
+      };
+    
 
 
     const handleEditClose = () => {
@@ -45,16 +63,14 @@ const MultiEdit: React.FC<IMultiEdit> = ({ items, CardComponent,onClose,onSave,E
 
     const handleRemove = (product:IProduct) => {
         setActiveItems(prevItems => prevItems.filter(item => item.id !== product.id));
-
     }
 
     const handleSave = () => {
-        if (allItemsValid(activeItems)) {
+        if (productValidities.length) {
             onSave(activeItems);
-        } else {
-            console.error("Some items are not valid.");
         }
     };
+    const isSubmitEnabled  = productValidities.every(isValid => isValid);
     return (
         <Col style={{background: theme.neutralColor.bgContainer}} h="100%">
             <Row a="center" w="inherit" p=' 0.5rem' style={{background:'yellow'}}>
@@ -65,21 +81,23 @@ const MultiEdit: React.FC<IMultiEdit> = ({ items, CardComponent,onClose,onSave,E
             </Row>
             <Col style={{overflow:'scroll'}} h="100%" p={'0 0 10rem'}>
                 {activeItems.map((item, index) => (
-                    <CardWithControls item={item} onEdit={handleEdit} onDelete={() => handleRemove(item)}>
-                        <CardComponent key={index} item={item} showCategory={true}/>
+                    <Row p={'0.5rem'}>
+                        <CardWithControls p={'1rem 0.5rem'} br="8px" isValid={productValidities[index]} showValidation={true} item={item} onEdit={handleEdit} onDelete={() => handleRemove(item)} >
+                        <ProductCard key={index} item={item} showCategory={true}/>
                     </CardWithControls>
+                    </Row>
                 ))}
             </Col>
             <Row a="center" j="center" p='1rem' style={{gap:'1rem',position:'absolute',bottom: '0',borderTop: '1px solid '+ theme.neutralColor.border,background:theme.neutralColor.bgContainer}}>
-                <Button width="80%" onClick={handleSave} disabled={!allItemsValid(activeItems)}>
+                <Button width="80%" onClick={handleSave} disabled={!isSubmitEnabled}>
                     Done
                 </Button>
             </Row>
             <Drawer isOpen={ editingProduct !== null}>
-            <EditComponent 
+            <Editor 
                 shop="food" 
                 activeEditProduct={editingProduct}
-                products={prevItems}
+                products={prevProducts}
                 onClose={handleEditClose} 
                 onSave={handleEditSave}
                 />

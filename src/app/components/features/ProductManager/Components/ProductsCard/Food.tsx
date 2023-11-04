@@ -13,14 +13,12 @@ export enum EItemCardFood {
 }
 export interface IItemFoodCard {
   item: IProductFood;
-  onPreview?: (item: IProductFood) => void;
   mode?: EItemCardFood;
   showCategory? : boolean;
 }
 
 const ItemFoodCard: React.FC<IItemFoodCard> = ({
   item,
-  onPreview,
   mode = EItemCardFood.Strip,
   showCategory= false
 }) => {
@@ -39,7 +37,7 @@ const ItemFoodCard: React.FC<IItemFoodCard> = ({
   const isRow = mode === EItemCardFood.Strip;
   const { category }  = item;
   const categoryFormat = category ?  category?.replaceAll('/', ' / ') : 'Others';
-  const isCategory = mode === EItemCardFood.Preview;
+  const isCategory = showCategory || mode === EItemCardFood.Preview;
   const {description,tags} = item;
 
   const isDescription = (mode === EItemCardFood.Preview && description);
@@ -47,8 +45,8 @@ const ItemFoodCard: React.FC<IItemFoodCard> = ({
   const previewHandler = mode === EItemCardFood.Preview ? undefined : handleItemPreview;
   const detailsGap = isRow ? "0.5rem" : "0.5rem";
   const isVeg = item.veg || (item.veg !== false) 
-  const imgWidth = mode === EItemCardFood.Preview ? '100%' : '55%';
-  const imgHeight = mode === EItemCardFood.Preview ? '100%' : '7rem';
+  const imgWidth = mode === EItemCardFood.Preview ? '100%' : '62%';
+  const imgHeight = mode === EItemCardFood.Preview ? '100%' : '100%';
   const detailsPadding = mode ===  EItemCardFood.Preview ? '1rem 0.5rem' : "0.5rem 0 0 ";
   const imageRadius =  mode === EItemCardFood.Preview ?  "8px 8px 0 0 " :  "8px";
 
@@ -96,7 +94,7 @@ const ItemFoodCard: React.FC<IItemFoodCard> = ({
         </Row>
         </Row>
         { isCategory  ? 
-          <Text s="12" w={6} c={theme.neutralColor.textTertiary}>{`In ${categoryFormat}`}</Text> :
+          <Text tt="cap" s="12" w={6} c={theme.neutralColor.textTertiary}>{`In ${categoryFormat}`}</Text> :
           null
         }
         <Text
@@ -114,7 +112,7 @@ const ItemFoodCard: React.FC<IItemFoodCard> = ({
         </Col>
         {mode === EItemCardFood.Preview && item.variants && item.variants.length ? <Row a="center" style={{gap:'1rem'}}>
           {item.variants.map(variant => (
-            <Button variant={selectedVariant?.variantId === variant.variantId ? 'primary' :"secondary"} size="small" padding="4px 6px" onClick={() => handleVariantClick(variant)}>{variant.name}</Button>
+            <Button type="button" variant={selectedVariant?.variantId === variant.variantId ? 'primary' :"secondary"} size="small" padding="4px 6px" onClick={() => handleVariantClick(variant)}>{variant.name}</Button>
           ))}
         </Row>
         : null}
