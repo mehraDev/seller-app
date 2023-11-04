@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Form, { InputDescription, InputInteger, InputRadio, InputText, CategoryHierarchySelector } from "ui/Form";
 import  styled, { useTheme } from "styled-components";
 import { IProduct, IProductFood } from "app/interfaces";
@@ -12,6 +12,12 @@ import { IFoodTag, IVariant,EFoodTagType } from "app/interfaces/Shop/product";
 import InputCheckbox from "ui/Form/Inputs/InputCheckbox";
 import InputWithSuggestions from "ui/Form/Inputs/InputWithSuggestions";
 import Icon, { IconName } from "ui/Icon";
+import validateAspectRatio from "ui/Image/utils/validateAspectRatio";
+import { Drawer } from "ui/Drawer";
+import ImageCropper from "ui/Image/ImageCropper/ImageCropper";
+import isDataURL from "ui/Image/utils/isDataUrl";
+import { DrawerPreviewProduct } from "../../Components";
+import ItemFoodCard, { EItemCardFood } from "../../Components/ProductsCard/Food";
 
 export interface IFormProduct {
   onSubmit: (item: IProduct, additionalData?: any) => void;
@@ -44,6 +50,11 @@ const FormProductFood: React.FC<IFormProductFood> = ({ onSubmit, products, editP
       variantId: '1'
   };
 
+  const imageWidth = PRODUCT_CARD_DIMENSIONS[EShop.Food].width
+  const imageHeight = PRODUCT_CARD_DIMENSIONS[EShop.Food].height
+  const imageAspectRatio = +(imageWidth / imageHeight).toFixed(2);
+
+  const [preview,setPreview] = useState<IProductFood | null>(null)
   const initialVariants = (editProduct && editProduct.variants && editProduct.variants.length) ? editProduct.variants : [defaultVariant];
   const [variants, setVariants] = useState<IVariant[]>(initialVariants);
   const [isMultiVariant, setIsMultiVariant] = useState((!!editProduct && !!editProduct.variants));
@@ -60,10 +71,26 @@ const FormProductFood: React.FC<IFormProductFood> = ({ onSubmit, products, editP
   const [nameError, setNameError] = useState('');
   const [priceError, setPriceError] = useState('');
   const [typeError, setTypeError] = useState('');
+  const [imageError, setImageError] = useState('');
+  
+  useEffect(() => {
+    const checkAspectRatio = async () => {
+      if (image) {
+        const EXPECTED_ASPECT_RATIO = imageAspectRatio;
+        try {
+          const isValidImage  = await validateAspectRatio(image, EXPECTED_ASPECT_RATIO);
+          setImageError(isValidImage ? '' : 'Invalid image aspect ratio.');
+        } catch (error) {
+          setImageError('Invalid image aspect ratio.');
+        }
+      }
+    };
+  
+    checkAspectRatio();
+  }, [ image, imageAspectRatio]);
 
-  const imageWidth = PRODUCT_CARD_DIMENSIONS[EShop.Food].width
-  const imageHeight = PRODUCT_CARD_DIMENSIONS[EShop.Food].height
-  const imageAspectRatio = +(imageWidth / imageHeight).toFixed(2);
+  const [cropImage, setCropImage] = useState('');
+  
   const getUniqueVariantNames = (products: IProductFood[]): string[] => {
     const uniqueVariantsSet: Set<string> = new Set();
 
@@ -79,6 +106,7 @@ const FormProductFood: React.FC<IFormProductFood> = ({ onSubmit, products, editP
 
     return Array.from(uniqueVariantsSet);
 }
+
 const getUniqueTagNames = (products: IProductFood[]): string[] => {
   const uniqueTagsSet: Set<string> = new Set();
 
@@ -97,12 +125,6 @@ const getUniqueTagNames = (products: IProductFood[]): string[] => {
 }
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log('clicked')
-    // const errors = validateForm();
-    
-    // if (Object.values(errors).some(error => error)) {
-    //   return;
-    // }
     const isVeg = itemType !== 'nonVeg' ? true : false;
     const newProduct: IProductFood = {
       name,
@@ -117,6 +139,7 @@ const getUniqueTagNames = (products: IProductFood[]): string[] => {
     if(isVariant){
       newProduct.variants = variants;
     }
+    console.log(tags,'tags')
     if(tags && tags.length){
       newProduct.tags = tags;
     }
@@ -166,6 +189,10 @@ const handleDeleteTag = (tagIndex: number) => {
     setPriceError('');
     }
   }
+  const handleSaveCropper = (img: string) => {
+     setImage(img);
+     setCropImage('');
+  }
   const anyError = nameError || priceError || typeError;
   const handleNameChange = ( newName : string) => {
     setName(newName);
@@ -184,8 +211,30 @@ const handleDeleteTag = (tagIndex: number) => {
     setCategory(category);
     clearError()
   }
-  const handlePreview = () => {
+  const handleClosePreview = () => {
+    setPreview(null);
   }
+  const handleItemPreview = () => {
+    const isVeg = itemType !== 'nonVeg' ? true : false;
+    const newProduct: IProductFood = {
+      name,
+      price,
+      description,
+      veg: isVeg,
+      category,
+      image,
+    };
+
+    const isVariant = isMultiVariant ? true : false;
+    if(isVariant){
+      newProduct.variants = variants;
+    }
+    console.log(tags,'tags')
+    if(tags && tags.length){
+      newProduct.tags = tags;
+    }
+    setPreview(newProduct);
+  };
 
   const isSaveDisabled = !(name && ((!isMultiVariant && price) || (isMultiVariant && variants.every(val => val.name !== '' && val.price > 0))) && itemType);
   const handleVariantChange = (field: 'name' | 'price', value: string | number, index: number) => {
@@ -204,6 +253,7 @@ const handleDeleteTag = (tagIndex: number) => {
     updatedVariants.splice(index, 1);
     setVariants(updatedVariants);
   };
+  const isCropEnabled = isDataURL(editProduct?.image) && imageError; 
   return (
     <Form onSubmit={handleSubmit} noValidate style={{gap:'1.5rem'}}>
       <InputText
@@ -315,13 +365,21 @@ const handleDeleteTag = (tagIndex: number) => {
         </Row>
 
       <Col a="center" style={{gap:'0.5rem'}}>
-        <Row p='0.5rem 0' a="center" j="end">
+        <Col p='0.5rem 0'>
+        <Row p='0 0 0.2rem ' a="center" j="end">
           <Row><Text w={5}>Product Image</Text></Row>
           <Row a="center" j="end" style={{gap:'0.5rem'}}>
+          {isCropEnabled && 
+              <ButtonUnderlined  border={'none'} variant="secondary" padding="2px 4px"  size="small" type="button" onClick={()=> setCropImage(image)}>Crop</ButtonUnderlined>}
             {image !== '' &&
               <ButtonUnderlined  border={'none'} variant="secondary" padding="2px 4px"  size="small" type="button" onClick={()=> setImage('')}>Remove</ButtonUnderlined>}
           </Row>
         </Row>
+        { isCropEnabled  &&
+          <Row>
+            <Text s="10" w={5}  tt='cap' c={theme.brandColor.red}>{imageError}</Text>
+        </Row>}
+        </Col>
         <Col br="8px" w="60%"  a="start" j="center">
           {
             image
@@ -333,9 +391,24 @@ const handleDeleteTag = (tagIndex: number) => {
         </Col>
       </Col>
       <Row j="center" a="center" style={{gap:'1rem'}} p='1rem 0' >
-        <Button padding="1rem" width="100%" type="button" onClick={handlePreview} disabled={isSaveDisabled}>Preview</Button>
+        <Button padding="1rem" width="100%" type="button" onClick={handleItemPreview} disabled={isSaveDisabled}>Preview</Button>
         <Button padding="1rem" width="100%" disabled={isSaveDisabled}>Save</Button>
       </Row>
+      <Drawer isOpen={cropImage !== ''} h="100%">
+        <ImageCropper
+          selectedImage={cropImage}
+          onCancel={() => setCropImage('')}
+          onSave={handleSaveCropper}
+          aspectRatio={imageAspectRatio}
+        />
+      </Drawer>
+      <DrawerPreviewProduct isOpen={!!preview} onClose={handleClosePreview}>
+        {preview && 
+          <Row style={{boxShadow:theme.shadow.boxShadowSecondary, borderRadius:'8px'}}>
+            <ItemFoodCard item={preview} mode={EItemCardFood.Preview}/>
+          </Row>
+        }
+    </DrawerPreviewProduct>
     </Form>
   );
 };

@@ -57,23 +57,23 @@ const ButtonWrapper = styled.button<IButton>`
     }
   }};
 
-  border: ${({ color, border, variant, disabled }) => {
+  border: ${({ bg, border, variant, disabled }) => {
+    if (disabled) {
+        return `1px solid ${theme.neutralColor.textQuaternary}`;
+      }
     if (border) {
       return border;
-    } else if (variant === 'primary' || variant === 'secondary') {
-      if(disabled){
-        return `1px solid ${theme.neutralColor.textTertiary}`;
-      }
-      else if(color) {
-        return `1px solid ${color}`;
-      } else {
-        return `1px solid ${theme.brandColor.primary}`;
-      }
-    } else {
-      return disabled && variant === 'secondary' ? `1px solid ${theme.neutralColor.text}` : `1px solid ${theme.brandColor.primary}`;
     }
+    if (variant === 'primary' || variant === 'secondary') {
+      if (bg) {
+        return `1px solid ${bg}`;
+      }
+      return `1px solid ${theme.brandColor.primary}`;
+    }
+    return disabled && variant === 'secondary' 
+          ? `1px solid ${theme.neutralColor.text}` 
+          : `1px solid ${theme.brandColor.primary}`;
   }};
-
   border-radius: ${({ br }) => br || '4px'};
   padding: ${({ padding }) => padding || '0.5rem 1rem'};
 

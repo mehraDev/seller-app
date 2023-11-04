@@ -244,32 +244,29 @@ const ProductsEditor : React.FC<IProductsEditor>= ({onClose,onUpload,shop,initia
           });
       };
       const imageFiles = Array.from(files).filter(file => file.type.startsWith('image/'));
-      const compressFile= async (file: File): Promise<File> => {
+      const convertFile= async (file: File): Promise<File> => {
         try {
           if (file) {
             if (file.type === "image/heic") {
-              console.log("Converting HEIC to JPEG");
               file = await convertHEICToJPEG(file);
-              console.log("After convertsion from HEIC to Webp: ", (file.size / 1024).toFixed(2), "KB");
-
+              // console.log("After convertsion from HEIC to Webp: ", (file.size / 1024).toFixed(2), "KB");
             }
-            const cp  =  await resizeImage(file,200);
-            const compressed =  await compressImage(cp);
-            console.log('compressing',compressed);
-
-            if (!compressed) {
-              throw new Error('Compression returned null.');
-            }
-            return compressed;
+            // const cp  =  await resizeImage(file,200);
+            // const compressed =  await compressImage(cp);
+            // console.log('compressing',compressed);
+            // if (!compressed) {
+            //   throw new Error('Compression returned null.');
+            // }
+            return file;
           }
           return file;
         } catch (error) {
           console.error('Error converting file:', error);
-          throw error; // rethrow the error to be handled in the catch block of handleMultiUpload
+          throw error;
         }
       };
       try {
-        const processedFiles = await Promise.all(imageFiles.map(compressFile));
+        const processedFiles = await Promise.all(imageFiles.map(convertFile));
         const loadedImages = await Promise.all(processedFiles.map(readFileAsDataURL));
         const products: IProduct[] = loadedImages.map((image, index) => ({
           id: `${generateUniqueTimestampId()}`,
