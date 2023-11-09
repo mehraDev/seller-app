@@ -6,6 +6,12 @@ import { getImageFileFromURL } from "ui/Image";
 import rewriteProductsList from "./rewriteProducts";
 import { generateUniqueId } from "firebaseServices/Utils/UniqueID";
 import { EImageSource, determineImageSource } from "./productsImage";
+import compressImage, { CompressionOptions } from "ui/Image/utils/ImageCompression";
+import convertHEICToWebp from "ui/Image/utils/imageConversion";
+import resizeImage from "ui/Image/utils/resizeImage";
+import { PRODUCT_CARD_DIMENSIONS } from "../Components/ProductsCard/dimensionsConstants";
+import isDataURL from "ui/Image/utils/isDataUrl";
+import { EFirebaseErrorCode, FirebaseErrorType } from "firebaseServices/Error";
 
 export interface IAllProducts {
   newProducts: IProduct[];
@@ -18,37 +24,94 @@ export interface IAllProducts {
   importedAbsoluteImageProducts: IProduct[];
 }
 
-const uploadNewProductImages = async (products: IProduct[], importedAbsoluteImageProducts: IProduct[], importedRelativeImageProducts: IProduct[], location: string): Promise<IProduct[]> => {
+const uploadFoodImage = async (imageFile: File, name: string, location: string): Promise<void> => {
+  const options100kb: CompressionOptions = {
+    maxSizeMB: 0.1, // 100KB
+    initialQuality: 1,
+    outputType: "image/webp",
+    maxCompressions: 2,
+  };
+
+  const options15kb: CompressionOptions = {
+    maxSizeMB: 0.015, // 15KB
+    initialQuality: 1,
+    outputType: "image/webp",
+  };
+
+  if (imageFile.type === "image/heic") {
+    imageFile = await convertHEICToWebp(imageFile);
+  }
+
+  imageFile = await resizeImage(imageFile, PRODUCT_CARD_DIMENSIONS.food.width * 3, PRODUCT_CARD_DIMENSIONS.food.height * 3);
+
+  const compressedImage100kb = await compressImage(imageFile, options100kb);
+  const imageName100kb = `${name}.k100`;
+  await uploadImageToFirebase(compressedImage100kb, imageName100kb, location);
+
+  const compressedImage15kb = await compressImage(imageFile, options15kb);
+  const imageName15kb = `${name}`;
+  await uploadImageToFirebase(compressedImage15kb, imageName15kb, location);
+};
+
+const deleteFoodImage = async (baseImageName: string, location: string): Promise<void> => {
+  if (!baseImageName || !location) return;
+
+  const variants = [".k100", ""];
+  for (const variant of variants) {
+    const imageNameVariant = `${baseImageName}${variant}`;
+    try {
+      await deleteImageFromFirebase(imageNameVariant, location);
+    } catch (error) {
+      const firebaseError = error as FirebaseErrorType;
+      if (firebaseError.code !== EFirebaseErrorCode.NotFound) {
+        throw error;
+      } else {
+        console.log(`Image variant "${imageNameVariant}" not found at location "${location}". Skipping.`);
+      }
+    }
+  }
+};
+
+const replaceFoodImage = async (newProduct: IProduct, oldProduct: IProduct, location: string) => {
+  try {
+    if (oldProduct.image && determineImageSource(oldProduct.image) === EImageSource.PERSONAL) {
+      await deleteFoodImage(oldProduct.image, location);
+    }
+    if (newProduct.image) {
+      const imageFile = await getImageFileFromURL(newProduct.image);
+      const imageName = `${newProduct.name}_${generateUniqueId()}`;
+      await uploadFoodImage(imageFile, imageName, location);
+      return { ...newProduct, image: imageName };
+    }
+    return newProduct;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const uploadNewProductImages = async (products: IProduct[], inputFileProductsRelativeImages: IProduct[], location: string): Promise<IProduct[]> => {
   try {
     const uploadedImageNewProducts = await Promise.all(
       products.map(async (product) => {
         if (!product.image) {
           return product;
         }
-        const importedAbsoluteImageProduct = importedAbsoluteImageProducts.find((p) => p.id === product.id);
-        if (importedAbsoluteImageProduct) {
-          const isImageUnchanged = importedAbsoluteImageProduct.image === product.image;
-          const relativeUrlImageProduct = importedRelativeImageProducts.find((p) => p.id === product.id);
-          if (isImageUnchanged) {
-            if (!relativeUrlImageProduct) {
-              throw new Error("Cannot find absolute products in relative product.");
-            }
-            return {
-              ...product,
-              image: relativeUrlImageProduct.image,
-            };
-          } else {
-            const imageFile = await getImageFileFromURL(product.image);
-            const imageName = `${product.name}_${generateUniqueId()}`;
-            await uploadImageToFirebase(imageFile, imageName, location);
-            return { ...product, image: imageName };
-          }
-        } else {
+
+        if (isDataURL(product.image)) {
           const imageFile = await getImageFileFromURL(product.image);
           const imageName = `${product.name}_${generateUniqueId()}`;
-          await uploadImageToFirebase(imageFile, imageName, location);
+          await uploadFoodImage(imageFile, imageName, location);
           return { ...product, image: imageName };
         }
+
+        const relativeUrlImageProduct = inputFileProductsRelativeImages.find((p) => p.id === product.id);
+        if (relativeUrlImageProduct) {
+          return {
+            ...product,
+            image: relativeUrlImageProduct.image,
+          };
+        }
+        return product;
       })
     );
     return uploadedImageNewProducts;
@@ -57,39 +120,35 @@ const uploadNewProductImages = async (products: IProduct[], importedAbsoluteImag
   }
 };
 
+/**
+ * Asynchronously uploads modified product images, ensuring that products exist in the absolute list,
+ * and handling image updates when necessary.
+ *
+ * @param {IProduct[]} modifiedProducts - A list of potentially modified products.
+ * @param {IProduct[]} relativeImageProducts - A list of products with relative image URLs.
+ * @param {IProduct[]} absoluteImageProducts - A list of products with absolute image URLs.
+ * @param {string} location - The storage location for image uploads.
+ * @returns {Promise<IProduct[]>} - A promise that resolves to an array of updated products.
+ */
 const uploadModifiedProductImages = async (modifiedProducts: IProduct[], relativeImageProducts: IProduct[], absoluteImageProducts: IProduct[], location: string): Promise<IProduct[]> => {
-  try {
-    const uploadedImagesModifiedProducts = await Promise.all(
-      modifiedProducts.map(async (modifiedProduct) => {
-        const absoluteImageInitialProduct = absoluteImageProducts.find((p) => p.id === modifiedProduct.id);
-        const relativeImageInitialProduct = relativeImageProducts.find((p) => p.id === modifiedProduct.id);
+  const updatedProductsPromises = modifiedProducts.map(async (modifiedProduct): Promise<IProduct> => {
+    const absoluteImageProduct = absoluteImageProducts.find((p) => p.id === modifiedProduct.id);
+    const relativeImageProduct = relativeImageProducts.find((p) => p.id === modifiedProduct.id);
+    if (!relativeImageProduct || !absoluteImageProduct) {
+      throw new Error(`Product with ID ${modifiedProduct.id} not found in previous products.`);
+    }
+    if (modifiedProduct.image === absoluteImageProduct.image) {
+      return { ...modifiedProduct, image: relativeImageProduct.image };
+    } else {
+      const updatedProduct = await replaceFoodImage(modifiedProduct, relativeImageProduct, location);
+      if (!updatedProduct) {
+        throw new Error(`Failed to update product with ID ${modifiedProduct.id}.`);
+      }
+      return updatedProduct;
+    }
+  });
 
-        if (!absoluteImageInitialProduct || !relativeImageInitialProduct) {
-          throw new Error("Product not found in either absolute or relative initial products.");
-        }
-
-        if (modifiedProduct.image === absoluteImageInitialProduct.image) {
-          const updatedModifiedProduct = { ...modifiedProduct, image: relativeImageInitialProduct.image };
-          return updatedModifiedProduct;
-        } else {
-          if (relativeImageInitialProduct.image && determineImageSource(relativeImageInitialProduct.image || "") === EImageSource.PERSONAL) {
-            await deleteImageFromFirebase(relativeImageInitialProduct.image, location);
-          }
-          if (modifiedProduct.image) {
-            const imageFile = await getImageFileFromURL(modifiedProduct.image);
-            const imageName = `${modifiedProduct.name}__${generateUniqueId()}`;
-            await uploadImageToFirebase(imageFile, imageName, location);
-            return { ...modifiedProduct, image: imageName };
-          } else {
-            return { ...modifiedProduct, image: "" };
-          }
-        }
-      })
-    );
-    return uploadedImagesModifiedProducts;
-  } catch (error) {
-    throw error;
-  }
+  return Promise.all(updatedProductsPromises);
 };
 
 const deleteProductImages = async (deletedProducts: IProduct[], relativeImageProducts: IProduct[], location: string): Promise<boolean> => {
@@ -101,7 +160,7 @@ const deleteProductImages = async (deletedProducts: IProduct[], relativeImagePro
           throw new Error("Product not found in relative image array.");
         }
         if (relativeImageInitialProduct.image && determineImageSource(relativeImageInitialProduct.image) === EImageSource.PERSONAL) {
-          await deleteImageFromFirebase(relativeImageInitialProduct.image, location);
+          await deleteFoodImage(relativeImageInitialProduct.image, location);
         }
       })
     );
@@ -138,7 +197,7 @@ const uploadMenu = async (state: IAllProducts) => {
     }
     const loc = getLocationSellerProductsImages(sellerId);
 
-    const updatedNewProducts = await uploadNewProductImages(newProducts, importedAbsoluteImageProducts, importedRelativeImageProducts, loc);
+    const updatedNewProducts = await uploadNewProductImages(newProducts, importedRelativeImageProducts, loc);
     const updatedModifiedProducts = await uploadModifiedProductImages(modifiedProducts, relativeImageProducts, absoluteImageProducts, loc);
     await deleteProductImages(deletedProducts, relativeImageProducts, loc);
     const updatedUnmodifiedProducts = processUnmodifiedProducts(unModifiedProducts, relativeImageProducts);

@@ -1,5 +1,7 @@
 import { IProductFood, IVariant, IFoodTag, EFoodTagType } from "app/interfaces/Shop/product";
-import isValidBaseProduct, { isValidBaseProductPrice } from "./baseShopValidator";
+import isValidBaseProduct, { isValidBaseImageAspectRatio, isValidBaseProductPrice } from "./baseShopValidator";
+import { PRODUCT_CARD_DIMENSIONS } from "../../../Components/ProductsCard/dimensionsConstants";
+import { EShop } from "app/enums";
 
 const isValidVeg = (veg: boolean): boolean => {
   return typeof veg === "boolean";
@@ -33,17 +35,23 @@ const isValidFoodTags = (tags: IFoodTag[] | undefined): boolean => {
   if (!tags) return true;
   return tags.every(isValidFoodTag);
 };
+const imageWidth = PRODUCT_CARD_DIMENSIONS[EShop.Food].width;
+const imageHeight = PRODUCT_CARD_DIMENSIONS[EShop.Food].height;
+export const FOOD_IMAGE_ASPECT_RATIO = +(imageWidth / imageHeight).toFixed(2);
 
-// Main Validator for IProductFood
-
-const isValidIProductFood = (product: IProductFood, allProducts: IProductFood[]): boolean => {
+const isValidFoodImage = async (product: IProductFood) => {
+  const isValid = await isValidBaseImageAspectRatio(product.image, FOOD_IMAGE_ASPECT_RATIO);
+  return isValid;
+};
+const isValidProductFood = async (product: IProductFood, allProducts: IProductFood[]): Promise<boolean> => {
   const isBaseValid = isValidBaseProduct(product, allProducts);
   const isVegValid = isValidVeg(product.veg);
   const isCategoryValid = isValidCategory(product.category);
   const areVariantsValid = isValidVariants(product.variants);
   const areTagsValid = isValidFoodTags(product.tags);
   const isPriceValid = isValidBaseProductPrice(product.price);
-  const isPriceOrVariantsValid = product.variants ? areVariantsValid : isPriceValid;
+  const isPriceOrVariantsValid = product.variants && product.variants.length ? areVariantsValid : isPriceValid;
+  const isValidImage = await isValidFoodImage(product);
   console.log("--- Debugging isValidIProductFood ---");
   console.log("isBaseValid:", isBaseValid);
   console.log("isVegValid:", isVegValid);
@@ -52,12 +60,12 @@ const isValidIProductFood = (product: IProductFood, allProducts: IProductFood[])
   console.log("areTagsValid:", areTagsValid);
   console.log("isPriceOrVariantsValid:", isPriceOrVariantsValid);
   console.log("isPriceValid:", isPriceValid);
+  console.log("isValidImage:", isValidImage);
   console.log("------------------------------------");
-
   return isBaseValid && isVegValid && isCategoryValid && isPriceOrVariantsValid && areTagsValid;
 };
 
-export default isValidIProductFood;
+export default isValidProductFood;
 /**
  * Food Product Validator Documentation:
  *

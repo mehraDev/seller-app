@@ -1,7 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { CSSProperties, useEffect, useState } from "react";
 import { 
-
   faCheck,
   faRotateLeft,
   faEyeSlash,
@@ -17,7 +16,7 @@ import {
   faCrop
 } from '@fortawesome/free-solid-svg-icons';
 
-  import styled from "styled-components";
+import styled from "styled-components";
 import {
   faFacebook,
   faInstagram,
@@ -130,7 +129,7 @@ const Icon: React.FC<IconProps> = ({
   height ,
   borderRadius = 0.25,
   isHoverable = true,
-  clickEffectTime = 100,
+  clickEffectTime = 0,
   onBlur,
   onClick,
   padding,

@@ -5,4 +5,5 @@ function getUrlImageStorage(relLocatioin: string): string {
 
   return storageUrl;
 }
+
 export default getUrlImageStorage;

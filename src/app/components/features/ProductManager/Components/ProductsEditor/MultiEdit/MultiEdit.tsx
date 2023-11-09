@@ -81,9 +81,9 @@ const MultiEdit: React.FC<IMultiUpload> = ({ newProducts, ProductCard,onClose,on
             </Row>
             <Col style={{overflow:'scroll'}} h="100%" p={'0 0 10rem'}>
                 {activeItems.map((item, index) => (
-                    <Row p={'0.5rem'}>
+                    <Row p={'0.5rem'} key={index}>
                         <CardWithControls p={'1rem 0.5rem'} br="8px" isValid={productValidities[index]} showValidation={true} item={item} onEdit={handleEdit} onDelete={() => handleRemove(item)} >
-                        <ProductCard key={index} item={item} showCategory={true}/>
+                        <ProductCard  item={item} showCategory={true}/>
                     </CardWithControls>
                     </Row>
                 ))}

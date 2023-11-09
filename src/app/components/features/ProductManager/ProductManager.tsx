@@ -72,7 +72,7 @@ if (isLoading) {
         }}
         br='12px'>
       <Icon name={IconName.Edit} 
-        clickEffectTime={100}
+        clickEffectTime={50}
         onClick={() => setMode(Mode.Editor)}
           padding='1rem'
         color={theme.neutralColor.bgContainer}

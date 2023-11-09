@@ -1,4 +1,5 @@
 import { IProductBase } from "app/interfaces/Shop/product";
+import validateAspectRatio from "ui/Image/utils/validateAspectRatio";
 
 export const isValidBaseProductName = (name: string): boolean => {
   return typeof name === "string" && name.trim().length > 0;
@@ -40,7 +41,20 @@ export const isValidBaseProductID = (id: string | undefined, allProducts: IProdu
   }
   return true;
 };
+export const isValidBaseImageAspectRatio = async (image: string | undefined, aspectRatio: number): Promise<boolean> => {
+  // If image is not provided, assume valid
+  if (!image) return true;
 
+  // Use the validateAspectRatio function to check the actual image
+  try {
+    const isValid = await validateAspectRatio(image, aspectRatio);
+    return isValid;
+  } catch (error) {
+    // If there's an error (e.g., network issue, invalid image source), consider the validation as failed
+    console.error("Error validating image aspect ratio:", error);
+    return false;
+  }
+};
 const isValidBaseProduct = (product: IProductBase, allProducts: IProductBase[]): boolean => {
   const isNameValid = isValidBaseProductName(product.name);
   const isIDValid = isValidBaseProductID(product.id, allProducts);
