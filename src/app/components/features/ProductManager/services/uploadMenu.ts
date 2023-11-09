@@ -25,18 +25,18 @@ export interface IAllProducts {
 }
 
 const uploadFoodImage = async (imageFile: File, name: string, location: string): Promise<void> => {
-  const options100kb: CompressionOptions = {
-    maxSizeMB: 0.1, // 100KB
-    initialQuality: 1,
-    outputType: "image/webp",
-    maxCompressions: 2,
-  };
+  // const options100kb: CompressionOptions = {
+  //   maxSizeMB: 0.1, // 100KB
+  //   initialQuality: 1,
+  //   outputType: "image/webp",
+  //   maxCompressions: 2,
+  // };
 
-  const options15kb: CompressionOptions = {
-    maxSizeMB: 0.015, // 15KB
-    initialQuality: 1,
-    outputType: "image/webp",
-  };
+  // const options15kb: CompressionOptions = {
+  //   maxSizeMB: 0.015, // 15KB
+  //   initialQuality: 1,
+  //   outputType: "image/webp",
+  // };
 
   if (imageFile.type === "image/heic") {
     imageFile = await convertHEICToWebp(imageFile);
@@ -44,13 +44,13 @@ const uploadFoodImage = async (imageFile: File, name: string, location: string):
 
   imageFile = await resizeImage(imageFile, PRODUCT_CARD_DIMENSIONS.food.width * 3, PRODUCT_CARD_DIMENSIONS.food.height * 3);
 
-  const compressedImage100kb = await compressImage(imageFile, options100kb);
+  // const compressedImage100kb = await compressImage(imageFile, options100kb);
   const imageName100kb = `${name}.k100`;
-  await uploadImageToFirebase(compressedImage100kb, imageName100kb, location);
+  await uploadImageToFirebase(imageFile, imageName100kb, location);
 
-  const compressedImage15kb = await compressImage(imageFile, options15kb);
+  // const compressedImage15kb = await compressImage(imageFile, options15kb);
   const imageName15kb = `${name}`;
-  await uploadImageToFirebase(compressedImage15kb, imageName15kb, location);
+  await uploadImageToFirebase(imageFile, imageName15kb, location);
 };
 
 const deleteFoodImage = async (baseImageName: string, location: string): Promise<void> => {
