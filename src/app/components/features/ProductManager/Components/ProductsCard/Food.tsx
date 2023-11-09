@@ -5,6 +5,7 @@ import { Box, Col, Img, Row, Text } from "ui/basic";
 import DrawerPreviewProduct from "../DrawerPreviewProduct/DrawerPreviewProduct";
 import Button from "ui/Button";
 import { IVariant } from "app/interfaces/Shop/product";
+import { getUrlImageStorage } from "firebaseServices/Storage";
 
 export enum EItemCardFood {
   Card = "card",
@@ -45,7 +46,7 @@ const ItemFoodCard: React.FC<IItemFoodCard> = ({
   const previewHandler = mode === EItemCardFood.Preview ? undefined : handleItemPreview;
   const detailsGap = isRow ? "0.5rem" : "0.5rem";
   const isVeg = item.veg || (item.veg !== false) 
-  const imgWidth = mode === EItemCardFood.Preview ? '100%' : '62%';
+  const imgWidth = mode === EItemCardFood.Preview ? '100%' : '10rem';
   const imgHeight = mode === EItemCardFood.Preview ? '100%' : '100%';
   const detailsPadding = mode ===  EItemCardFood.Preview ? '1rem 0.5rem' : "0.5rem 0 0 ";
   const imageRadius =  mode === EItemCardFood.Preview ?  "8px 8px 0 0 " :  "8px";
@@ -58,6 +59,25 @@ const ItemFoodCard: React.FC<IItemFoodCard> = ({
   const handleVariantClick = (variant: IVariant) => {
       setSelectedVariant(variant);
   };
+  const previewImageUrl = preview && preview.image ? getUrlWithSuffixFromUrl(preview.image,'.k100') : '';
+  console.log(previewImageUrl);
+
+  function getUrlWithSuffixFromUrl(url:string, suffix:string) {
+    if (!url || !suffix) {
+      return '';
+    }
+    const parsedUrl = new URL(url);
+    const imageName = decodeURIComponent(parsedUrl.pathname.split('/').pop() || '');
+    const baseImageLoc = imageName.replace(/\.[^/.]+$/, "");
+    const suffixImageLoc = `${baseImageLoc}${suffix}`;
+    const resultUrl = `${getUrlImageStorage(suffixImageLoc)}?alt=media`;
+
+    console.log('suffixImageName',resultUrl)
+    return resultUrl;
+  }
+  
+
+  
   return (
     <>
     <Box fd={fd} a="start" style={{ gap: isRow ? "1rem" : "" }} >
@@ -128,7 +148,7 @@ const ItemFoodCard: React.FC<IItemFoodCard> = ({
     <DrawerPreviewProduct isOpen={!!preview} onClose={handleClosePreview}>
       {preview && 
         <Row style={{boxShadow:theme.shadow.boxShadowSecondary, borderRadius:'8px'}}>
-          <ItemFoodCard item={preview} mode={EItemCardFood.Preview}/>
+          <ItemFoodCard item={{...preview, image:previewImageUrl}} mode={EItemCardFood.Preview}/>
         </Row>
       }
     </DrawerPreviewProduct>

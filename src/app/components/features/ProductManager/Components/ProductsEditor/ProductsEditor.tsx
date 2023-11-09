@@ -30,10 +30,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "store/store";
 import MultiEdit from "./MultiEdit/MultiEdit";
 import { isProductValid } from "../../utils/validators/isProductValid";
-import compressImage from "ui/Image/utils/ImageCompression";
-import convertHEICToJPEG from "ui/Image/utils/imageConversion";
-import compressAndConvertImage from "ui/Image/utils/resizeImage";
-import resizeImage from "ui/Image/utils/resizeImage";
+import convertHEICToWebp from "ui/Image/utils/imageConversion";
 
 export interface IProductsEditor {
     initialProducts: IProduct[];
@@ -248,15 +245,10 @@ const ProductsEditor : React.FC<IProductsEditor>= ({onClose,onUpload,shop,initia
         try {
           if (file) {
             if (file.type === "image/heic") {
-              file = await convertHEICToJPEG(file);
-              // console.log("After convertsion from HEIC to Webp: ", (file.size / 1024).toFixed(2), "KB");
+              console.log("Before convertsion from HEIC to Webp: ", (file.size / 1024).toFixed(2), "KB");
+              file = await convertHEICToWebp(file);
+              console.log("After convertsion from HEIC to Webp: ", (file.size / 1024).toFixed(2), "KB");
             }
-            // const cp  =  await resizeImage(file,200);
-            // const compressed =  await compressImage(cp);
-            // console.log('compressing',compressed);
-            // if (!compressed) {
-            //   throw new Error('Compression returned null.');
-            // }
             return file;
           }
           return file;

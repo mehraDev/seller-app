@@ -16,12 +16,8 @@ const createImage = (file: File): Promise<HTMLImageElement> => {
 
 // This function will take a File object (image) and a target width.
 // It will maintain the aspect ratio of the original image and output a WebP format File.
-const resizeImage = async (imageFile: File, targetWidth: number): Promise<File> => {
+const resizeImage = async (imageFile: File, targetWidth: number, targetHeight: number): Promise<File> => {
   const img = await createImage(imageFile); // Await the creation of the Image object
-
-  // Calculate the target height to maintain the aspect ratio
-  const aspectRatio = img.naturalHeight / img.naturalWidth;
-  const targetHeight = targetWidth * aspectRatio;
 
   // Create a canvas element to resize the image
   const canvas = document.createElement("canvas");
@@ -36,7 +32,7 @@ const resizeImage = async (imageFile: File, targetWidth: number): Promise<File> 
   });
 
   // Convert the canvas content to a WebP format Blob
-  const blob = await pica().toBlob(canvas, "image/webp", 0.9);
+  const blob = await pica().toBlob(canvas, "image/webp", 1);
 
   // Convert the Blob to a File
   const resizedImageFile = new File([blob], imageFile.name, {

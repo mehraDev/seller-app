@@ -12,7 +12,8 @@ const deleteImageFromFirebase = async (imageName: string, location: string): Pro
     if (firebaseError.code === EFirebaseErrorCode.Unauthorized) {
       throw new Error(`Permission denied. You do not have access to delete image "${imageName}" at location "${location}".`);
     } else if (firebaseError.code === EFirebaseErrorCode.NotFound) {
-      throw new Error(`Image "${imageName}" not found at location "${location}".`);
+      firebaseError.message = `Image "${imageName}" not found at location "${location}".`;
+      throw firebaseError;
     } else {
       throw new Error(`Failed to delete image "${imageName}" at location "${location}". Error: ${firebaseError.message}`);
     }
