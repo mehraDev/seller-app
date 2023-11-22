@@ -94,15 +94,15 @@ const About: React.FC<{ tags: string[] }> = ({ tags }) => {
           )}
           {tags.map((item, index) => (
             <React.Fragment key={index}>
-              <Text  tt="cap" c={theme.neutralColor.textSecondary} s="14">
+              <Text tt="cap" c={theme.neutralColor.textSecondary} s="14" w={6}>
                 {item}
               </Text>
               {index < tags.length - 1 && (
                 <Icon
                   name={IconName.Diamond}
-                  width={0.3}
-                  height={0.3}
-                  color={"#FFA000"}
+                  width={0.2}
+                  height={0.2}
+                  color={theme.neutralColor.textTertiary}
                 />
               )}
             </React.Fragment>
