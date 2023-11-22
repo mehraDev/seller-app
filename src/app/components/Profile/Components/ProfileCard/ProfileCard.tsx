@@ -18,46 +18,54 @@ const ProfileCard: React.FC<IProfileCard> = ({ logo, profile}) => {
     const { name, about, address }: ISellerProfile = profile;
     const profileBasic = (
       <>
-        <ImageWithFallback src={logo} fallbackImage={placeholderProfileImage} alt='Logo' />
-        <Text tt="cap" s="20" w={6} type="heading" c={theme.neutralColor.text}>
-        {name}
-      </Text>
-      <About tags={about} />
-      {address && (
-        <Row
+        <Row w="initial">
+          <ImageWithFallback
+            src={logo}
+            fallbackImage={placeholderProfileImage}
+            alt="Logo"
+          />
+        </Row>
+        <Col
           a="center"
-          w="initial"
-          p="6px"
           style={{
-            border: " 1px solid #ca1a193d",
-            borderLeft: "0px",
-            borderRight: "0px",
+            gap: "1rem",
           }}
         >
-          <Icon
-            name={IconName.Location}
-            width={1}
-            padding="0"
-            color={"#CA1919"}
-            borderRadius={0.35}
-            height={1}
-          />
-          <Text
-            tt="cap"
-            ml="8px"
-            c={theme.neutralColor.textSecondary}
-            s="12"
-            w={5}
-          >
-            {address}
+          <Text tt="cap" s="20" w={7} c={theme.neutralColor.text}>
+            {name}
           </Text>
-        </Row>
-      )}
-        <Col
-          w="initial"
-          style={{ gap: "8px", position: "absolute", right: "1rem",top:'3rem' }}
-        >
-          <ContactBar/>
+          <About tags={about} />
+          {address && (
+            <Row
+              a="center"
+              w="initial"
+              p="0.5rem 1rem"
+              style={{
+                gap: "0.5rem",
+                border: "1px solid #d9d9e3",
+              }}
+              br="0.75rem"
+            >
+              <Icon
+                name={IconName.Location}
+                width={1}
+                height={1}
+                padding="0"
+                color={"#e91e63"}
+              />
+              <Text tt="cap" c={theme.neutralColor.textSecondary} s="12" w={5}>
+                {address}
+              </Text>
+            </Row>
+          )}
+          <Col
+            w="initial"
+            style={{
+              gap: "12px",
+            }}
+          >
+            <ContactBar />
+          </Col>
         </Col>
       </>
     );
