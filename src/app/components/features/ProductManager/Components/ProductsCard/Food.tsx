@@ -60,7 +60,6 @@ const ItemFoodCard: React.FC<IItemFoodCard> = ({
       setSelectedVariant(variant);
   };
   const previewImageUrl = preview && preview.image ? getUrlWithSuffixFromUrl(preview.image,'.k100') : '';
-  console.log(previewImageUrl);
 
   function getUrlWithSuffixFromUrl(url:string, suffix:string) {
     if (!url || !suffix) {

@@ -47,7 +47,7 @@ function DashboardPage() {
   }
   
   return (
-    <Box h={`${dashboardHeight}px`}>
+    <Box style={{minWidth:'240px'}} h={`${dashboardHeight}px`}>
       {initialLoad 
         ? <LoadingAnimation />
         : authId 

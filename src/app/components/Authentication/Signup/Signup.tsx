@@ -177,7 +177,7 @@ const SignupForm: React.FC<Props> = ({ onSignUp }) => {
               }
             </Row>
         <Button loading={isSigningUp} width='100%' padding='1rem' type='submit' disabled={!isValidForm || isSigningUp}>
-              <Text s='18' w={5} mb='2px' mt='2px'>{isSigningUp ? `Signing up...` :  `Continue` }</Text>
+              <Text s='18' c='white' w={5} mb='2px' mt='2px'>{isSigningUp ? `Signing up...` :  `Continue` }</Text>
         </Button>
       </Form>
     </SignupFormWrapper>

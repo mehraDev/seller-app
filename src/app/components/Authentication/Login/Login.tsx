@@ -95,7 +95,7 @@ const Login: React.FC<LoginProps> = () => {
               }
             </Row>
             <Button loading={isLoggingIn} width='100%' padding='1rem' type='submit' disabled={!isValidForm}>
-              <Text s='18' w={5} mb='2px' mt='2px'>{isLoggingIn ? `Logging in...` :  `Log in` }</Text>
+              <Text s='18' w={5} c='white' mb='2px' mt='2px'>{isLoggingIn ? `Logging in...` :  `Log in` }</Text>
               </Button>
         </Form>
       <Row>
