@@ -2,19 +2,18 @@ import React, { useState, useEffect } from 'react';
 import LoadingAnimation from 'ui/LoadingAnimation/LoadingAnimation';
 import styled, { useTheme } from 'styled-components';
 import {  uploadMenu } from './services';
-import { IProduct } from 'app/interfaces';
 import { useOptionsButton } from 'app/components/Dashboard';
 import { OptionsCard } from 'ui/OptionsCard';
 import ProductsEditor from './Components/ProductsEditor';
 import ProductsViewer from './Components/ProductsViewer/ProductsViewer';
 import { EShop } from 'app/enums';
-import { Action } from './Components/ProductsEditor/ProductsEditor';
 import Icon, { IconName } from 'ui/Icon';
 import { IAllProducts } from './services/uploadMenu';
 import { Drawer } from 'ui/Drawer';
 import { Row } from 'ui/basic';
 import { useSelector } from 'react-redux';
 import { RootState } from 'store/store';
+import { ModeSwitcher } from 'ui/ModeSwitcher';
 
 enum Mode {
   Viewer = 'viewer',
@@ -42,7 +41,21 @@ const ProductManager: React.FC = () => {
       throw(error);
     }
   };
-  
+  const modeComponents = {
+    [Mode.Viewer]: <ProductsViewer shop={profile?.type || EShop.Base} />,
+    [Mode.Editor]: (
+      <Drawer isOpen={true} h='100%'>
+        <ProductsEditor
+          onUpload={handleUploadProducts}
+          initialProducts={products}
+          onClose={() => setMode(Mode.Viewer)}
+          shop={shop}
+        />
+      </Drawer>
+    ),
+
+  };
+
   useEffect(() => {
     setHasOptionButton(true);
     return () => {
@@ -63,7 +76,7 @@ if (isLoading) {
   
   return (
     <>
-      <ProductsViewer shop={profile?.type || EShop.Base}/>
+     <ModeSwitcher currentMode={mode} modeComponents={modeComponents} />
       <Row w='initial' style={{
           background: theme.brandColor.primary,
           boxShadow:theme.shadow.shadow1,
@@ -74,22 +87,13 @@ if (isLoading) {
       <Icon name={IconName.Edit} 
         clickEffectTime={50}
         onClick={() => setMode(Mode.Editor)}
-          padding='1rem'
+        padding='1rem'
         color={theme.neutralColor.bgContainer}
         height={1.5}
         br='12px'
         width={1.5}
       />
-      </Row>
-      <Drawer isOpen={mode === Mode.Editor} h='100%' >
-        <ProductsEditor
-          onUpload={handleUploadProducts}
-          initialMode={displayAddProductFormInitially ? Action.Add : Action.None }
-          initialProducts={products}
-          onClose={() => setMode(Mode.Viewer)}
-          shop={shop}
-          />
-      </Drawer>
+      </Row> 
       {displayOptions &&
         <OptionsCard options={options} closeCard={() => setDisplayOptions(false)}/>
       }

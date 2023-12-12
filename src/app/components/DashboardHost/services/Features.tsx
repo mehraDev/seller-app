@@ -7,7 +7,7 @@ const BillingComponent = lazy(() => import('app/components/features/Billing/Bill
 const OrdersComponent = lazy(() => import('app/components/features/Orders/Orders'));
 const StatisticsComponent = lazy(() => import('app/components/features/Statistics/Statistics'));
 const DeliveryComponent = lazy(() => import('app/components/features/Delivery/Delivery'));
-const ProductsManager = lazy(() => import('app/components/features/ProductManager/ProductManager'));
+const ProductsManager = lazy(() => import('app/components/features/ProductManager/ProductsManager'));
 const TransactionsComponent = lazy(() => import('app/components/features/Transactions/Transactions'));
 const ImagePoolManager = lazy(() => import('app/components/features/ImagePoolManager/ImagePoolManager'));
 

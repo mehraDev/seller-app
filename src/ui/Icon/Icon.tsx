@@ -13,7 +13,9 @@ import {
   faTimes,
   faSearch,
   faSortDown,
-  faCrop
+  faCrop,
+  faClockRotateLeft,
+  faFileImport
 } from '@fortawesome/free-solid-svg-icons';
 
 import styled from "styled-components";
@@ -36,6 +38,7 @@ export enum IconName {
   LeftArrow = 'leftArrow',
   Location = "location",
   RightArrow = 'rightArrow',
+  Reset = 'reset',
   Bars = 'bars',
   Ellipsis = 'ellipsis',
   ChevronDown = 'chevronDown',
@@ -58,7 +61,8 @@ export enum IconName {
   Search = "search",
   Undo = 'undo',
   Whatsapp = "whatsapp",
-  Xmark = 'xmark'
+  Xmark = 'xmark',
+  Import = 'fileImport'
 }
 
 interface Icons {
@@ -96,11 +100,13 @@ export const icons: Icons = {
   plus : faPlus,
   phone: faPhone,
   qr : faQrcode,
+  reset: faClockRotateLeft,
   search: faSearch,
   undo: faRotateLeft,
   recover:faTrashRestore,
   whatsapp: faWhatsapp,
-  xmark:faXmarkCircle
+  xmark:faXmarkCircle,
+  fileImport: faFileImport
 };
 
 
