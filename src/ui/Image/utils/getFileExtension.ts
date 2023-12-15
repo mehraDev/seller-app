@@ -1,4 +1,4 @@
-function getExtension(fileName: string): string {
+function getFileExtension(fileName: string): string {
   const lastDotIndex = fileName.lastIndexOf(".");
   if (lastDotIndex !== -1 && lastDotIndex < fileName.length - 1) {
     return fileName.substring(lastDotIndex + 1);
@@ -6,4 +6,4 @@ function getExtension(fileName: string): string {
   return "";
 }
 
-export default getExtension;
+export default getFileExtension;

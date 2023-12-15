@@ -181,7 +181,7 @@ function ProfileEditor({logo, profile, onSave, onClose }: IProfileEditorProps) {
   }
   const deleteLogoTitle = 'Delete Shop Logo ?';
   const deleteLogoMessage  = `Are you sure you want to delete your shop's logo?`
-  console.log('logoUrl',logoUrl)
+  // console.log('logoUrl',logoUrl)
   return (
     <>
       <Row a='center' j='between' style={{ borderBottom: '1px solid ' + theme.neutralColor.border }} p={'1rem 1rem'}>

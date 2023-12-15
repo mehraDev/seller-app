@@ -34,7 +34,6 @@ const ImageCropperComponent: React.FC<ImageCropperComponentProps> = ({
   } 
   const handleSaveImage = () => {
     if (!selectedImage) return;
-    
     const img = new Image();
     const cropperElement = cropperRef.current;
     if (cropperElement) {
@@ -46,7 +45,6 @@ const ImageCropperComponent: React.FC<ImageCropperComponentProps> = ({
         
       
       if (!crop.width || !crop.height) return;
- 
       const scaleX = img.width / containerWidth;
       const scaleY = img.height / containerHeight;
       
@@ -69,7 +67,7 @@ const ImageCropperComponent: React.FC<ImageCropperComponentProps> = ({
       );
       const croppedImageUrl = canvas.toDataURL("image/png");
       onSave(croppedImageUrl);
-
+      onCancel()
     };
     }
     
@@ -82,13 +80,16 @@ const ImageCropperComponent: React.FC<ImageCropperComponentProps> = ({
         </Text>
       </Row>
       <Col h="100%" j="center" style={{background: theme.neutralColor.bgLayout}}>
-        <Row ref={cropperRef}>
+        <Row  h='100%' a="center">
+          <div ref={cropperRef}>
           <ImageCrop
             crop={crop}
             onCrop={handleCrop}
             aspectRatio={aspectRatio}
             image={selectedImage}
           />
+          </div>
+          
         </Row>
       </Col>
       <Row p='1rem' a="center" j="center" style={{background: theme.neutralColor.bgContainer, gap: '1rem'}}>

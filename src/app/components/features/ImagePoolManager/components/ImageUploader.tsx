@@ -1,18 +1,14 @@
-// ImageUploader.tsx
 import React, { useState } from "react";
 import { Text, Col, Grid, Row } from "ui/basic";
 import Button from "ui/Button";
-import { getExtension } from "../services"; //removeExtension
 import PreviewCard from "./PreviewCard";
-// import { ImageMetadata } from "firebaseServices/Storage/uploadImageToFirebase";
 import { uploadPoolImages } from "app/services/Images/pool/imageUtils";
 import theme from "ui/Utils/Media/Theme/theme";
 import { PanelHeader } from "ui/headers";
 import Icon, { IconName } from "ui/Icon";
-// import { InputFile } from "ui/Form";
 import { LoadingAnimation } from "ui/LoadingAnimation";
 import { Backdrop } from "ui/Backdrop";
-
+import { getFileExtension } from "ui/Image";
 
 interface ImageUploaderProps {
   onUpload: (files: File[]) => void;
@@ -25,18 +21,6 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onUpload, onClose, path }
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [, setUploadMessage] = useState<string>("");
   const [names, setNames] = useState<string[]>([]);
-
-  // const handleInputFile = (files: FileList | null) => {
-  //   if (files) {
-  //     const mergedFiles = selectedImages ? [...selectedImages, ...Array.from(files)] : Array.from(files);
-  //     setSelectedImages(mergedFiles);
-  //     const newNames = mergedFiles.map((image) => {
-  //       const fileNameWithoutExtensioin = removeExtension(image.name);
-  //       return fileNameWithoutExtensioin;
-  //     });
-  //     setNames(newNames);
-  //   }
-  // };
 
   const handleUpdateName = (newName: string, index: number) => {
     setNames((prevNames) => {
@@ -68,7 +52,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onUpload, onClose, path }
     setIsUploading(true);
     try {
       const namesWithExtension = names.map((name, index) => {
-        const extension = getExtension(selectedImages[index].name);
+        const extension = getFileExtension(selectedImages[index].name);
         return `${name}.${extension}`;
       });
 
@@ -114,7 +98,6 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onUpload, onClose, path }
         <Button size="small" onClick={handleDownloadZip}>
           Download Zip
         </Button>
-        {/* <InputFile  multiple={true} accept=".jpg,.png,.gif" onFileChange={handleInputFile} /> */}
         <Button size="small" onClick={handleUploadImages} disabled={isUploadingInProgress || !selectedImages.length || names.some((name) => name === '')}>
           Save to Pool
         </Button>
