@@ -15,7 +15,9 @@ import {
   faSortDown,
   faCrop,
   faClockRotateLeft,
-  faFileImport
+  faFileImport,
+  faGlobe,
+  faArrowUpFromBracket
 } from '@fortawesome/free-solid-svg-icons';
 
 import styled from "styled-components";
@@ -59,7 +61,9 @@ export enum IconName {
   Qr = 'qr',
   Recover = 'recover',
   Search = "search",
+  Share='share',
   Undo = 'undo',
+  Web='web',
   Whatsapp = "whatsapp",
   Xmark = 'xmark',
   Import = 'fileImport'
@@ -102,8 +106,10 @@ export const icons: Icons = {
   qr : faQrcode,
   reset: faClockRotateLeft,
   search: faSearch,
+  share: faArrowUpFromBracket,
   undo: faRotateLeft,
   recover:faTrashRestore,
+  web:faGlobe,
   whatsapp: faWhatsapp,
   xmark:faXmarkCircle,
   fileImport: faFileImport

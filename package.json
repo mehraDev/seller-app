@@ -27,6 +27,7 @@
     "firebase": "^9.18.0",
     "firebase-auth": "^0.1.2",
     "heic2any": "^0.0.4",
+    "html2canvas": "^1.4.1",
     "image-compression": "^0.0.6",
     "image-compressor": "^2.0.3",
     "image-conversion": "^2.1.1",
