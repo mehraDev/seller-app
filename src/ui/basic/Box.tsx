@@ -14,7 +14,7 @@
  */
 import styled from "styled-components";
 
-export interface IBox {
+export interface IBox extends React.HTMLAttributes<HTMLDivElement>{
   w?: string;
   h?: string;
   p?: string | number | number[];
