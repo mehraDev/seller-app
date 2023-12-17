@@ -4,12 +4,12 @@ import { RootState } from "store/store";
 import { useTheme } from "styled-components";
 import { Backdrop } from "ui/Backdrop";
 import { Box, Col, Row, Text } from "ui/basic";
-import { Card } from "ui/Card";
 import Icon, { IconName } from "ui/Icon";
 import { LoadingAnimation } from "ui/LoadingAnimation";
 import ShopQRCard from "../../ShopQRCard";
 import Button from "ui/Button";
 import html2canvas from 'html2canvas';
+import { getSellerLogo } from "app/services/Shop";
 
 
 const ToolBar: React.FC = () => {
@@ -35,9 +35,9 @@ const ToolBar: React.FC = () => {
 
   const baseUrl = "digibhoomi.com";
   const shopUrl = `https://${baseUrl}/${user}`;
+  const nameUppercase = name.split(' ').map(w => w[0].toUpperCase() + w.slice(1)).join(' ');
 
   const handleShareClick = async () => {
-    const nameUppercase = name.split(' ').map(w => w[0].toUpperCase() + w.slice(1)).join(' ');
     const title = `Explore ${nameUppercase}`;
     const text = `Welcome to ${nameUppercase}! Explore our menu and more at ${shopUrl}.`;
   
@@ -50,9 +50,7 @@ const ToolBar: React.FC = () => {
           text: text
         };
         if (imageData) {
-          const response = await fetch(imageData);
-          const blob = await response.blob();
-          const file = new File([blob], 'shop-qr-code.png', { type: 'image/png' });
+          const file = new File([imageData], `${name} qr code.png`, { type: 'image/png' });
           if (navigator.canShare && navigator.canShare({ files: [file] })) {
             shareData.files = [file];
           }
@@ -90,7 +88,7 @@ const ToolBar: React.FC = () => {
     return null;
   };
   
-  
+  const logo = getSellerLogo()
   return ( 
     <Row style={{background: theme.neutralColor.bgContainer}} p={'1rem'}  a="center" j="center">
         <Row j="between"  >
@@ -101,7 +99,7 @@ const ToolBar: React.FC = () => {
             <Row w='initial' style={{gap:'1rem'}} j="between">
                 <Button variant="secondary" padding="0.25rem 0.5rem" onClick={handleShareClick}>
                     <Icon color={theme.brandColor.primary} width={0.8} height={0.8} name={IconName.Share}/>
-                    <Text c={theme.brandColor.primary}   s="14"  >Share</Text>
+                    <Text c={theme.brandColor.primary} s="14">Share</Text>
                 </Button>
                 <Button variant="secondary" padding="0.25rem 0.5rem" onClick={handleViewQr}>
                     <Icon color={theme.brandColor.primary} width={0.8} height={0.8} name={IconName.Qr} />
@@ -109,13 +107,13 @@ const ToolBar: React.FC = () => {
                 </Button>
             </Row>
         </Row>
-        <div style={{display:'none'}}>
-            <ShopQRCard ref={shopQRRef} userName={user} logo={""} qrCodeUrl={shopUrl}/>
+        <div style={{ position: 'absolute', left: '-10000px', top: '-10000px' }}>
+            <ShopQRCard name={nameUppercase} ref={shopQRRef} userName={user} logo={logo} qrCodeUrl={shopUrl}/>
         </div>
         {popup &&
                  <Backdrop  >
                   <Col p={'2rem 1rem'}>
-                   <ShopQRCard onDownload={downloadImage} onShare={handleShareClick}  userName={user} logo={""} onClose={() => setPopup(false)} qrCodeUrl={shopUrl}/> 
+                   <ShopQRCard name={nameUppercase} onDownload={downloadImage} onShare={handleShareClick}  userName={user} logo={logo} onClose={() => setPopup(false)} qrCodeUrl={shopUrl}/> 
                    </Col>
                 </Backdrop>
               }

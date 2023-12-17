@@ -2,12 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "store/store";
 import { useTheme } from "styled-components";
-import Popup from "ui/Popup";
+
 import {  Col, Row } from "ui/basic"
-import ShopQRCard from "./Components/ShopQRCard";
 import { ProductsViewerWidget } from "./Components/Widgets/ProductViewer";
 import { ProfileHomeWidget } from "./Components/Widgets";
-import QRWidget from "./Components/Widgets/QRWidget/QRWidget";
 import { getSellerLogo } from "app/services/Shop";
 import { fetchProducts } from "store/modules/productSlice";
 import ToolBar from "./Components/Widgets/ToolBar/ToolBar";
@@ -24,7 +22,7 @@ const Home = () => {
   useEffect(() => {
     dispatch(fetchProducts());
   }, [dispatch]);
-  const profileImageUrl = getSellerLogo();
+  
   const homeRef = useRef<HTMLDivElement>(null);
 
   return (
