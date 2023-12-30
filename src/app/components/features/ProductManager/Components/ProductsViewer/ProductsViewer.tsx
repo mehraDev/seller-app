@@ -64,17 +64,18 @@ return (
       <LoadingAnimation/>
       : 
       <Col style={{gap:'1rem'}} >
-            <Sticky height={searchContainerHeight} at={searchStickyPosition} stickyStyle={{position:'fixed',top:0, zIndex:1,boxShadow: theme.shadow.shadow1}} containerRef={scrollRef || viewerRef}>
-              <Row ref={searchContainerRef} p='0.5rem 1rem' style={{background:theme.neutralColor.bgContainer}}>
+            
+         {
+          filterProducts.length
+          ?
+          <>
+            <Row ref={searchContainerRef} p='0.5rem 1rem' style={{background:theme.neutralColor.bgContainer,position:'sticky',top:'0'}}>
                 <InputSearch placeholder="Search in products..." value={searchTerm} onChange={handleSearch} onClear={() => setSearchTerm('')}/>
               </Row>
-            </Sticky>
-         {
-          !filterProducts.length
-          ?
-           <Row h='500px' j="center"  p={'2rem 1rem'}><Text c={theme.neutralColor.textSecondary} s='14' w={5}>No Produts Found</Text></Row>
+            <Viewer products={filterProducts}/>
+            </>
           :
-           <Viewer products={filterProducts}/>
+          <Row h='500px' j="center"  p={'2rem 1rem'}><Text c={theme.neutralColor.textSecondary} s='14' w={5}>No Produts Found</Text></Row>
          }
       </Col>
     }
