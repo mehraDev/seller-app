@@ -77,23 +77,6 @@ if (isLoading) {
   return (
     <>
      <ModeSwitcher currentMode={mode} modeComponents={modeComponents} />
-      <Row w='initial' style={{
-          background: theme.brandColor.primary,
-          boxShadow:theme.shadow.shadow1,
-          position:'absolute', bottom:'1rem',right:'1rem'
-
-        }}
-        br='12px'>
-      <Icon name={IconName.Edit} 
-        clickEffectTime={50}
-        onClick={() => setMode(Mode.Editor)}
-        padding='1rem'
-        color={theme.neutralColor.bgContainer}
-        height={1.5}
-        br='12px'
-        width={1.5}
-      />
-      </Row> 
       {displayOptions &&
         <OptionsCard options={options} closeCard={() => setDisplayOptions(false)}/>
       }

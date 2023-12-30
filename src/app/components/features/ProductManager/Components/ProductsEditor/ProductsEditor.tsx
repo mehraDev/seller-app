@@ -417,57 +417,23 @@ const ProductsEditor : React.FC<IProductsEditor>= ({onClose,onUpload,shop,initia
     allProducts: IProduct[]
 ): Promise<boolean> => {
     return isProductValid(product, allProducts, shop);
-};
+  };
 
   return (
     <Col h="100%" style={{background:theme.neutralColor.bgContainer,borderBottom: `1px solid ${theme.neutralColor.borderSecondary}`}}>
       <Col style={{boxShadow:theme.shadow.shadow1, background: theme.neutralColor.bgContainer,borderBottom: `1px solid ${theme.neutralColor.borderSecondary}`}}>
-        <Row j='between' a="center" w="inherit" p='0.5rem' style={{borderBottom: `1px solid ${theme.neutralColor.border}`}} >
-            <Text w={6} s='16'  ml="0.5rem" c={theme.neutralColor.text}>Products Editor</Text>
-            <Row a="center" w="initial" j="end" style={{gap:'4rem'}}>
-              {hasChanges ?
-              <Button
-              variant="secondary"
-              border="1px solid #d9d9e3"
-              padding="0.25rem 0.25rem"
-              br="0.35rem"
-              onClick={() => setResetPopup(true) }
-            >
-              <Icon
-                name={IconName.Reset}
-                borderRadius={0}
-                color={theme.brandColor.red}
-              />
-            </Button>
-            
-              // <Icon height={1.2} color={theme.brandColor.red} width={1.2} name={IconName.Close} onClick={handleCloseEditor} />
-                // <Button padding="2px 4px"  size="small"  variant="secondary" onClick={}>Reset Changes</Button>
-              : 
-              null}
-              <Button
-              variant="secondary"
-              border="1px solid #d9d9e3"
-              padding="0.25rem 0.25rem"
-              br="0.35rem"
-              onClick={() => setResetPopup(true) }
-            >
-              <Icon
-                name={IconName.Import}
-                borderRadius={0}
-                color={theme.brandColor.red}
-              />
-            </Button>
-              {/* <Icon height={1.2} color={theme.brandColor.red} width={1.2} name={IconName.Close} onClick={handleCloseEditor} /> */}
-            </Row>            
+        <Row  a="center" w="inherit" p='0.5rem' style={{borderBottom: `1px solid ${theme.neutralColor.border}`}} >
+              <Icon height={1.2} color={theme.neutralColor.text} width={1.2} name={IconName.GoBack} onClick={handleCloseEditor} />
+              <Text w={6} s='16'  ml="0.5rem" c={theme.neutralColor.text}>Products Editor</Text>           
         </Row>
-{/*         
+        
         <Row j="between" a='center'  p='0.5rem 1rem'>
           <Row w="initial">
             <Button width="100%" bg={theme.neutralColor.bgContainer} >
               <Text s="14" >Add Item</Text>
-            </Button>#47B649
+            </Button>
           </Row>
-            <Row style={{gap:'1rem'}} j="end" a="center">
+          <Row style={{gap:'1rem'}} j="end" a="center">
             <InputFile
               width={'initial'}
               variant="secondary"
@@ -475,13 +441,13 @@ const ProductsEditor : React.FC<IProductsEditor>= ({onClose,onUpload,shop,initia
               size="small" padding="2px 6px"
               label="Upload by Images" onFileChange={handleMultiUpload} />
             <InputFile
-            width={'initial'}
+              width={'initial'}
               variant="secondary"
               accept=".dbmenu"
               size="small" padding="2px 6px"
               label="Import-Menu" onFileChange={handleUploadFromFile} />
-            </Row>
-        </Row> */}
+          </Row>
+        </Row>
         <Row p={'0.5rem 1rem' }>
           <InputSearch value={query} onChange={handleSearch} onClear={() => setQuery('')} placeholder={'Search...'}/>
         </Row>
