@@ -11,8 +11,8 @@ import { IViewerBase, IViewerFood } from "../../../interfaces/viewer";
 export type IViewer = IViewerBase | IViewerFood;
 
 const supportedProductViewers: ISupportedProductCardsType = {
-  [EShop.Food]: lazy(() => import("./ViewerFood")) as React.LazyExoticComponent<React.FC<IViewerFood>>,
-  [EShop.Base]: lazy(() => import("./ViewerFood")) as React.LazyExoticComponent<React.FC<IViewerBase>>,
+  [EShop.Food]: lazy(() => import("./Food/ViewerFood")) as React.LazyExoticComponent<React.FC<IViewerFood>>,
+  [EShop.Base]: lazy(() => import("./Food/ViewerFood")) as React.LazyExoticComponent<React.FC<IViewerBase>>,
 };
 
 export type ISupportedProductCardsType = {
