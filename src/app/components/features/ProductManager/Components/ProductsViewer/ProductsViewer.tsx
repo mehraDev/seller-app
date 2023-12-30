@@ -69,11 +69,9 @@ return (
           filterProducts.length
           ?
           <>
-          <Sticky height={searchContainerHeight} at={searchStickyPosition} stickyStyle={{position:'fixed',top:0, zIndex:1,boxShadow: theme.shadow.shadow1}} containerRef={scrollRef || viewerRef}>
-              <Row ref={searchContainerRef} p='0.5rem 1rem' style={{background:theme.neutralColor.bgContainer}}>
+            <Row ref={searchContainerRef} p='0.5rem 1rem' style={{background:theme.neutralColor.bgContainer,position:'sticky',top:'0'}}>
                 <InputSearch placeholder="Search in products..." value={searchTerm} onChange={handleSearch} onClear={() => setSearchTerm('')}/>
               </Row>
-            </Sticky>
             <Viewer products={filterProducts}/>
             </>
           :
