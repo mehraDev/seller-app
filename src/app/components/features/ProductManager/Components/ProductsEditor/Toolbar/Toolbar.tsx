@@ -17,7 +17,7 @@ const Toolbar: React.FC<ToolbarProps> = ({ onAddItem, onUploadImages, onImportIt
   return (
     <Row j="between" a="center" p="0.5rem 1rem">
       <Row w="initial">
-        <Button  variant='primary' onClick={onAddItem}> 
+        <Button type='button'  variant='primary' onClick={onAddItem}> 
           <Text s="14">Add Item</Text>
         </Button>
       </Row>

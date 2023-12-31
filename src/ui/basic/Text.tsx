@@ -62,7 +62,6 @@ const Text = styled.div<IText>`
       font-family: "Manrope", sans-serif;
     `}
     overflow-wrap: break-word;
-  white-space: normal;
 `;
 
 export default Text;
