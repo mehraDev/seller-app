@@ -31,6 +31,7 @@ import { AppDispatch } from "store/store";
 import MultiEdit from "./MultiEdit/MultiEdit";
 import { isProductValid } from "../../utils/validators/isProductValid";
 import convertHEICToWebp from "ui/Image/utils/imageConversion";
+import Toolbar from "./Toolbar/Toolbar";
 
 export interface IProductsEditor {
     initialProducts: IProduct[];
@@ -407,11 +408,6 @@ const ProductsEditor : React.FC<IProductsEditor>= ({onClose,onUpload,shop,initia
   let ProductCard = supportedProductCards[shop] as React.FC<IItemCard>;
   let EditComponent =  EditProduct;
   
-  // const validateProduct = async (products: IProduct[]): Promise<boolean> => {
-  //     const allProducts = [...newProducts, ...unModifiedProducts, ...modifiedProducts];
-  //     const isValid = await isProductValid(allProducts, product, shop);
-  //   return isValid;
-  // };
   const validateProductForShop = async (
     product: IProduct, 
     allProducts: IProduct[]
@@ -424,33 +420,9 @@ const ProductsEditor : React.FC<IProductsEditor>= ({onClose,onUpload,shop,initia
       <Col style={{boxShadow:theme.shadow.shadow1, background: theme.neutralColor.bgContainer,borderBottom: `1px solid ${theme.neutralColor.borderSecondary}`}}>
         <Row  a="center" w="inherit" p='0.5rem' style={{borderBottom: `1px solid ${theme.neutralColor.border}`}} >
               <Icon height={1.2} color={theme.neutralColor.text} width={1.2} name={IconName.GoBack} onClick={handleCloseEditor} />
-              <Text w={6} s='16'  ml="0.5rem" c={theme.neutralColor.text}>Products Editor</Text>           
+              <Text w={7} s='16'  ml="0.5rem" c={theme.neutralColor.text}>Products Editor</Text>           
         </Row>
-        
-        <Row j="between" a='center'  p='0.5rem 1rem'>
-          <Row w="initial">
-            <Button width="100%" bg={theme.neutralColor.bgContainer} >
-              <Text s="14" >Add Item</Text>
-            </Button>
-          </Row>
-          <Row style={{gap:'1rem'}} j="end" a="center">
-            <InputFile
-              width={'initial'}
-              variant="secondary"
-              multiple={true}
-              size="small" padding="2px 6px"
-              label="Upload by Images" onFileChange={handleMultiUpload} />
-            <InputFile
-              width={'initial'}
-              variant="secondary"
-              accept=".dbmenu"
-              size="small" padding="2px 6px"
-              label="Import-Menu" onFileChange={handleUploadFromFile} />
-          </Row>
-        </Row>
-        <Row p={'0.5rem 1rem' }>
-          <InputSearch value={query} onChange={handleSearch} onClear={() => setQuery('')} placeholder={'Search...'}/>
-        </Row>
+        <Toolbar onAddItem={handleInitialProductAdd} onUploadImages={handleMultiUpload} onImportItems={handleUploadFromFile}/>
       </Col>
 
       <Col h="100%" style={{overflow:'scroll'}}>
