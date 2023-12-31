@@ -408,11 +408,6 @@ const ProductsEditor : React.FC<IProductsEditor>= ({onClose,onUpload,shop,initia
   let ProductCard = supportedProductCards[shop] as React.FC<IItemCard>;
   let EditComponent =  EditProduct;
   
-  // const validateProduct = async (products: IProduct[]): Promise<boolean> => {
-  //     const allProducts = [...newProducts, ...unModifiedProducts, ...modifiedProducts];
-  //     const isValid = await isProductValid(allProducts, product, shop);
-  //   return isValid;
-  // };
   const validateProductForShop = async (
     product: IProduct, 
     allProducts: IProduct[]
@@ -427,13 +422,7 @@ const ProductsEditor : React.FC<IProductsEditor>= ({onClose,onUpload,shop,initia
               <Icon height={1.2} color={theme.neutralColor.text} width={1.2} name={IconName.GoBack} onClick={handleCloseEditor} />
               <Text w={7} s='16'  ml="0.5rem" c={theme.neutralColor.text}>Products Editor</Text>           
         </Row>
-        <Toolbar onAddItem={function (): void {
-          throw new Error("Function not implemented.");
-        } } onUploadImages={function (files: FileList | null): void {
-          throw new Error("Function not implemented.");
-        } } onImportItems={function (files: FileList | null): void {
-          throw new Error("Function not implemented.");
-        } }/>
+        <Toolbar onAddItem={handleInitialProductAdd} onUploadImages={handleMultiUpload} onImportItems={handleUploadFromFile}/>
       </Col>
 
       <Col h="100%" style={{overflow:'scroll'}}>

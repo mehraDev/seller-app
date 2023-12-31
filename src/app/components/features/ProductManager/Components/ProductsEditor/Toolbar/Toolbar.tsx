@@ -8,20 +8,20 @@ import { Col, Row,Text } from 'ui/basic';
 
 type ToolbarProps = {
   onAddItem: () => void;
-  onUploadImages: (files: FileList | null) => void;
-  onImportItems: (files: FileList | null) => void;
+  onUploadImages: (files: FileList ) => void;
+  onImportItems: (files: FileList ) => void;
 };
 
 const Toolbar: React.FC<ToolbarProps> = ({ onAddItem, onUploadImages, onImportItems }) => {
   const theme = useTheme();
   return (
-    <Row j="between" a="center" p="0.5rem 1rem">
+    <Row j="between"  p="1rem">
       <Row w="initial">
-        <Button type='button'  variant='primary' onClick={onAddItem}> 
+        <Button type='button'   padding="4px 8px"  variant='primary' onClick={onAddItem}> 
           <Text s="14">Add Item</Text>
         </Button>
       </Row>
-      <Col  style={{ gap: '1rem' }} j="end" a="end">
+      <Row  style={{ gap: '1rem' }} j="end" a="end">
         <InputFile
           width={'initial'}
           variant="secondary"
@@ -42,7 +42,7 @@ const Toolbar: React.FC<ToolbarProps> = ({ onAddItem, onUploadImages, onImportIt
           onFileChange={onImportItems}
           border={`1px solid ${theme.brandColor.primary}`}
         />
-      </Col>
+      </Row>
     </Row>
   );
 };
