@@ -69,9 +69,6 @@ return (
           filterProducts.length
           ?
           <>
-            <Row ref={searchContainerRef} p='0.5rem 1rem' style={{background:theme.neutralColor.bgContainer,position:'sticky',top:'0'}}>
-                <InputSearch placeholder="Search in products..." value={searchTerm} onChange={handleSearch} onClear={() => setSearchTerm('')}/>
-              </Row>
             <Viewer products={filterProducts}/>
             </>
           :
