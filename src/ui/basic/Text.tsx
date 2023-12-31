@@ -13,7 +13,6 @@
  */
 
 import styled, { css } from "styled-components";
-import theme from "ui/Utils/Media/Theme/theme";
 
 interface IText {
   s?: string; //px
@@ -26,14 +25,13 @@ interface IText {
   mr?: string;
   ml?: string;
   tt?: "none" | "cap" | "upp" | "low";
-  type?: "heading";
-  hc?: string; 
+  type?: "heading" | "subheading";
 }
 
 const Text = styled.div<IText>`
-  font-size: ${(props) => (props.s ? props.s + "px" : '')};
+  font-size: ${(props) => (props.s ? props.s + "px" : "")};
   font-weight: ${(props) => (props.w ? props.w + "00" : "")};
-  color: ${(props) => (props.c ? props.c : theme.neutralColor.text)};
+  color: ${(props) => (props.c ? props.c : "")};
   margin: ${(props) =>
     props.m ? props.m.map((item) => item + "rem").join(" ") : ""};
   margin-bottom: ${(props) => (props.mb ? props.mb : "")};
@@ -56,15 +54,15 @@ const Text = styled.div<IText>`
   ${(props) =>
     props.type === "heading" &&
     css`
-      font-family: "Raleway", sans-serif;
+      font-family: "Manrope", sans-serif;
     `}
-    ${(props) =>
-    props.hc &&
+  ${(props) =>
+    props.type === "subheading" &&
     css`
-      &:hover {
-        color: ${props.hc};
-      }
+      font-family: "Manrope", sans-serif;
     `}
+    overflow-wrap: break-word;
+  white-space: normal;
 `;
 
 export default Text;
